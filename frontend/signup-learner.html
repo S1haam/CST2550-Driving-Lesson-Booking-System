@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Learner Sign Up</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+    <h3>Sign Up: Learner</h3>
+
+    <form method="post" action="http://localhost:5000/Learner/Register">
+    <input type="text" name="LicenceId" placeholder="Provisional Licence ID" required>
+    <input type="text" name="Name" placeholder="Name" required>
+    <input type="email" name="Email" placeholder="Email address" required>
+    <input type="password" name="Password" placeholder="Password" required>
+    <input type="password" name="ConfirmPassword" placeholder="Confirm Password" required>
+
+    <button type="submit">Sign Up</button>
+</form>
+ 
+    <button class="back-btn" onclick="location.href='start.html'">Back</button>
+</div>
+
+</body>
+</html>
