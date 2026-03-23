@@ -7,7 +7,7 @@ namespace DrivingLessonBookingSystem.DataStructures
         public Instructor Data { get; set; }
         public InstructorNode Next { get; set; }
 
-        public InstructorNode(Instructor Data) {
+        public InstructorNode(Instructor data) {
             Data = data;
             Next = null;
         }

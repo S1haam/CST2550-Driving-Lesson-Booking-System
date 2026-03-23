@@ -2,9 +2,9 @@
 {
     public class Learner
     {
-        public int LearnerID { get; set; }
+        public int LearnerId { get; set; }
         public string LearnerName { get; set; }
-        public string LearnerLicenceID { get; set; }
+        public string LearnerLicenceId { get; set; }
         public string LearnerEmail { get; set; }
         public string LearnerPhone { get; set; }
 

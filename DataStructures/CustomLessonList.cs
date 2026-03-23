@@ -35,7 +35,7 @@ namespace DrivingLessonBookingSystem.DataStructures
             LessonNode current = head;
             while (current.Next != null)
             {
-                if (current.Next.Data.LessonId = lessonId)
+                if (current.Next.Data.LessonId == lessonId)
                 {
                     current.Next = current.Next.Next;
                     return true;

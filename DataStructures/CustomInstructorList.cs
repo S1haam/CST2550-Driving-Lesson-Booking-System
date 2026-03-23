@@ -4,11 +4,11 @@ namespace DrivingLessonBookingSystem.DataStructures
 {
     public class CustomInstructorList
     {
-        private IntructorNode head;
+        private InstructorNode head;
 
         public void AddInstructor(Instructor instructor)
         {
-            IntructorNode newNode = new InstructorNode(instructor);
+            InstructorNode newNode = new InstructorNode(instructor);
             if (head == null)
             {
                 head = newNode;
