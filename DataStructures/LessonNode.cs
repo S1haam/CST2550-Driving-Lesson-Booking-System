@@ -2,12 +2,12 @@
 
 namespace DrivingLessonBookingSystem.DataStructures
 {
-    public class InstructorNode
+    public class LessonNode
     {
-        public Instructor Data { get; set; }
-        public InstructorNode Next { get; set; }
-
-        public InstructorNode(Instructor Data) {
+        public Lesson Data { get; set; }
+        public LessonNode Next { get; set; }
+        public LessonNode(Lesson data)
+        {
             Data = data;
             Next = null;
         }

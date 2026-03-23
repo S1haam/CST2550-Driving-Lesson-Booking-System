@@ -1,11 +1,19 @@
-﻿namespace DrivingLessonBookingSystem.Models
+﻿using DrivingLessonBookingSystem.DataStructures;
+
+namespace DrivingLessonBookingSystem.Models
 {
     public class Instructor
     {
-        public int IntructorID { get; set; }
-        public string IntructorName { get; set; }
-        public string IntructorEmail { get; set; }
-        public string IntructorPhone { get; set; }
+        public int InstructorID { get; set; }
+        public string InstructorName { get; set; }
+        public string InstructorEmail { get; set; }
+        public string InstructorPhone { get; set; }
+        public string InstructorPasswordHash { get; set; }
+        public string InstructorVehicleType { get; set; }
+        public string InstructorStatus { get; set; }
+
+        public CustomLessonList AvailableSlots { get; set; }
+        public CustomLessonList ScheduledLessons { get; set; } = new CustomLessonList();
 
     }
 }
