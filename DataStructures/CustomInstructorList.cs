@@ -2,19 +2,19 @@
 
 namespace DrivingLessonBookingSystem.DataStructures
 {
-    public class CustomLearnerList
+    public class CustomInstructorList
     {
-        private LearnerNode head;
+        private IntructorNode head;
 
-        public void AddLearner(Learner learner)
+        public void AddInstructor(Instructor instructor)
         {
-            LearnerNode newNode = new LearnerNode(learner);
+            IntructorNode newNode = new InstructorNode(instructor);
             if (head == null)
             {
                 head = newNode;
                 return;
             }
-            LearnerNode current = head;
+            InstructorNode current = head;
             while (current.Next != null)
             {
                 current = current.Next;
@@ -22,12 +22,12 @@ namespace DrivingLessonBookingSystem.DataStructures
             current.Next = newNode;
         }
 
-        public Learner FindLearner(int id)
+        public Instructor FindInstructor(int id)
         {
-            LearnerNode current = head;
+            InstructorNode current = head;
             while (current != null)
             {
-                if (current.Data.LearnerId == id) return current.Data;
+                if (current.Data.InstructorID == id) return current.Data;
                 current = current.Next;
             }
             return null;
