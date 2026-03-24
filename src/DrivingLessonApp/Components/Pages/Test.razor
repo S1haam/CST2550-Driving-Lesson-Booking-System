@@ -1,0 +1,31 @@
+@page "/test"
+
+@using DrivingLessonApp.Models
+@using DrivingLessonApp.Services
+
+<h3>Hash Table Test</h3>
+
+<p>Bookings found: @count</p>
+
+@code {
+    int count = 0;
+
+    protected override void OnInitialized()
+    {
+        var manager = new BookingManager();
+
+        manager.CreateBooking(new Booking
+        {
+            BookingId = 1,
+            LearnerId = 101,
+            InstructorId = 201,
+            LessonDateTime = DateTime.Today.AddHours(10),
+            LessonType = "Manual",
+            BookingStatus = "Pending"
+        });
+
+        var results = manager.GetBookings(DateTime.Today.AddHours(10));
+
+        count = results.Count;
+    }
+}
