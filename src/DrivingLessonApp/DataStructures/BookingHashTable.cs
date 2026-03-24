@@ -1,4 +1,5 @@
 using DrivingLessonApp.Models;
+using System.Linq;
 
 namespace DrivingLessonApp.DataStructures
 {
@@ -18,10 +19,13 @@ namespace DrivingLessonApp.DataStructures
             table = new List<Booking>[size];
         }
 
-        // hash function converts datetime into array index
+        // hash function converts date (ignores time) into array index
         private int Hash(DateTime key)
         {
-            return Math.Abs(key.GetHashCode()) % size;
+            // remove time part so all bookings on same day go to same index
+            var dateOnly = key.Date;
+
+            return Math.Abs(dateOnly.GetHashCode()) % size;
         }
 
         // adds a booking into the hash table
@@ -37,7 +41,7 @@ namespace DrivingLessonApp.DataStructures
             table[index].Add(booking);
         }
 
-        // searches for bookings using datetime key
+        // searches for bookings by date
         public List<Booking> Search(DateTime key)
         {
             int index = Hash(key);
@@ -46,7 +50,10 @@ namespace DrivingLessonApp.DataStructures
             if (table[index] == null)
                 return new List<Booking>();
 
-            return table[index];
+            // filter only bookings that match the date
+            return table[index]
+                .Where(b => b.LessonDateTime.Date == key.Date)
+                .ToList();
         }
     }
 }

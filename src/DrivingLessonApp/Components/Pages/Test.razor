@@ -5,27 +5,62 @@
 
 <h3>Hash Table Test</h3>
 
-<p>Bookings found: @count</p>
+<!-- displays total number of bookings returned from search -->
+<p>Bookings found: @results.Count</p>
+
+<!-- displays each booking returned -->
+<ul>
+    @foreach (var booking in results)
+    {
+        <li>
+            <!-- shows key booking information -->
+            ID: @booking.BookingId |
+            Time: @booking.LessonDateTime |
+            Status: @booking.BookingStatus
+        </li>
+    }
+</ul>
 
 @code {
-    int count = 0;
+    // list to store bookings returned from hash table search
+    List<Booking> results = new();
 
+    // runs automatically when page loads
+    // used to simulate adding and retrieving bookings
     protected override void OnInitialized()
     {
+        // create booking manager (handles logic and connects to hash table)
         var manager = new BookingManager();
 
+        // add first booking (10:00 today)
+        // this will be stored in the hash table
         manager.CreateBooking(new Booking
         {
             BookingId = 1,
-            LearnerId = 101,
-            InstructorId = 201,
             LessonDateTime = DateTime.Today.AddHours(10),
-            LessonType = "Manual",
             BookingStatus = "Pending"
         });
 
-        var results = manager.GetBookings(DateTime.Today.AddHours(10));
+        // add second booking at same time (10:00)
+        // tests collision handling (same date → same hash index)
+        manager.CreateBooking(new Booking
+        {
+            BookingId = 2,
+            LessonDateTime = DateTime.Today.AddHours(10),
+            BookingStatus = "Confirmed"
+        });
 
-        count = results.Count;
+        // add third booking at different time (12:00)
+        // still same date → should be grouped with others
+        manager.CreateBooking(new Booking
+        {
+            BookingId = 3,
+            LessonDateTime = DateTime.Today.AddHours(12),
+            BookingStatus = "Pending"
+        });
+
+        // search for all bookings on today's date
+        // should return all 3 bookings
+        results = manager.GetBookings(DateTime.Today);
     }
 }
