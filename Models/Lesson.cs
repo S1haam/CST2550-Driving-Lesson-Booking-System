@@ -7,7 +7,13 @@ namespace DrivingLessonBookingSystem.Models
         public int LessonId { get; set; }
         public int LearnerId {  get; set; }
         public int InstructorId { get; set; }
+
         public DateTime LessonDate { get; set; }
-        public string Status { get; set; } // "Available", "Booked", "Completed" 
+        public TimeSpan LessonTime { get; set; }
+
+        public string BookingStatus { get; set; } // "Available", "Booked", "Completed" 
+
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

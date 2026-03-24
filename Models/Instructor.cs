@@ -9,11 +9,11 @@ namespace DrivingLessonBookingSystem.Models
         public string InstructorEmail { get; set; }
         public string InstructorPhone { get; set; }
         public string InstructorPasswordHash { get; set; }
-        public string InstructorVehicleType { get; set; }
+        public string InstructorCarType { get; set; }
         public string InstructorStatus { get; set; }
 
-        public CustomLessonList AvailableSlots { get; set; }
-        public CustomLessonList ScheduledLessons { get; set; } = new CustomLessonList();
-
+        public CustomLessonList AvailableSlots { get; set; } = new CustomLessonList();
+        public CustomLessonList InstructorUpcomingLessons { get; set; } = new CustomLessonList();
+        public CustomLessonList InstructorPastLessons { get; set; } = new CustomLessonList();
     }
 }
