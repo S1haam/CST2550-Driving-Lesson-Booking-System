@@ -3,28 +3,72 @@
   "WorkspaceRootPath": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\change-password.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:change-password.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-home.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:learner-home.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\choose-instructor.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:choose-instructor.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\start.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:start.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\choose-lesson-type.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:choose-lesson-type.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-learner.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:signup-learner.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\delete-account.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:delete-account.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\delete-success.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:delete-success.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\leaner-dashboard.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:leaner-dashboard.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-confirmed.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:learner-book-confirmed.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-summary.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:learner-book-summary.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-time.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:learner-book-time.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:learner-book.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-settings.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:learner-settings.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\login.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:login.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-admin.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:signup-admin.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
       "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-instructor.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
       "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:signup-instructor.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\login.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:login.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-learner.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:signup-learner.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\start.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:start.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
     }
   ],
   "DocumentGroupContainers": [
@@ -34,7 +78,7 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 3,
+          "SelectedChildIndex": 7,
           "Children": [
             {
               "$type": "Bookmark",
@@ -46,80 +90,223 @@
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "learner-home.html",
-              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-home.html",
-              "RelativeDocumentMoniker": "learner-home.html",
-              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-home.html",
-              "RelativeToolTip": "learner-home.html",
-              "ViewState": "AgIAAAcAAAAAAAAAAAAAABAAAAAkAAAAAAAAAA==",
+              "DocumentIndex": 5,
+              "Title": "leaner-dashboard.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\leaner-dashboard.html",
+              "RelativeDocumentMoniker": "leaner-dashboard.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\leaner-dashboard.html",
+              "RelativeToolTip": "leaner-dashboard.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAABVAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-03-07T15:28:27.873Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "style.css",
-              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\style.css",
-              "RelativeDocumentMoniker": "style.css",
-              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\style.css",
-              "RelativeToolTip": "style.css",
-              "ViewState": "AgIAAD4AAAAAAAAAAAAIwFsAAAAAAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
-              "WhenOpened": "2026-03-07T15:21:34.854Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 3,
-              "Title": "signup-learner.html",
-              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-learner.html",
-              "RelativeDocumentMoniker": "signup-learner.html",
-              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-learner.html",
-              "RelativeToolTip": "signup-learner.html",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAqwBoAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-03-07T15:21:37.577Z",
-              "EditorCaption": ""
-            },
-            {
-              "$type": "Document",
-              "DocumentIndex": 2,
-              "Title": "start.html",
-              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\start.html",
-              "RelativeDocumentMoniker": "start.html",
-              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\start.html",
-              "RelativeToolTip": "start.html",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABIAAAAHAAAAAAAAAA==",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-03-07T15:21:43.226Z",
+              "WhenOpened": "2026-03-23T12:33:57.359Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 4,
+              "Title": "delete-success.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\delete-success.html",
+              "RelativeDocumentMoniker": "delete-success.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\delete-success.html",
+              "RelativeToolTip": "delete-success.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA4AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T13:09:00.134Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "delete-account.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\delete-account.html",
+              "RelativeDocumentMoniker": "delete-account.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\delete-account.html",
+              "RelativeToolTip": "delete-account.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAA8AAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T13:00:19.422Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "choose-lesson-type.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\choose-lesson-type.html",
+              "RelativeDocumentMoniker": "choose-lesson-type.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\choose-lesson-type.html",
+              "RelativeToolTip": "choose-lesson-type.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T12:11:31.656Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "choose-instructor.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\choose-instructor.html",
+              "RelativeDocumentMoniker": "choose-instructor.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\choose-instructor.html",
+              "RelativeToolTip": "choose-instructor.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T12:16:54.581Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "change-password.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\change-password.html",
+              "RelativeDocumentMoniker": "change-password.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\change-password.html",
+              "RelativeToolTip": "change-password.html",
+              "ViewState": "AgIAAB4AAAAAAAAAAAAAAB4AAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T12:56:45.466Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "learner-book-confirmed.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-confirmed.html",
+              "RelativeDocumentMoniker": "learner-book-confirmed.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-confirmed.html",
+              "RelativeToolTip": "learner-book-confirmed.html",
+              "ViewState": "AgIAAAIAAAAAAAAAAAAAABIAAAAyAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-24T10:46:59.94Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "learner-book-summary.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-summary.html",
+              "RelativeDocumentMoniker": "learner-book-summary.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-summary.html",
+              "RelativeToolTip": "learner-book-summary.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAFwAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-24T10:35:11.285Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 8,
+              "Title": "learner-book-time.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-time.html",
+              "RelativeDocumentMoniker": "learner-book-time.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book-time.html",
+              "RelativeToolTip": "learner-book-time.html",
+              "ViewState": "AgIAAG8AAAAAAAAAAAAAAH4AAAAcAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T13:37:25.533Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 9,
+              "Title": "learner-book.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book.html",
+              "RelativeDocumentMoniker": "learner-book.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-book.html",
+              "RelativeToolTip": "learner-book.html",
+              "ViewState": "AgIAADAAAAAAAAAAAAAAAD4AAAAjAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T13:19:16.642Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 10,
+              "Title": "learner-settings.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-settings.html",
+              "RelativeDocumentMoniker": "learner-settings.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\learner-settings.html",
+              "RelativeToolTip": "learner-settings.html",
+              "ViewState": "AgIAAC0AAAAAAAAAAAAAAEgAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T12:36:53.327Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 11,
+              "Title": "login.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\login.html",
+              "RelativeDocumentMoniker": "login.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\login.html",
+              "RelativeToolTip": "login.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABYAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-07T14:45:44.292Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 12,
+              "Title": "signup-admin.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-admin.html",
+              "RelativeDocumentMoniker": "signup-admin.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-admin.html",
+              "RelativeToolTip": "signup-admin.html",
+              "ViewState": "AgIAAAMAAAAAAAAAAAAAABMAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-23T12:07:05.22Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 13,
               "Title": "signup-instructor.html",
               "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-instructor.html",
               "RelativeDocumentMoniker": "signup-instructor.html",
               "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-instructor.html",
               "RelativeToolTip": "signup-instructor.html",
-              "ViewState": "AgIAAAQAAAAAAAAAAAAqwBoAAAAHAAAAAAAAAA==",
+              "ViewState": "AgIAAA0AAAAAAAAAAAAIwCgAAAAAAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
               "WhenOpened": "2026-03-07T15:21:47.173Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 5,
-              "Title": "login.html",
-              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\login.html",
-              "RelativeDocumentMoniker": "login.html",
-              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\login.html",
-              "RelativeToolTip": "login.html",
-              "ViewState": "AgIAAAAAAAAAAAAAAAAAABUAAAAHAAAAAAAAAA==",
+              "DocumentIndex": 14,
+              "Title": "signup-learner.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-learner.html",
+              "RelativeDocumentMoniker": "signup-learner.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\signup-learner.html",
+              "RelativeToolTip": "signup-learner.html",
+              "ViewState": "AgIAAAcAAAAAAAAAAAAIwCQAAAAHAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
-              "WhenOpened": "2026-03-07T14:45:44.292Z",
+              "WhenOpened": "2026-03-07T15:21:37.577Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 15,
+              "Title": "start.html",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\start.html",
+              "RelativeDocumentMoniker": "start.html",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\start.html",
+              "RelativeToolTip": "start.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABQAAAAHAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-03-07T15:21:43.226Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 16,
+              "Title": "style.css",
+              "DocumentMoniker": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\style.css",
+              "RelativeDocumentMoniker": "style.css",
+              "ToolTip": "C:\\Users\\Ridaa Mohamed\\OneDrive\\Desktop\\University\\CST2550-Driving-Lesson-Booking-System\\frontend\\style.css",
+              "RelativeToolTip": "style.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAE0AAAAMAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-03-07T15:21:34.854Z",
               "EditorCaption": ""
             }
           ]
