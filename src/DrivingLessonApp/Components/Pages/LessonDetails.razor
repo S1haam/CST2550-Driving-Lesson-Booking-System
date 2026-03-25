@@ -1,10 +1,10 @@
-﻿@page "/"
+@page "/lesson-details"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 
 <div class="brand-title">SER Driving School</div>
 
-<h3>Hello X!</h3>
+<h3>Lesson Details</h3>
 
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/")'>Home</button>
@@ -14,20 +14,8 @@
     <button>Settings</button>
 </div>
 
-<div class="card next-card">
-    <div class="section-title">Next Lesson</div>
-
-    <div class="lesson-pill-container">
-        <div class="lesson-pill">ID<br />12340586</div>
-        <div class="lesson-pill">Driver<br />David</div>
-        <div class="lesson-pill">Date<br />15/08/2025</div>
-        <div class="lesson-pill">Time<br />12:00 - 14:00</div>
-
-        <button @onclick='() => Nav.NavigateTo("/schedule?tab=next")'>View</button>
-    </div>
-</div>
-
 <div class="card previous-card">
+
     <div class="section-title">Previous Lesson</div>
 
     <div class="lesson-pill-container">
@@ -35,7 +23,17 @@
         <div class="lesson-pill">Driver<br />David</div>
         <div class="lesson-pill">Date<br />02/08/2025</div>
         <div class="lesson-pill">Time<br />13:00 - 15:00</div>
-
-        <button @onclick='() => Nav.NavigateTo("/lesson-details")'>View</button>
     </div>
+
+</div>
+
+<div class="card">
+
+    <div class="section-title">Instructor Notes</div>
+
+    <!-- readonly notes (student cannot edit) -->
+    <div class="lesson-list">
+        driver should improve clutch control and mirror checks.
+    </div>
+
 </div>

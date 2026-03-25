@@ -1,177 +1,141 @@
-/* base styles */
-html, body {
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+/* base */
+body {
+    font-family: 'Segoe UI', sans-serif;
     margin: 0;
-    padding: 0;
-    background-color: #f5f7fb;
+    background: #eef2f7;
 }
 
-a, .btn-link {
-    color: #006bb7;
+/* container */
+.main-content {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
 }
 
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
+/* branding */
+.brand-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d4ea2;
+    margin-bottom: 5px;
 }
 
-.btn:focus, .btn:active:focus, .btn-link.nav-link:focus,
-.form-control:focus, .form-check-input:focus {
-    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+/* headings */
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
 }
 
-.content {
-    padding-top: 1.1rem;
-}
-
-h1, h3 {
-    margin: 20px;
-}
-
-    h1:focus {
-        outline: none;
-    }
-
-/* validation */
-.valid.modified:not([type=checkbox]) {
-    outline: 1px solid #26b050;
-}
-
-.invalid {
-    outline: 1px solid #e50000;
-}
-
-.validation-message {
-    color: #e50000;
-}
-
-/* error message */
-.blazor-error-boundary {
-    background: #b32121;
-    padding: 1rem;
-    color: white;
-}
-
-    .blazor-error-boundary::after {
-        content: "an error has occurred.";
-    }
-
-/* navigation bar */
+/* nav bar */
 .nav-bar {
-    background-color: #4a7bd0;
-    padding: 12px;
-    margin: 20px;
-    border-radius: 10px;
+    background: linear-gradient(135deg, #4a7bd0, #2d4ea2);
+    padding: 15px;
+    border-radius: 14px;
     display: flex;
-    gap: 12px;
+    justify-content: center;
+    gap: 15px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    margin-bottom: 25px;
 }
 
     .nav-bar button {
-        background-color: #5c8df6;
+        background: #6fa3ff;
         color: white;
         border: none;
-        padding: 10px 16px;
-        border-radius: 6px;
-        font-weight: 500;
+        padding: 10px 18px;
+        border-radius: 8px;
         cursor: pointer;
+        transition: 0.2s;
     }
 
-/* card container */
+        .nav-bar button:hover {
+            background: #1f3f91;
+        }
+
+/* cards */
 .card {
-    background-color: #4a7bd0;
     padding: 20px;
-    margin: 20px;
-    border-radius: 15px;
+    border-radius: 16px;
+    margin-bottom: 20px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.12);
 }
 
-    /* card titles */
-    .card h4 {
-        color: white;
-        margin-bottom: 12px;
-    }
+/* next */
+.next-card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    color: white;
+}
 
-/* table header */
-.lesson-header {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    background: #e6e6e6;
-    padding: 10px;
-    border-radius: 8px;
+/* previous */
+.previous-card {
+    background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    color: white;
+}
+
+/* title */
+.section-title {
     font-weight: bold;
-    margin-bottom: 8px;
+    margin-bottom: 12px;
 }
 
-/* table row */
-.lesson-content {
-    display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    background: white;
+/* pill container */
+.lesson-pill-container {
+    display: flex;
+    gap: 12px;
+    background: rgba(255,255,255,0.2);
     padding: 12px;
-    border-radius: 8px;
+    border-radius: 12px;
     align-items: center;
 }
 
-    /* buttons inside rows */
-    .lesson-content button {
-        background-color: #e6e6e6;
-        border: none;
-        padding: 6px 12px;
-        border-radius: 6px;
-        cursor: pointer;
-    }
-
-/* spacing between cards */
-.card + .card {
-    margin-top: 10px;
+/* pill */
+.lesson-pill {
+    background: rgba(0,0,0,0.25);
+    padding: 12px;
+    border-radius: 10px;
+    flex: 1;
+    text-align: center;
 }
 
-/* form styles */
-.darker-border-checkbox.form-check-input {
-    border-color: #929292;
+/* buttons */
+.lesson-pill-container button {
+    background: white;
+    border: none;
+    padding: 10px 14px;
+    border-radius: 8px;
+    cursor: pointer;
 }
 
-.form-floating > .form-control-plaintext::placeholder,
-.form-floating > .form-control::placeholder {
-    color: var(--bs-secondary-color);
-    text-align: end;
-}
-
-.form-floating > .form-control-plaintext:focus::placeholder,
-.form-floating > .form-control:focus::placeholder {
-    text-align: start;
-}
 /* tabs */
 .tabs {
     display: flex;
     gap: 10px;
-    margin: 20px;
+    margin-bottom: 15px;
 }
 
 .tab {
-    background: #d9d9d9;
     padding: 8px 16px;
-    border-radius: 10px 10px 0 0;
+    border-radius: 10px;
+    background: #dcdcdc;
     cursor: pointer;
 }
 
     .tab.active {
-        background: #4a7bd0;
+        background: #2d4ea2;
         color: white;
     }
 
-/* scroll container */
+/* lesson list */
 .lesson-list {
-    background: #d9d9d9;
+    background: #f4f6fb;
     padding: 15px;
     border-radius: 12px;
-    max-height: 250px;
-    overflow-y: auto;
 }
 
-/* list rows */
+/* row */
 .lesson-item {
-    background: #cfcfcf;
+    background: white;
     padding: 12px;
     border-radius: 10px;
     margin-bottom: 10px;
@@ -180,33 +144,30 @@ h1, h3 {
     align-items: center;
 }
 
-/* buttons group */
-.lesson-actions {
-    display: flex;
-    gap: 10px;
-}
-
-    .lesson-actions button {
-        background: #bfbfbf;
+    /* buttons inside list */
+    .lesson-item button {
+        margin-left: 8px;
+        background: #e3e7f0;
         border: none;
         padding: 6px 12px;
         border-radius: 6px;
     }
 
-/* pill style boxes (home page) */
-.lesson-pill-container {
-    display: flex;
-    gap: 10px;
-    background: #5c8df6;
+/* notes */
+.notes-box {
+    width: 100%;
+    height: 120px;
+    border-radius: 10px;
+    border: none;
     padding: 10px;
-    border-radius: 12px;
 }
 
-.lesson-pill {
-    background: #3f6fc0;
-    color: white;
+.save-btn {
+    margin-top: 10px;
     padding: 10px;
-    border-radius: 10px;
-    flex: 1;
-    text-align: center;
+    width: 100%;
+    border-radius: 8px;
+    border: none;
+    background: #2d4ea2;
+    color: white;
 }
