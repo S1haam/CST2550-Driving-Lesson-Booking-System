@@ -1,7 +1,75 @@
 ﻿@page "/"
 
-<PageTitle>Home</PageTitle>
+<h3>Hello X!</h3>
 
-<h1>Hello, world!</h1>
+<!-- navigation bar for switching between pages -->
+<div class="nav-bar">
+    <button>Home</button>
+    <button>My Schedule</button>
+    <button>Book lessons</button>
+    <button>FAQs</button>
+    <button>Settings</button>
+</div>
 
-Welcome to your new app.
+<!-- next lesson section -->
+<div class="card">
+
+    <!-- label showing this is the next lesson -->
+    <div class="tab active">Next Lesson:</div>
+
+    <!-- container holding lesson details in pill format -->
+    <div class="lesson-pill-container">
+
+        <!-- each box displays a different piece of information -->
+        <div class="lesson-pill">
+            ID<br />12340586
+        </div>
+
+        <div class="lesson-pill">
+            Driver<br />David
+        </div>
+
+        <div class="lesson-pill">
+            Date<br />15/08/2025
+        </div>
+
+        <div class="lesson-pill">
+            Time<br />12:00 - 14:00
+        </div>
+
+        <!-- button to view lesson details -->
+        <button>View</button>
+
+    </div>
+</div>
+
+<!-- previous lesson section -->
+<div class="card">
+
+    <!-- label showing previous lesson -->
+    <div class="tab active">Previous Lesson:</div>
+
+    <!-- container holding previous lesson details -->
+    <div class="lesson-pill-container">
+
+        <div class="lesson-pill">
+            ID<br />12340586
+        </div>
+
+        <div class="lesson-pill">
+            Driver<br />David
+        </div>
+
+        <div class="lesson-pill">
+            Date<br />02/08/2025
+        </div>
+
+        <div class="lesson-pill">
+            Time<br />13:00 - 15:00
+        </div>
+
+        <!-- button to view lesson details -->
+        <button>View</button>
+
+    </div>
+</div>
