@@ -1,0 +1,38 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Instructor - SER Driving School</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div class="container">
+        <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+        <h3>You have a choice of instructors:</h3>
+
+        <form method="post" action="http://localhost:5000/Learner/SelectInstructor">
+
+
+            <input type="hidden" name="LearnerId" value="">
+
+
+            <input type="hidden" name="LessonType" value="">
+
+
+            <!-- Buttons for the instructor, students pick this so it shows after they have logged in -->
+
+            <button type="submit" name="SelectedInstructorId" value="1" class="option-btn">Driver 1</button>
+            <button type="submit" name="SelectedInstructorId" value="2" class="option-btn">Driver 2</button>
+            <button type="submit" name="SelectedInstructorId" value="3" class="option-btn">Driver 3</button>
+
+            <!-- Navigation buttons -->
+            <div class="nav-row">
+                <button type="button" class="back-btn" onclick="location.href='choose-lesson-type.html'">Back</button>
+                <button type="button" class="next-btn" onclick="location.href='login.html'">Next</button>
+            </div>
+
+        </form>
+    </div>
+
+</body>
+</html>

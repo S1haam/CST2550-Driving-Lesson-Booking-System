@@ -1,0 +1,137 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Select Time - SER Driving School</title>
+    <link rel="stylesheet" href="style.css">
+
+    <style>
+        .time-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .time-box {
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            font-size: 15px;
+            cursor: pointer;
+            background: #e8f0ff;
+            border: 1px solid #b8cfff;
+        }
+
+            .time-box:hover {
+                background: #c7dcff;
+            }
+
+            /* Does not show the radio buttons */
+            .time-box input {
+                display: none;
+            }
+
+                /* Styling for the time */
+                .time-box input:checked + span {
+                    background: #4a7dff;
+                    color: white;
+                    padding: 10px 14px;
+                    border-radius: 6px;
+                }
+
+        /* Unavailable time */
+        .time-unavailable {
+            background: #f0f0f0;
+            color: #999;
+            border: 1px solid #ddd;
+            cursor: not-allowed;
+        }
+
+        /* Style for the back button */
+        .back-btn {
+            display: inline-block;
+            margin-bottom: 15px;
+            padding: 10px 18px;
+            background: #444;
+            color: white;
+            border-radius: 6px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+            .back-btn:hover {
+                background: #222;
+            }
+    </style>
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <button onclick="location.href='learner-dashboard.html'">Home</button>
+        <button onclick="location.href='learner-schedule.html'">My Schedule</button>
+        <button onclick="location.href='learner-book.html'">Book Lessons</button>
+        <button onclick="location.href='learner-faq.html'">FAQs</button>
+        <button onclick="location.href='learner-settings.html'">Settings</button>
+    </div>
+
+    <div class="container" style="width: 450px;">
+
+        <h1>Select a Time</h1>
+
+        <p style="font-size: 15px; margin-bottom: 20px;">
+            Please select the available times:
+        </p>
+
+        
+        <form method="get" action="learner-book-summary.html">
+
+           
+            <input type="hidden" name="date" value="">
+
+            <div class="time-grid">
+
+                <!-- AVAILABLE TIMES -->
+                <label class="time-box">
+                    <input type="radio" name="time" value="09:00-11:00" required>
+                    <span>9:00–11:00</span>
+                </label>
+
+                <label class="time-box">
+                    <input type="radio" name="time" value="11:00-13:00">
+                    <span>11:00–13:00</span>
+                </label>
+
+                <label class="time-box">
+                    <input type="radio" name="time" value="12:00-14:00">
+                    <span>12:00–14:00</span>
+                </label>
+
+                <label class="time-box">
+                    <input type="radio" name="time" value="13:00-15:00">
+                    <span>13:00–15:00</span>
+                </label>
+
+                <label class="time-box">
+                    <input type="radio" name="time" value="15:00-17:00">
+                    <span>15:00–17:00</span>
+                </label>
+
+                <label class="time-box">
+                    <input type="radio" name="time" value="17:00-19:00">
+                    <span>17:00–19:00</span>
+                </label>
+
+            </div>
+
+            <!-- Back button-->
+            <a href="learner-book.html" class="back-btn">Back</a>
+
+            <button type="submit">Next: summary selection</button>
+
+        </form>
+
+    </div>
+
+</body>
+</html>

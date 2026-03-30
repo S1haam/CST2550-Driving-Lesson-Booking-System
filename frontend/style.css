@@ -1,0 +1,277 @@
+/* GLOBAL PAGE STYLING */
+body {
+    font-family: Arial, sans-serif;
+    background: #f4f4f4;
+    margin: 0;
+    padding: 0;
+}
+
+/* FORM CONTAINERS (LOGIN, SIGNUP, ETC.) */
+.container {
+    width: 380px;
+    margin: 60px auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 0 12px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+/* HEADINGS */
+h1 {
+    font-size: 22px;
+    margin-bottom: 20px;
+}
+
+/* FORM INPUTS */
+input {
+    width: 90%;
+    padding: 10px;
+    margin: 8px 0;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+}
+
+/* BUTTONS INSIDE .container ONLY */
+.container button {
+    width: 95%;
+    padding: 12px;
+    margin-top: 12px;
+    background: #0078ff;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+    .container button:hover {
+        background: #005fcc;
+    }
+
+/* LINKS */
+.link {
+    margin-top: 12px;
+    display: block;
+    color: #0078ff;
+    text-decoration: none;
+}
+
+/* BACK BUTTON */
+.back-btn {
+    background: #444 !important;
+    width: auto !important;
+    padding: 8px 20px !important;
+    font-size: 14px !important;
+    color: white !important;
+    border-radius: 6px;
+    text-decoration: none;
+    display: inline-block;
+}
+
+    .back-btn:hover {
+        background: #222 !important;
+    }
+
+/* OPTION BUTTONS */
+.option-btn {
+    width: 60%;
+    padding: 15px;
+    margin: 10px 0;
+    font-size: 18px;
+}
+
+/* ROW LAYOUT FOR BACK + NEXT */
+.nav-row {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    margin-top: 20px;
+}
+
+/* DASHBOARD NAVIGATION BAR */
+.nav-bar {
+    background: #1e4f91;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+    .nav-bar button {
+        background: #4fa3ff;
+        color: black;
+        border: none;
+        padding: 10px 18px;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: auto;
+    }
+
+        .nav-bar button:hover {
+            background: #2f8cff;
+        }
+
+/* DASHBOARD CONTENT */
+.dashboard-container {
+    width: 100%;
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* SETTINGS PAGE WRAPPER */
+.settings-wrapper {
+    width: 90%;
+    max-width: 1000px;
+    margin: 40px auto;
+}
+
+.settings-title {
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+/* TWO-COLUMN GRID */
+.settings-grid {
+    display: flex;
+    justify-content: space-between;
+    gap: 25px;
+}
+
+.left-column, .right-column {
+    flex: 1;
+}
+
+/* CARD STYLE */
+.card {
+    background: #f7f9ff;
+    padding: 20px;
+    border-radius: 12px;
+    margin-bottom: 25px;
+    box-shadow: 0 0 8px rgba(0,0,0,0.08);
+    text-align: left;
+}
+
+.blue-card {
+    background: #4fa3ff;
+    color: black;
+}
+
+/* DELETE ACCOUNT */
+.delete-container {
+    text-align: center;
+    margin-top: 30px;
+}
+
+.delete-btn {
+    background: black;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+    .delete-btn:hover {
+        background: #333;
+    }
+
+/* CALENDAR GRID */
+.calendar-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.date-box {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    background: #e8f0ff;
+    border: 1px solid #b8cfff;
+}
+
+    .date-box:hover {
+        background: #c7dcff;
+    }
+
+    .date-box input {
+        display: none;
+    }
+
+        .date-box input:checked + span {
+            background: #4a7dff;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+        }
+
+.date-unavailable {
+    background: #f0f0f0;
+    color: #999;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* TIME GRID */
+.time-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+    margin-bottom: 25px;
+}
+
+.time-box {
+    padding: 15px;
+    border-radius: 8px;
+    text-align: center;
+    font-size: 15px;
+    cursor: pointer;
+    background: #e8f0ff;
+    border: 1px solid #b8cfff;
+}
+
+    .time-box:hover {
+        background: #c7dcff;
+    }
+
+    .time-box input {
+        display: none;
+    }
+
+        .time-box input:checked + span {
+            background: #4a7dff;
+            color: white;
+            padding: 10px 14px;
+            border-radius: 6px;
+        }
+
+.time-unavailable {
+    background: #f0f0f0;
+    color: #999;
+    border: 1px solid #ddd;
+    cursor: not-allowed;
+}
+
+/* SUMMARY BOX */
+.summary-box {
+    background: #e8f0ff;
+    padding: 18px;
+    border-radius: 10px;
+    margin-bottom: 25px;
+    border: 1px solid #b8cfff;
+}
+
+.summary-item {
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+

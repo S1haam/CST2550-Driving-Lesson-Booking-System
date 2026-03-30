@@ -1,0 +1,76 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Learner Settings - SER Driving School</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <button onclick="location.href='learner-dashboard.html'">Home</button>
+        <button onclick="location.href='learner-schedule.html'">My Schedule</button>
+        <button onclick="location.href='learner-book.html'">Book Lessons</button>
+        <button onclick="location.href='learner-faq.html'">FAQs</button>
+        <button onclick="location.href='learner-settings.html'">Settings</button>
+    </div>
+
+    <div class="settings-wrapper">
+
+        <h1 class="settings-title">Settings</h1>
+
+        <div class="settings-grid">
+
+            
+            <div class="left-column">
+
+                <!-- Personal Info -->
+                <div class="card">
+                    <h2>Personal Information</h2>
+                    <p><strong>Name:</strong> John</p>
+                    <p><strong>Email:</strong> john@gmail.com</p>
+                    <p><strong>Phone Number:</strong> 07958294911</p>
+                    <p><strong>Address:</strong> 23 Bromley Rd N17 9AG</p>
+                </div>
+
+                <!-- Provisional License Information -->
+                <div class="card blue-card">
+                    <h3>User License Info</h3>
+                    <p><strong>Issued:</strong> JUN2027</p>
+                    <p><strong>EXP:</strong> AUG2029</p>
+                    <p><strong>Status:</strong> Provisional</p>
+                </div>
+
+            </div>
+
+            
+            <div class="right-column">
+
+                <!-- Notifacation Section-->
+                <div class="card blue-card">
+                    <h3>Notifications</h3>
+
+                    <label><input type="checkbox" checked> Email</label><br>
+                    <label><input type="checkbox"> SMS</label><br>
+                    <label><input type="checkbox" checked> Booking Confirmations</label>
+                </div>
+
+                <!-- Account Settings  Section -->
+                <div class="card blue-card">
+                    <h3>Account Settings</h3>
+                    <button class="small-btn" onclick="location.href='change-password.html'">Change Password</button>
+                </div>
+
+            </div>
+
+        </div>
+
+        <!-- Delete Account Section -->
+        <div class="delete-container">
+            <<button class="delete-btn" onclick="location.href='delete-account.html'">DELETE ACCOUNT</button>
+        </div>
+
+    </div>
+
+</body>
+</html>

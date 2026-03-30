@@ -1,0 +1,56 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <title>Booking Confirmed - SER Driving School</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <!-- Navigation Bar -->
+    <div class="nav-bar">
+        <button onclick="location.href='learner-dashboard.html'">Home</button>
+        <button onclick="location.href='learner-schedule.html'">My Schedule</button>
+        <button onclick="location.href='learner-book.html'">Book Lessons</button>
+        <button onclick="location.href='learner-faq.html'">FAQs</button>
+        <button onclick="location.href='learner-settings.html'">Settings</button>
+    </div>
+
+    <div class="container">
+        <!-- Shows the details of the booking here -->
+
+        <h1>Your booking has been confirmed!</h1>
+
+
+        <div class="summary-box">
+
+            <div class="summary-item">
+                <strong>Booking ID:</strong> 12340586
+            </div>
+
+            <div class="summary-item">
+                <strong>Date:</strong>
+            </div>
+
+            <div class="summary-item">
+                <strong>Time:</strong>
+            </div>
+
+            <div class="summary-item">
+                <strong>Fee:</strong> £67
+            </div>
+
+        </div>
+
+        <form method="get" action="learner-dashboard.html">
+            <button type="submit">Return to home</button>
+        </form>
+
+        <form method="get" action="learner-view-booking.html">
+            <!-- Connect the view booking page here using the link to it -->
+            <button type="submit">View booking</button>
+        </form>
+
+    </div>
+
+</body>
+</html>
