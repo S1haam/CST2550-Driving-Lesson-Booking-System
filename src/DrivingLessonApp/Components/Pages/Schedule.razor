@@ -7,7 +7,7 @@
 
 <h3>My Schedule</h3>
 
-<!-- nav bar -->
+<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
@@ -18,23 +18,21 @@
 
 <div class="card next-card">
 
-    <!-- top section -->
+    <!-- tabs and search -->
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
 
-        <!-- tabs -->
         <div class="tabs">
             <div class="tab @(showNext ? "active" : "")"
-                 @onclick='() => showNext = true'>
+                 @onclick='() => { showNext = true; searchResult = null; }'>
                 Next Lessons
             </div>
 
             <div class="tab @(!showNext ? "active" : "")"
-                 @onclick='() => showNext = false'>
+                 @onclick='() => { showNext = false; searchResult = null; }'>
                 Previous Lessons
             </div>
         </div>
 
-        <!-- search -->
         <div class="search-container">
             <input @bind="searchId" placeholder="Search by ID" />
             <button @onclick="SearchBooking">Search</button>
@@ -42,16 +40,17 @@
 
     </div>
 
-    <!-- results -->
     <div class="lesson-list">
 
+        @* shows search result *@
         @if (searchResult != null)
         {
             <div class="lesson-item">
                 <span>@searchResult.Date @searchResult.Time</span>
-                <button @onclick='() => Nav.NavigateTo("/lesson-details")'>VIEW</button>
+                <button @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>VIEW</button>
             </div>
         }
+        @* shows next lessons *@
         else if (showNext)
         {
             @foreach (var lesson in nextLessons)
@@ -59,20 +58,21 @@
                 <div class="lesson-item">
                     <span>@lesson.Date @lesson.Time</span>
                     <div>
-                        <button>VIEW</button>
+                        <button @onclick='() => Nav.NavigateTo("/lesson-details?type=next")'>VIEW</button>
                         <button>RESCHEDULE</button>
                         <button>CANCEL</button>
                     </div>
                 </div>
             }
         }
+        @* shows previous lessons *@
         else
         {
             @foreach (var lesson in previousLessons)
             {
                 <div class="lesson-item">
                     <span>@lesson.Date @lesson.Time</span>
-                    <button @onclick='() => Nav.NavigateTo("/lesson-details")'>VIEW</button>
+                    <button @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>VIEW</button>
                 </div>
             }
         }
@@ -81,11 +81,17 @@
 
 </div>
 
-                        @code {
+@code {
+    // controls active tab
     bool showNext = true;
+
+    // stores search input
     string searchId;
+
+    // stores found lesson
     Lesson searchResult;
 
+    // sets tab from url
     protected override void OnInitialized()
     {
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
@@ -96,17 +102,20 @@
         }
     }
 
+    // list of next lessons
     List<Lesson> nextLessons = new()
     {
         new Lesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00" },
         new Lesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00" }
     };
 
+    // list of previous lessons
     List<Lesson> previousLessons = new()
     {
         new Lesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00" }
     };
 
+    // finds lesson by id
     void SearchBooking()
     {
         searchResult = null;
@@ -130,6 +139,7 @@
         }
     }
 
+    // lesson model
     class Lesson
     {
         public int Id { get; set; }

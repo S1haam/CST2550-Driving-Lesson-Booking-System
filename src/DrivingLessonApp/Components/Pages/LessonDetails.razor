@@ -1,11 +1,13 @@
 @page "/lesson-details"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@using Microsoft.AspNetCore.WebUtilities
 
 <div class="brand-title">SER Driving School</div>
 
 <h3>Lesson Details</h3>
 
+<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
@@ -17,7 +19,8 @@
 <!-- lesson info -->
 <div class="outer-card secondary">
 
-    <div class="section-label">Previous Lesson</div>
+    <!-- shows lesson type -->
+    <div class="section-label">@lessonTypeText</div>
 
     <div class="inner-card">
         <div class="info-row">
@@ -46,7 +49,7 @@
     </div>
 </div>
 
-<!-- instructor notes -->
+<!-- notes section -->
 <div class="notes-card">
 
     <div class="notes-title">Instructor Notes</div>
@@ -56,3 +59,26 @@
     </div>
 
 </div>
+
+@code {
+    // stores lesson type text
+    string lessonTypeText = "Previous Lesson";
+
+    // sets lesson type from url
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("type", out var type))
+        {
+            if (type == "next")
+            {
+                lessonTypeText = "Next Lesson";
+            }
+            else
+            {
+                lessonTypeText = "Previous Lesson";
+            }
+        }
+    }
+}
