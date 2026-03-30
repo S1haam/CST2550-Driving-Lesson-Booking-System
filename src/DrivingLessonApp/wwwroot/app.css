@@ -1,0 +1,239 @@
+/* base */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #eef2f7;
+}
+
+/* container */
+.main-content {
+    max-width: 1100px;
+    margin: auto;
+    padding: 20px;
+}
+
+/* branding */
+.brand-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d4ea2;
+}
+
+/* headings */
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* nav bar */
+.nav-bar {
+    background: linear-gradient(135deg, #4a7bd0, #2d4ea2);
+    padding: 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    margin-bottom: 25px;
+}
+
+    .nav-bar button {
+        background: #6fa3ff;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        .nav-bar button:hover {
+            background: #1f3f91;
+        }
+
+/* schedule page (leave as is) */
+.lesson-item {
+    background: rgba(255,255,255,0.95);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* ============================= */
+/* 🔥 HOME + LESSON DETAILS FIX */
+/* ============================= */
+
+/* outer card */
+.outer-card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+
+    /* previous */
+    .outer-card.secondary {
+        background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    }
+
+/* section title */
+.section-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* inner container */
+.inner-card {
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+/* 🔥 FIXED ROW */
+.info-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+/* 🔥 FIXED BOXES */
+.info-box {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+    /* 🔥 LABEL STRIP */
+    .info-box span {
+        display: inline-block;
+        background: #d9d9d9;
+        color: black;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+    }
+
+    /* value */
+    .info-box strong {
+        display: block;
+        font-size: 14px;
+    }
+
+/* 🔥 BUTTON FIX */
+.action-btn {
+    flex-shrink: 0;
+    background: #d9d9d9;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* notes */
+.notes-card {
+    background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.notes-title {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.notes-content {
+    background: #e6e6e6;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+/* ============================= */
+/* schedule page styling */
+/* ============================= */
+
+/* main schedule card */
+.card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+    /* top row spacing */
+    .card > div:first-child {
+        margin-bottom: 10px;
+    }
+
+/* tabs */
+.tabs {
+    display: flex;
+    gap: 10px;
+}
+
+/* tab button */
+.tab {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #dcdcdc;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+    /* active tab */
+    .tab.active {
+        background: #2d4ea2;
+        color: white;
+    }
+
+/* search bar */
+.search-container {
+    display: flex;
+    gap: 8px;
+    align-items: center;
+}
+
+    .search-container input {
+        padding: 8px 12px;
+        border-radius: 16px;
+        border: none;
+        outline: none;
+        width: 180px;
+        background: white;
+    }
+
+    /* search button */
+    .search-container button {
+        padding: 8px 14px;
+        border-radius: 16px;
+        border: none;
+        background: #2d4ea2;
+        color: white;
+        cursor: pointer;
+    }
+
+        .search-container button:hover {
+            background: #1f3f91;
+        }
+
+/* lesson list container */
+.lesson-list {
+    margin-top: 10px;
+}
+
+/* improve spacing inside lesson rows */
+.lesson-item div {
+    display: flex;
+    gap: 8px;
+}

@@ -1,0 +1,149 @@
+@page "/schedule"
+@using Microsoft.AspNetCore.WebUtilities
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>My Schedule</h3>
+
+<!-- navigation bar -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button>Book lessons</button>
+    <button>FAQs</button>
+    <button>Settings</button>
+</div>
+
+<div class="card next-card">
+
+    <!-- tabs and search -->
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+
+        <div class="tabs">
+            <div class="tab @(showNext ? "active" : "")"
+                 @onclick='() => { showNext = true; searchResult = null; }'>
+                Next Lessons
+            </div>
+
+            <div class="tab @(!showNext ? "active" : "")"
+                 @onclick='() => { showNext = false; searchResult = null; }'>
+                Previous Lessons
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input @bind="searchId" placeholder="Search by ID" />
+            <button @onclick="SearchBooking">Search</button>
+        </div>
+
+    </div>
+
+    <div class="lesson-list">
+
+        @* shows search result *@
+        @if (searchResult != null)
+        {
+            <div class="lesson-item">
+                <span>@searchResult.Date @searchResult.Time</span>
+                <button @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>VIEW</button>
+            </div>
+        }
+        @* shows next lessons *@
+        else if (showNext)
+        {
+            @foreach (var lesson in nextLessons)
+            {
+                <div class="lesson-item">
+                    <span>@lesson.Date @lesson.Time</span>
+                    <div>
+                        <button @onclick='() => Nav.NavigateTo("/lesson-details?type=next")'>VIEW</button>
+                        <button>RESCHEDULE</button>
+                        <button>CANCEL</button>
+                    </div>
+                </div>
+            }
+        }
+        @* shows previous lessons *@
+        else
+        {
+            @foreach (var lesson in previousLessons)
+            {
+                <div class="lesson-item">
+                    <span>@lesson.Date @lesson.Time</span>
+                    <button @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>VIEW</button>
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+    // controls active tab
+    bool showNext = true;
+
+    // stores search input
+    string searchId;
+
+    // stores found lesson
+    Lesson searchResult;
+
+    // sets tab from url
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+
+        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("tab", out var tab))
+        {
+            showNext = tab == "next";
+        }
+    }
+
+    // list of next lessons
+    List<Lesson> nextLessons = new()
+    {
+        new Lesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00" },
+        new Lesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00" }
+    };
+
+    // list of previous lessons
+    List<Lesson> previousLessons = new()
+    {
+        new Lesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00" }
+    };
+
+    // finds lesson by id
+    void SearchBooking()
+    {
+        searchResult = null;
+
+        foreach (var lesson in nextLessons)
+        {
+            if (lesson.Id.ToString() == searchId)
+            {
+                searchResult = lesson;
+                return;
+            }
+        }
+
+        foreach (var lesson in previousLessons)
+        {
+            if (lesson.Id.ToString() == searchId)
+            {
+                searchResult = lesson;
+                return;
+            }
+        }
+    }
+
+    // lesson model
+    class Lesson
+    {
+        public int Id { get; set; }
+        public string Date { get; set; }
+        public string Time { get; set; }
+    }
+}
