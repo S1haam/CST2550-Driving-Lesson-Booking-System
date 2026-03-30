@@ -14,28 +14,76 @@
     <button>Settings</button>
 </div>
 
-<div class="card next-card">
-    <div class="section-title">Next Lesson</div>
+<!-- next lesson -->
+<div class="outer-card">
 
-    <div class="lesson-pill-container">
-        <div class="lesson-pill">ID<br />12340586</div>
-        <div class="lesson-pill">Driver<br />David</div>
-        <div class="lesson-pill">Date<br />15/08/2025</div>
-        <div class="lesson-pill">Time<br />12:00 - 14:00</div>
+    <div class="section-label">Next Lesson</div>
 
-        <button @onclick='() => Nav.NavigateTo("/schedule?tab=next")'>View</button>
+    <div class="inner-card">
+        <div class="info-row">
+
+            <div class="info-box">
+                <span>ID</span>
+                <strong>12340586</strong>
+            </div>
+
+            <div class="info-box">
+                <span>Driver</span>
+                <strong>David</strong>
+            </div>
+
+            <div class="info-box">
+                <span>Date</span>
+                <strong>15/08/2025</strong>
+            </div>
+
+            <div class="info-box">
+                <span>Time</span>
+                <strong>12:00-14:00</strong>
+            </div>
+
+            <button class="action-btn"
+                    @onclick='() => Nav.NavigateTo("/schedule?tab=next")'>
+                View All
+            </button>
+
+        </div>
     </div>
 </div>
 
-<div class="card previous-card">
-    <div class="section-title">Previous Lesson</div>
+<!-- previous lesson -->
+<div class="outer-card secondary">
 
-    <div class="lesson-pill-container">
-        <div class="lesson-pill">ID<br />12342386</div>
-        <div class="lesson-pill">Driver<br />David</div>
-        <div class="lesson-pill">Date<br />02/08/2025</div>
-        <div class="lesson-pill">Time<br />13:00 - 15:00</div>
+    <div class="section-label">Previous Lesson</div>
 
-        <button @onclick='() => Nav.NavigateTo("/lesson-details")'>View</button>
+    <div class="inner-card">
+        <div class="info-row">
+
+            <div class="info-box">
+                <span>ID</span>
+                <strong>12342386</strong>
+            </div>
+
+            <div class="info-box">
+                <span>Driver</span>
+                <strong>David</strong>
+            </div>
+
+            <div class="info-box">
+                <span>Date</span>
+                <strong>02/08/2025</strong>
+            </div>
+
+            <div class="info-box">
+                <span>Time</span>
+                <strong>13:00-15:00</strong>
+            </div>
+
+            <button class="action-btn"
+                    @onclick='() => Nav.NavigateTo("/schedule?tab=previous")'>
+                View All
+            </button>
+
+        </div>
     </div>
 </div>
