@@ -9,22 +9,20 @@
     <p class="start-sub">Are you a...</p>
 
     <!-- learner -->
-    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/signup-learner")'>
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/login?role=learner")'>
         Learner
     </button>
 
     <!-- instructor -->
-    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/signup-instructor")'>
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/login?role=instructor")'>
         Instructor
     </button>
 
     <!-- admin -->
-    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/signup-admin")'>
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/login?role=admin")'>
         Admin
     </button>
 
-<button class="start-secondary-btn" @onclick='() => Nav.NavigateTo("/login")'>
-    Next
-</button>
+   
 
 </div>

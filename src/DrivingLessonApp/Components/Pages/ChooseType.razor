@@ -1,0 +1,41 @@
+@page "/choose-type"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="booking-card choose-card">
+
+    <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+    <h3>Would you like to learn:</h3>
+
+    <!-- options -->
+    <button class="choose-btn" @onclick='() => SelectType("Automatic")'>
+        Automatic
+    </button>
+
+    <button class="choose-btn" @onclick='() => SelectType("Manual")'>
+        Manual
+    </button>
+
+    <!-- navigation -->
+    <div class="choose-nav">
+
+        <button class="choose-back" @onclick='() => Nav.NavigateTo("/signup-learner")'>
+            Back
+        </button>
+
+    </div>
+
+</div>
+
+@code {
+    string selectedType;
+
+    // stores type and moves forward
+    void SelectType(string type)
+    {
+        selectedType = type;
+
+        // move to instructor page
+        Nav.NavigateTo("/choose-instructor");
+    }
+}
