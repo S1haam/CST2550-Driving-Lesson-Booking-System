@@ -1,33 +1,52 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Admin Sign Up</title>
-    <link rel="stylesheet" href="style.css">
-</head>
-<body>
+@page "/signup-admin"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
 
-    <div class="container">
-        <h1>WELCOME TO SER DRIVING SCHOOL</h1>
-        <h3>Sign Up: Admin</h3>
+<div class="booking-card">
 
-        <form method="post" action="http://localhost:5000/Admin/Register">
+    <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+    <h3>Sign Up: Admin</h3>
 
-            <!-- Admin email -->
-            <input type="email" name="AdminEmail" placeholder="Admin Email" required>
+    <!-- email -->
+    <input type="email"
+           placeholder="Admin Email"
+           @bind="email" />
 
-            <!-- Admin password -->
-            <input type="password" name="AdminPassword" placeholder="Password" required>
+    <!-- password -->
+    <input type="password"
+           placeholder="Password"
+           @bind="password" />
 
-            <!-- Confirm password -->
-            <input type="password" name="ConfirmAdminPassword" placeholder="Confirm Password" required>
+    <!-- confirm password -->
+    <input type="password"
+           placeholder="Confirm Password"
+           @bind="confirmPassword" />
 
-           
+    <!-- sign up -->
+    <button class="booking-btn"
+            @onclick="RegisterAdmin">
+        Sign Up
+    </button>
 
-            <button type="submit">Sign Up</button>
-        </form>
-        <!-- Button links to the start page -->
-        <button class="back-btn" onclick="location.href='start.html'">Back</button>
-    </div>
+    <!-- back -->
+    <button class="booking-back"
+            @onclick='() => Nav.NavigateTo("/login?role=admin")'>
+        Back
+    </button>
 
-</body>
-</html>
+</div>
+
+@code {
+    string? email;
+    string? password;
+    string? confirmPassword;
+
+    // handles admin signup
+    void RegisterAdmin()
+    {
+        if (password != confirmPassword)
+            return;
+
+        Nav.NavigateTo("/homeAdmin");
+    }
+}
