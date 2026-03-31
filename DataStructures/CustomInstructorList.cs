@@ -27,7 +27,7 @@ namespace DrivingLessonBookingSystem.DataStructures
             InstructorNode current = head;
             while (current != null)
             {
-                if (current.Data.InstructorID == id) return current.Data;
+                if (current.Data.InstructorId == id) return current.Data;
                 current = current.Next;
             }
             return null;

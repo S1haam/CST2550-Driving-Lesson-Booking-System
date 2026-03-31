@@ -4,9 +4,10 @@ namespace DrivingLessonBookingSystem.DataStructures
 {
     public class LessonNode
     {
-        public Lesson Data { get; set; }
+        public Booking Data { get; set; }
         public LessonNode Next { get; set; }
-        public LessonNode(Lesson data)
+
+        public LessonNode(Booking data)
         {
             Data = data;
             Next = null;

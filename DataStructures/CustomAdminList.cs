@@ -1,5 +1,4 @@
 ﻿using DrivingLessonBookingSystem.Models;
-using System.Reflection.Metadata.Ecma335;
 
 namespace DrivingLessonBookingSystem.DataStructures
 {
@@ -23,28 +22,6 @@ namespace DrivingLessonBookingSystem.DataStructures
             current.Next = newNode;
         }
 
-        public Admin FindAdmin(int id)
-        {
-            AdminNode current = head;
-            while (current != null)
-            {
-                if (current.Data.AdminId == id) return current.Data;
-                current = current.Next;
-            }
-            return null;
-        }
-
-        public Admin FindAdminByEmail(string email)
-        {
-            AdminNode current = head;
-            while (current != null)
-            {
-                if (current.Data.AdminEmail == email) return current.Data;
-                current = current.Next;
-            }
-            return null;
-        }
-
         public bool RemoveAdmin(int id)
         {
             if (head == null) return false;
@@ -60,7 +37,7 @@ namespace DrivingLessonBookingSystem.DataStructures
             {
                 if (current.Next.Data.AdminId == id)
                 {
-                    currentNext = current.Next.Next;
+                    current.Next = current.Next.Next; 
                     return true;
                 }
                 current = current.Next;
