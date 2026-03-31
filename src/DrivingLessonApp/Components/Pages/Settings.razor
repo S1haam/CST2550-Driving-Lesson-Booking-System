@@ -1,0 +1,76 @@
+@page "/settings"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Settings</h3>
+
+<!-- nav bar -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="settings-wrapper">
+
+    <h1 class="settings-title">Settings</h1>
+
+    <div class="settings-grid">
+
+        <!-- LEFT -->
+        <div class="left-column">
+
+            <!-- personal info -->
+            <div class="settings-card">
+                <h2>Personal Information</h2>
+                <p><strong>Name:</strong> John</p>
+                <p><strong>Email:</strong> john@gmail.com</p>
+                <p><strong>Phone Number:</strong> 07958294911</p>
+                <p><strong>Address:</strong> 23 Bromley Rd</p>
+            </div>
+
+            <!-- license -->
+            <div class="settings-card blue">
+                <h3>User License Info</h3>
+                <p><strong>Issued:</strong> JUN2027</p>
+                <p><strong>EXP:</strong> AUG2029</p>
+                <p><strong>Status:</strong> Provisional</p>
+            </div>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="right-column">
+
+            <!-- notifications -->
+            <div class="settings-card blue">
+                <h3>Notifications</h3>
+
+                <label><input type="checkbox" checked /> Email</label><br />
+                <label><input type="checkbox" /> SMS</label><br />
+                <label><input type="checkbox" checked /> Booking Confirmations</label>
+            </div>
+
+            <!-- account -->
+            <div class="settings-card blue">
+                <h3>Account Settings</h3>
+
+                <button class="small-btn" @onclick='() => Nav.NavigateTo("/change-password")'>
+                    Change Password
+                </button>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- delete -->
+    <div class="delete-container">
+        <button class="delete-btn" @onclick='() => Nav.NavigateTo("/delete-account")'>
+            DELETE ACCOUNT
+        </button>
+    </div>
+
+</div>

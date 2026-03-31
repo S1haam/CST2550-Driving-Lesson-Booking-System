@@ -1,0 +1,84 @@
+@page "/signup-instructor"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="booking-card">
+
+    <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+    <h3>Sign Up: Instructor</h3>
+
+    <!-- instructor id -->
+    <input placeholder="Instructor ID"
+           @bind="instructorId" />
+
+    <!-- name -->
+    <input placeholder="Full Name"
+           @bind="name" />
+
+    <!-- email -->
+    <input type="email"
+           placeholder="Email Address"
+           @bind="email" />
+
+    <!-- password -->
+    <input type="password"
+           placeholder="Password"
+           @bind="password" />
+
+    <!-- confirm password -->
+    <input type="password"
+           placeholder="Confirm Password"
+           @bind="confirmPassword" />
+
+    <!-- car type -->
+    <select @bind="carType" class="booking-select">
+        <option value="">Select Car Type</option>
+        <option value="Manual">Manual</option>
+        <option value="Automatic">Automatic</option>
+    </select>
+
+    <!-- sign up -->
+    <button class="booking-btn"
+            @onclick="RegisterInstructor">
+        Sign Up
+    </button>
+
+    <!-- back -->
+    <button class="booking-back"
+            @onclick='() => Nav.NavigateTo("/login?role=instructor")'>
+        Back
+    </button>
+
+</div>
+
+@code {
+    string? instructorId;
+    string? name;
+    string? email;
+    string? password;
+    string? confirmPassword;
+    string? carType;
+
+    // handles instructor signup
+    void RegisterInstructor()
+    {
+        // basic validation
+        if (string.IsNullOrWhiteSpace(instructorId) ||
+            string.IsNullOrWhiteSpace(name) ||
+            string.IsNullOrWhiteSpace(email) ||
+            string.IsNullOrWhiteSpace(password) ||
+            string.IsNullOrWhiteSpace(confirmPassword) ||
+            string.IsNullOrWhiteSpace(carType))
+        {
+            return;
+        }
+
+        if (password != confirmPassword)
+        {
+            return;
+        }
+
+        // simulate success → go to home
+        Nav.NavigateTo("/instructorHome");
+    }
+}

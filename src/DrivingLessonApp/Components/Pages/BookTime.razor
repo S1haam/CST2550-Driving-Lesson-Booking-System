@@ -6,11 +6,11 @@
 
 <!-- navigation bar -->
 <div class="nav-bar">
-    <button @onclick='() => Nav.NavigateTo("/")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
     <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
     <button>FAQs</button>
-    <button>Settings</button>
+   <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
 </div>
 
 <div class="booking-card">
