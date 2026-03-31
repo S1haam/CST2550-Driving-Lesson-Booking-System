@@ -1,0 +1,84 @@
+@page "/book-time"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Select Time</h3>
+
+<!-- navigation bar -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+      <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+   <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Select a Time</h1>
+    <p>Please select the available times:</p>
+
+    <div class="booking-grid">
+
+        <label class="booking-box">
+            <input type="radio" name="time" @onchange='() => SelectTime("09:00-11:00")' />
+            <span>9:00–11:00</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="time" @onchange='() => SelectTime("11:00-13:00")' />
+            <span>11:00–13:00</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="time" @onchange='() => SelectTime("12:00-14:00")' />
+            <span>12:00–14:00</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="time" @onchange='() => SelectTime("13:00-15:00")' />
+            <span>13:00–15:00</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="time" @onchange='() => SelectTime("15:00-17:00")' />
+            <span>15:00–17:00</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="time" @onchange='() => SelectTime("17:00-19:00")' />
+            <span>17:00–19:00</span>
+        </label>
+
+    </div>
+
+    <!-- goes back to date selection -->
+    <button class="booking-back" @onclick='() => Nav.NavigateTo("/book")'>
+        Back
+    </button>
+
+    <!-- goes to summary page -->
+    <button class="booking-btn" @onclick="GoToSummary">
+        Next: summary selection
+    </button>
+
+</div>
+
+@code {
+    string selectedTime;
+
+    // stores selected time
+    void SelectTime(string time)
+    {
+        selectedTime = time;
+    }
+
+    // navigates to summary page
+    void GoToSummary()
+    {
+        if (!string.IsNullOrEmpty(selectedTime))
+        {
+            Nav.NavigateTo("/book-summary");
+        }
+    }
+}

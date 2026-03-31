@@ -51,7 +51,7 @@ h3 {
             background: #1f3f91;
         }
 
-/* schedule page (leave as is) */
+/* schedule page  */
 .lesson-item {
     background: rgba(255,255,255,0.95);
     padding: 12px 14px;
@@ -62,9 +62,7 @@ h3 {
     align-items: center;
 }
 
-/* ============================= */
-/* 🔥 HOME + LESSON DETAILS FIX */
-/* ============================= */
+
 
 /* outer card */
 .outer-card {
@@ -93,14 +91,14 @@ h3 {
     border-radius: 12px;
 }
 
-/* 🔥 FIXED ROW */
+/*  FIXED ROW */
 .info-row {
     display: flex;
     gap: 12px;
     align-items: center;
 }
 
-/* 🔥 FIXED BOXES */
+/*  FIXED BOXES */
 .info-box {
     flex: 1;
     min-width: 0;
@@ -111,7 +109,7 @@ h3 {
     color: white;
 }
 
-    /* 🔥 LABEL STRIP */
+    /*  LABEL STRIP */
     .info-box span {
         display: inline-block;
         background: #d9d9d9;
@@ -128,7 +126,7 @@ h3 {
         font-size: 14px;
     }
 
-/* 🔥 BUTTON FIX */
+/*  BUTTON FIX */
 .action-btn {
     flex-shrink: 0;
     background: #d9d9d9;
@@ -157,10 +155,12 @@ h3 {
     border-radius: 8px;
 }
 
-/* ============================= */
-/* schedule page styling */
-/* ============================= */
+/* make notes blue for next lesson */
+.notes-blue {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+}
 
+/* schedule page styling */
 /* main schedule card */
 .card {
     background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
@@ -236,4 +236,498 @@ h3 {
 .lesson-item div {
     display: flex;
     gap: 8px;
+}
+
+/* booking flow styling */
+
+/* main card */
+.booking-card {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #f7f7f7;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+    /* headings */
+    .booking-card h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .booking-card p {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+/* grid layout */
+.booking-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+/* boxes */
+.booking-box {
+    padding: 14px;
+    border-radius: 10px;
+    background: #dfe6f3;
+    border: 1px solid #b8cfff;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+}
+
+    /* hover */
+    .booking-box:hover {
+        background: #cddcff;
+    }
+
+    /* hide radio */
+    .booking-box input {
+        display: none;
+    }
+
+        /* selected */
+        .booking-box input:checked + span {
+            display: inline-block;
+            background: #4a7dff;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+/* unavailable */
+.booking-unavailable {
+    background: #e5e5e5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* main button */
+.booking-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    /* button hover */
+    .booking-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* back button */
+.booking-back {
+    margin-top: 15px;
+    padding: 10px 18px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+    /* spacing */
+    .booking-back + .booking-btn {
+        margin-top: 10px;
+    }
+
+/* summary box */
+.summary-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* each row */
+.summary-item {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* start page styling */
+
+/* center card vertically */
+.start-card {
+    margin-top: 80px;
+}
+
+/* title */
+.start-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* subtitle */
+.start-sub {
+    font-size: 14px;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+
+
+ 
+
+/* login inputs */
+.booking-card input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* login link container */
+.link-text {
+    margin-top: 14px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* clickable part */
+.link-action {
+    color: #1f6ed4;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+    /* hover effect */
+    .link-action:hover {
+        text-decoration: underline;
+        color: #174ea6;
+    }
+
+/* signup card spacing */
+.signup-card {
+    padding: 35px;
+}
+
+/* signup inputs */
+.signup-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    border: 1px solid #d0d5dd;
+    font-size: 14px;
+    background: #f9fafb;
+    outline: none;
+}
+
+    /* focus */
+    .signup-input:focus {
+        border: 1px solid #4a7bd0;
+        background: white;
+    }
+
+/* signup button */
+.signup-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+    /* hover */
+    .signup-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* back button */
+.signup-back {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* choose type card */
+.choose-card {
+    padding: 35px;
+}
+
+/* buttons */
+.choose-btn {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    /* hover */
+    .choose-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* nav container */
+.choose-nav {
+    margin-top: 10px;
+}
+
+/* back */
+.choose-back {
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* instructor card */
+.instructor-card {
+    padding: 35px;
+}
+
+/* instructor buttons */
+.instructor-btn {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    /* hover */
+    .instructor-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* nav row */
+.instructor-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+/* back button */
+.instructor-back {
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* next button */
+.instructor-next {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    cursor: pointer;
+}
+/* selected instructor */
+.instructor-btn.selected {
+    background: linear-gradient(135deg, #174ea6, #0f3c82);
+}
+
+/* disabled next button */
+.instructor-next:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* settings layout */
+.settings-wrapper {
+    max-width: 900px;
+    margin: auto;
+}
+
+/* title */
+.settings-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* grid */
+.settings-grid {
+    display: flex;
+    gap: 20px;
+}
+
+/* columns */
+.left-column,
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* cards */
+.settings-card {
+    background: #f2f2f2;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+    /* blue cards */
+    .settings-card.blue {
+        background: linear-gradient(135deg, #5b9df0, #4a7bd0);
+        color: white;
+    }
+
+/* small button */
+.small-btn {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+/* delete section */
+.delete-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+/* delete button */
+.delete-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #c0392b;
+    color: white;
+    cursor: pointer;
+}
+
+    /* hover */
+    .delete-btn:hover {
+        background: #a93226;
+    }
+
+    /* inactive state */
+    .delete-btn.inactive {
+        opacity: 0.6;
+    }
+
+/* warning text */
+.delete-warning {
+    color: #444;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* full width */
+.delete-btn.full {
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* success card */
+.success-card {
+    text-align: center;
+}
+
+/* success message */
+.success-text {
+    color: #444;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+
+/* dropdown styling */
+.booking-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+
+
+/* main faq card */
+.faq-card {
+    text-align: left;
+}
+
+/* container */
+.faq-box {
+    margin-top: 15px;
+}
+
+/* each faq item */
+.faq-item {
+    background: #eef3fb;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid #d6e0f5;
+}
+
+ /* hover effect */
+    .faq-item:hover {
+        background: #e0eaff;
+        transform: translateY(-1px);
+    }
+
+/* header row (question + icon) */
+.faq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2d4ea2;
+}
+
+    /* plus/minus icon */
+    .faq-header span:last-child {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+/* answer text */
+
+.faq-answer {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* smooth spacing */
+.faq-item + .faq-item {
+    margin-top: 10px;
 }

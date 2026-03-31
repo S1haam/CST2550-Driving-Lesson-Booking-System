@@ -1,0 +1,66 @@
+@page "/delete-account"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Delete Account</h3>
+
+<!-- nav bar -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Delete Account</h1>
+
+    <p class="delete-warning">
+        Deleting your account is permanent. All your data, bookings, and personal information will be removed.
+        This action cannot be undone.
+    </p>
+
+    <!-- password -->
+    <input type="password"
+           placeholder="Enter your password to confirm"
+           @bind="password" />
+
+    <!-- confirm text -->
+    <input placeholder="Type DELETE to confirm"
+           @bind="confirmText" />
+
+    <!-- delete button -->
+    <button class="delete-btn full @(CanDelete ? "" : "inactive")"
+            @onclick="HandleDelete">
+        Delete My Account
+    </button>
+
+    <!-- back -->
+    <button class="booking-back"
+            @onclick='() => Nav.NavigateTo("/settings")'>
+        Back
+    </button>
+
+</div>
+
+@code {
+    string? password;
+    string? confirmText;
+
+    // checks if delete conditions are met
+    bool CanDelete =>
+        confirmText == "DELETE" &&
+        !string.IsNullOrWhiteSpace(password);
+
+    // handles delete action
+    void HandleDelete()
+    {
+        if (!CanDelete)
+            return;
+
+        // go to success page (FIXED)
+        Nav.NavigateTo("/delete-success");
+    }
+}

@@ -1,0 +1,52 @@
+@page "/signup-admin"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="booking-card">
+
+    <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+    <h3>Sign Up: Admin</h3>
+
+    <!-- email -->
+    <input type="email"
+           placeholder="Admin Email"
+           @bind="email" />
+
+    <!-- password -->
+    <input type="password"
+           placeholder="Password"
+           @bind="password" />
+
+    <!-- confirm password -->
+    <input type="password"
+           placeholder="Confirm Password"
+           @bind="confirmPassword" />
+
+    <!-- sign up -->
+    <button class="booking-btn"
+            @onclick="RegisterAdmin">
+        Sign Up
+    </button>
+
+    <!-- back -->
+    <button class="booking-back"
+            @onclick='() => Nav.NavigateTo("/login?role=admin")'>
+        Back
+    </button>
+
+</div>
+
+@code {
+    string? email;
+    string? password;
+    string? confirmPassword;
+
+    // handles admin signup
+    void RegisterAdmin()
+    {
+        if (password != confirmPassword)
+            return;
+
+        Nav.NavigateTo("/homeAdmin");
+    }
+}

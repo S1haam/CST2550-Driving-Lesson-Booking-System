@@ -1,0 +1,77 @@
+@page "/book"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Book Lessons</h3>
+
+<!-- navigation bar -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Select a Date</h1>
+    <p>Please select the available dates:</p>
+
+    <div class="booking-grid">
+
+        <label class="booking-box">
+            <input type="radio" name="date" @onchange='() => SelectDate("15/08/2025")' />
+            <span>15/08/2025</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="date" @onchange='() => SelectDate("17/08/2025")' />
+            <span>17/08/2025</span>
+        </label>
+
+        <label class="booking-box">
+            <input type="radio" name="date" @onchange='() => SelectDate("19/08/2025")' />
+            <span>19/08/2025</span>
+        </label>
+
+        <div class="booking-box booking-unavailable">20/08/2025</div>
+
+        <label class="booking-box">
+            <input type="radio" name="date" @onchange='() => SelectDate("21/08/2025")' />
+            <span>21/08/2025</span>
+        </label>
+
+        <div class="booking-box booking-unavailable">22/08/2025</div>
+
+        <label class="booking-box">
+            <input type="radio" name="date" @onchange='() => SelectDate("27/08/2025")' />
+            <span>27/08/2025</span>
+        </label>
+
+    </div>
+
+    <button class="booking-btn" @onclick="GoToTimeSelection">
+        Next: time selection
+    </button>
+
+</div>
+
+@code {
+    string selectedDate;
+
+    // stores selected date
+    void SelectDate(string date)
+    {
+        selectedDate = date;
+    }
+
+    // navigates to next step
+    void GoToTimeSelection()
+    {
+        if (!string.IsNullOrEmpty(selectedDate))
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}");
+        }
+    }
+}

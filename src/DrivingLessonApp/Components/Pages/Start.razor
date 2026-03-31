@@ -1,0 +1,28 @@
+@page "/"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="booking-card start-card">
+
+    <h1 class="start-title">WELCOME TO SER DRIVING SCHOOL</h1>
+
+    <p class="start-sub">Are you a...</p>
+
+    <!-- learner -->
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/login?role=learner")'>
+        Learner
+    </button>
+
+    <!-- instructor -->
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/login?role=instructor")'>
+        Instructor
+    </button>
+
+    <!-- admin -->
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/login?role=admin")'>
+        Admin
+    </button>
+
+   
+
+</div>
