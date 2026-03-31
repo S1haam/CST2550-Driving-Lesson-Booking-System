@@ -52,11 +52,13 @@
 
     </div>
 
+    <!-- goes back to date selection -->
     <button class="booking-back" @onclick='() => Nav.NavigateTo("/book")'>
         Back
     </button>
 
-    <button class="booking-btn" @onclick="ConfirmBooking">
+    <!-- goes to summary page -->
+    <button class="booking-btn" @onclick="GoToSummary">
         Next: summary selection
     </button>
 
@@ -71,12 +73,12 @@
         selectedTime = time;
     }
 
-    // moves to next page
-    void ConfirmBooking()
+    // navigates to summary page
+    void GoToSummary()
     {
         if (!string.IsNullOrEmpty(selectedTime))
         {
-            Nav.NavigateTo("/book-confirmed");
+            Nav.NavigateTo("/book-summary");
         }
     }
 }

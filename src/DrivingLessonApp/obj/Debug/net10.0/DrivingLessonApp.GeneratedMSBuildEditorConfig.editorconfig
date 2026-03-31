@@ -26,6 +26,14 @@ build_property.EnableCodeStyleSeverity =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xBcHAucmF6b3I=
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/BookingComfirmed.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCb29raW5nQ29tZmlybWVkLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/BookingSummary.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCb29raW5nU3VtbWFyeS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/BookLesson.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xCb29rTGVzc29uLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

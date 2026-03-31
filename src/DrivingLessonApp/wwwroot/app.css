@@ -341,3 +341,18 @@ h3 {
     .booking-back + .booking-btn {
         margin-top: 10px;
     }
+
+/* summary box */
+.summary-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* each row */
+.summary-item {
+    margin-bottom: 10px;
+    font-size: 14px;
+}

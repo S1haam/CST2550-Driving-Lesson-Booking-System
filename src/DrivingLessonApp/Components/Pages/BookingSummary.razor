@@ -1,0 +1,57 @@
+@page "/book-summary"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Booking Summary</h3>
+
+<!-- navigation bar -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button>FAQs</button>
+    <button>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Booking Summary</h1>
+
+    <p>Please review your booking details:</p>
+
+    <!-- summary details -->
+    <div class="summary-box">
+
+        <div class="summary-item">
+            <strong>Date:</strong> selected date
+        </div>
+
+        <div class="summary-item">
+            <strong>Time:</strong> selected time
+        </div>
+
+        <div class="summary-item">
+            <strong>Fee:</strong> £67
+        </div>
+
+    </div>
+
+    <!-- back button -->
+    <button class="booking-back" @onclick='() => Nav.NavigateTo("/book-time")'>
+        Back
+    </button>
+
+    <!-- confirm booking -->
+    <button class="booking-btn" @onclick="ConfirmBooking">
+        Confirm booking
+    </button>
+
+</div>
+
+@code {
+    // moves to confirmed page
+    void ConfirmBooking()
+    {
+        Nav.NavigateTo("/book-confirmed");
+    }
+}
