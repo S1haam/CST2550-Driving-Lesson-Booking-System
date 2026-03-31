@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("DrivingLessonApp")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+280a547e53486297301ad2dd5c559d95ae2fde00")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+f9e1133bcd0699928af51618fca93e4fc88a1619")]
 [assembly: System.Reflection.AssemblyProductAttribute("DrivingLessonApp")]
 [assembly: System.Reflection.AssemblyTitleAttribute("DrivingLessonApp")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
