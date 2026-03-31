@@ -1,0 +1,219 @@
+﻿body {
+    padding-top: 70px;
+}
+
+
+/* Custom Colours */
+
+.bg-blue {
+    background-color: #3766B1;
+}
+
+.bg-bluelight {
+    background-color: #5093FF;
+}
+
+.bg-greylight {
+    background-color: #D9D9D9;
+}
+
+.bg-greydark {
+    background-color: #B1B1B1;
+}
+
+.bg-greyd {
+    background-color: #A4A4A6;
+}
+
+/* Custom Outline */
+.btn-outline-none {
+    border: none;
+}
+
+/* Custom Width */
+.w-40 {
+    width: 40px;
+}
+
+/* Custom Avatar Circle */
+.avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+/* Custom inbox notif badge */
+.inbox-badge {
+    position: absolute;
+    top: 10px;
+    right: 44.5%;
+    background: red;
+    color: white;
+    font-size: 12px;
+    font-weight: 600;
+    padding: 2px 6px;
+    border-radius: 12px;
+    border: 2px solid red;
+    min-width: 18px;
+    text-align: center;
+    line-height: 1;
+}
+
+/* Custom Status badge */
+.status-badge {
+    width: 15px;
+    height: 15px;
+    background: rgb(10, 199, 4);
+    border-radius: 50%;
+    display: inline-block;
+    margin-left: 1%;
+}
+
+/* **************DROPDOWN MENU***************** */
+.dropdown-container {
+    position: relative;
+    width: 100%;
+}
+
+.dropdown-btn {
+    display: block;
+    width: 100%;
+    padding: 10px 14px;
+    background: #fff;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+/* Hide the checkbox */
+.dropdown-toggle {
+    display: none;
+}
+
+.dropdown-btn:hover {
+    background-color: #d2cdcd;
+    color: #fff;
+}
+
+/* Dropdown menu*/
+.dropdown-menuC {
+    overflow: hidden;
+    max-height: 0;
+    opacity: 0;
+    transform: translateY(-5px);
+    transition: max-height 0.35s ease, opacity 0.35s ease, transform 0.35s ease;
+    list-style: none;
+    padding: 0;
+    margin-top: 6px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    background: white;
+}
+
+/* Show menu */
+.dropdown-toggle:checked ~ .card-body .dropdown-menuC {
+    max-height: 500px;
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.dropdown-menuC li a {
+    display: block;
+    padding: 10px 14px;
+    text-decoration: none;
+    color: black;
+    font-weight: 500;
+    transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+    .dropdown-menuC li a:hover {
+        background-color: #A4A4A6;
+        color: #fff;
+    }
+
+/* CARD EXPANSION */
+.card-body {
+    overflow: hidden;
+    max-height: 300px;
+    transition: max-height 0.45s ease;
+}
+
+.dropdown-toggle:checked ~ .card-body {
+    max-height: 600px;
+}
+
+/* Arrow Icon */
+.arrow {
+    transition: transform 0.35s ease;
+    font-size: 14px;
+    margin-top: 3px;
+    display: inline-block;
+}
+
+.dropdown-toggle:checked ~ .card-body .dropdown-btn .arrow {
+    transform: rotate(180deg);
+}
+
+/* DASHBOARD NAVIGATION BAR */
+.nav-bar {
+    background: #1e4f91;
+    padding: 15px;
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+    .nav-bar a {
+        background: #4fa3ff;
+        color: black;
+        border: none;
+        padding: 10px 18px;
+        font-size: 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        width: auto;
+        text-decoration: none;
+    }
+
+     .nav-bar a:hover {
+            background: #2f8cff;
+        }
+
+/* Account Information Option Links */
+.account-option {
+    display: block !important;
+    padding: 10px 4px !important;
+    text-decoration: none !important;
+    color: black !important;
+    font-weight: 500 !important;
+    border-radius: 4px !important;
+    transition: background-color 0.25s ease, color 0.25s ease !important;
+}
+
+.account-option:hover {
+    background-color: #A4A4A6 !important;
+    color: #fff !important;
+}
+
+/* Button Visability */
+.card-body, card, col-md-9{
+    overflow: visible !important;
+}
+
+/* Clickable message rows */
+.message-link{
+    position: relative;
+    cursor: pointer;
+}
