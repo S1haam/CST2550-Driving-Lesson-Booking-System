@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DrivingLessonBookingSystem.Models
+namespace Backend_Connection.Models
 {
     /// <summary>
     /// Represents an initial request from a student to book a specific instructor or slot
@@ -25,7 +25,7 @@ namespace DrivingLessonBookingSystem.Models
         public int AvailabilityId { get; set; }
 
         /// <summary> A message sent from the learner to the instructor </summary>
-        public string RequestMessage { get; set; }
+        public string? RequestMessage { get; set; }
 
         /// <summary> The current state of the request (Pending or Accepted or Rejected) </summary>
         [Required]
@@ -42,15 +42,15 @@ namespace DrivingLessonBookingSystem.Models
         /// <summary> Timestamp for when an instructor rejected the request </summary>
         public DateTime? RejectedAt { get; set; }
         /// <summary> Reason provided if the request was denied </summary>
-        public string RejectionReason { get; set; }
+        public string? RejectionReason { get; set; }
         /// <summary> Message sent by the instructor upon acceptance </summary>
-        public string AcceptanceMessage { get; set; }
+        public string? AcceptanceMessage { get; set; }
 
         // Learner Removal (Audit)
         /// <summary> Timestamp if the request was archived or removed </summary>
         public DateTime? RemovedAt { get; set; }
         /// <summary> Reason for removing the request </summary>
-        public string RemovalReason { get; set; }
+        public string? RemovalReason { get; set; }
 
         // Navigation Properties
         /// <summary> Navigation property for the learner </summary>

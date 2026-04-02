@@ -1,9 +1,9 @@
-﻿using DrivingLessonBookingSystem.DataStructures;
+﻿using Backend_Connection.DataStructures;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DrivingLessonBookingSystem.Models
+namespace Backend_Connection.Models
 {
     /// <summary>
     /// Represents a learner driver booking lessons through the system

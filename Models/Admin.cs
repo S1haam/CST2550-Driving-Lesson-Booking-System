@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DrivingLessonBookingSystem.Models
+namespace Backend_Connection.Models
 {
     /// <summary>
     /// Represents an administrator with authority to manage users and view audit logs

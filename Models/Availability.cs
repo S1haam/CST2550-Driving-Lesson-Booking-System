@@ -2,7 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
-namespace DrivingLessonBookingSystem.Models
+namespace Backend_Connection.Models
 {
     /// <summary>
     /// Represents a specific time slot when an instructor is free to teach

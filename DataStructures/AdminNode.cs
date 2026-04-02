@@ -1,6 +1,6 @@
-﻿using DrivingLessonBookingSystem.Models;
+﻿using Backend_Connection.Models;
 
-namespace DrivingLessonBookingSystem.DataStructures
+namespace Backend_Connection.DataStructures
 {
     public class AdminNode
     {

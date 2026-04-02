@@ -1,4 +1,4 @@
-namespace DrivingLessonBookingSystem.Models
+namespace Backend_Connection.Models
 {
     public class ErrorViewModel
     {
