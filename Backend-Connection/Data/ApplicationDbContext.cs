@@ -1,23 +1,17 @@
-﻿// Gives access to all your model classes (Instructor, Learner, Booking, etc.)
-using Backend_Connection.Models;
-
-// Provides EF Core features like DbContext and DbSet
-using Microsoft.EntityFrameworkCore;      
+﻿using Backend_Connection.Models;          // Access to your model classes
+using Microsoft.EntityFrameworkCore;      // EF Core DbContext + DbSet
 
 namespace Backend_Connection.Data
 {
-    // Class is an overall representation of your entire SQL Server database.
-
+    // Represents the entire SQL Server database for your backend
     public class ApplicationDbContext : DbContext
     {
-        
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
         }
 
-       // setting tables in the SQL server
-       
+        // Tables in SQL Server
         public DbSet<Instructor> Instructors { get; set; }
         public DbSet<Learner> Learners { get; set; }
         public DbSet<Booking> Bookings { get; set; }
@@ -26,12 +20,12 @@ namespace Backend_Connection.Data
         public DbSet<StudentRequest> StudentRequests { get; set; }
         public DbSet<LessonOutcome> LessonOutcomes { get; set; }
 
-        // Method lets you configure relationships, constraints, and also use sample data
+        // Configure relationships + seed sample data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
 
-           //Relationship configuration
+            //Relationships
 
             // Instructor → Availability
             // (1-to-many)
@@ -39,7 +33,7 @@ namespace Backend_Connection.Data
                 .HasMany(i => i.DbAvailabilities)
                 .WithOne(a => a.Instructor)
                 .HasForeignKey(a => a.InstructorId)
-                .OnDelete(DeleteBehavior.Restrict);   // Prevents cascading deletes
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Learner → Booking
             // (1-to-many)
@@ -81,9 +75,9 @@ namespace Backend_Connection.Data
                 .HasForeignKey(sr => sr.AvailabilityId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            // Instructor sample data
-            // Sample data used for something to be present in the SQL server
+            //Samples data
 
+            // Instructors
             modelBuilder.Entity<Instructor>().HasData(
                 new Instructor
                 {
@@ -92,7 +86,6 @@ namespace Backend_Connection.Data
                     InstructorName = "Abraham Smith",
                     InstructorEmail = "abraham.smith@example.com",
                     InstructorPhone = "07123456789",
-                    InstructorPasswordHash = "hash1",
                     InstructorCarType = "Manual",
                     InstructorStatus = "Active"
                 },
@@ -103,13 +96,12 @@ namespace Backend_Connection.Data
                     InstructorName = "Ali John",
                     InstructorEmail = "ali.john@example.com",
                     InstructorPhone = "07987654321",
-                    InstructorPasswordHash = "hash2",
                     InstructorCarType = "Automatic",
                     InstructorStatus = "Active"
                 }
             );
 
-            // Learner sample data
+            // Learners
             modelBuilder.Entity<Learner>().HasData(
                 new Learner
                 {
@@ -118,7 +110,6 @@ namespace Backend_Connection.Data
                     LearnerLicenceId = "L1234567",
                     LearnerEmail = "adam.lee@example.com",
                     LearnerPhone = "07111111111",
-                    LearnerPasswordHash = "hash3",
                     LearnerStatus = "Active",
                     PastLessonCount = 0,
                     NextLessonCount = 1
@@ -130,14 +121,13 @@ namespace Backend_Connection.Data
                     LearnerLicenceId = "L7654321",
                     LearnerEmail = "maria.khan@example.com",
                     LearnerPhone = "07222222222",
-                    LearnerPasswordHash = "hash4",
                     LearnerStatus = "Active",
                     PastLessonCount = 2,
                     NextLessonCount = 0
                 }
             );
 
-            // Availability sample data
+            // Availabilities
             modelBuilder.Entity<Availability>().HasData(
                 new Availability
                 {
@@ -162,7 +152,7 @@ namespace Backend_Connection.Data
                 }
             );
 
-            // Bookings sample data
+            // Bookings
             modelBuilder.Entity<Booking>().HasData(
                 new Booking
                 {

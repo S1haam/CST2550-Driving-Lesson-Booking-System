@@ -10,6 +10,8 @@ namespace Backend_Connection.Models
     /// </summary>
     public class Learner
     {
+        public List<Booking> Bookings;
+
         /// <summary> Unique identifier for the learner </summary>
         [Key]
         public int LearnerId { get; set; }
@@ -29,7 +31,7 @@ namespace Backend_Connection.Models
         /// <summary> Contact phone number for the learner </summary>
         public string LearnerPhone { get; set; }
         /// <summary> Hashed password for learner portal access </summary>
-        public string LearnerPasswordHash { get; set; }
+        public string? LearnerPasswordHash { get; set; }
         /// <summary> Current account status (Active or inactive) </summary>
         public string LearnerStatus { get; set; }
 

@@ -1,29 +1,41 @@
-﻿using Backend_Connection.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Backend_Connection.Data;      // Gives access to ApplicationDbContext (your database)
+using Backend_Connection.Models;    // Gives access to Booking model + ApiResponse<T>
+using Microsoft.AspNetCore.Mvc;     // Provides controller + HTTP response functionality
 
 namespace Backend_Connection.Controllers
 {
+
+    // enables automatic model validation and consistent API behaviour
     [ApiController]
-    //Define the API route
+
+    // sets the base route for this controller
+    // URL for all endpoints inside this controller
     [Route("api/[controller]")]
     public class BookingController : ControllerBase
     {
-        //method created privately
         private readonly ApplicationDbContext _context;
+        // The database context is injected so the controller can access the database
 
         public BookingController(ApplicationDbContext context)
         {
-            _context = context; //saved to be used by other methods
+            _context = context;
+            //gives us the database connection automatically
         }
 
-        // GET: api/booking
+        // Handles GET requests to: GET api/booking
         [HttpGet]
         public IActionResult GetAllBookings()
         {
+            // Retrieves all booking records from the database.
             var data = _context.Bookings.ToList();
 
-            //Data is being reutnred in the form of a JSON
-            return Ok(data);
+            // Wraps the result in your custom ApiResponse<T> format
+            return Ok(new ApiResponse<List<Booking>>
+            {
+                Success = true,                           //indicates the request succeeded
+                Message = "Bookings retrieved successfully", //output
+                Data = data                               // actual list of bookings
+            });
         }
     }
 }

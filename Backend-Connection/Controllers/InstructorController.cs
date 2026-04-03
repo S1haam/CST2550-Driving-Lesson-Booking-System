@@ -2,10 +2,15 @@
 using Backend_Connection.Models;
 using Microsoft.AspNetCore.Mvc;
 
-
 namespace Backend_Connection.Controllers
 {
+
+    // enables automatic model validation and consistent API behaviour
     [ApiController]
+
+
+    // sets the base route for this controller
+    // URL for all endpoints inside this controller
     [Route("api/[controller]")]
     public class InstructorController : ControllerBase
     {
@@ -13,25 +18,20 @@ namespace Backend_Connection.Controllers
 
         public InstructorController(ApplicationDbContext context)
         {
-            _context = context; //saved to be used by other methods
+            _context = context;
         }
 
-
-        //GET api/instructor
         [HttpGet]
         public IActionResult GetAllInstructors()
         {
-            //fetches all data from the Instructors table in the SQL server
-            var instructors = _context.Instructors.ToList();
+            var data = _context.Instructors.ToList();
 
-
-            //data is given in the ApiResponse format
-            //Used for consistency for other API responses
-            return Ok(new ApiResponse<List<Instructor>>(
-                true,
-                "Instructors retrieved successfully",
-                instructors //actual data passed onto here
-            ));
+            return Ok(new ApiResponse<List<Instructor>>
+            {
+                Success = true,
+                Message = "Instructors retrieved successfully",
+                Data = data
+            });
         }
     }
 }

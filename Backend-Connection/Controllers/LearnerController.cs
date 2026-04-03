@@ -1,29 +1,37 @@
-﻿//controller features being used
-using Backend_Connection.Data;
+﻿using Backend_Connection.Data;
+using Backend_Connection.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Backend_Connection.Controllers
 {
+
+    // enables automatic model validation and consistent API behaviour
     [ApiController]
+
+
+    // sets the base route for this controller
+    // URL for all endpoints inside this controller
     [Route("api/[controller]")]
     public class LearnerController : ControllerBase
     {
-
-        //allows communication to the SQL server
         private readonly ApplicationDbContext _context;
 
         public LearnerController(ApplicationDbContext context)
         {
-            _context = context; //saved to be used by other methods later on
+            _context = context;
         }
 
-        // GET: api/learner
         [HttpGet]
         public IActionResult GetAllLearners()
         {
-            //fetches all data from the database in the SQL server
             var data = _context.Learners.ToList();
-            return Ok(data); //saved in JSON format
+
+            return Ok(new ApiResponse<List<Learner>>
+            {
+                Success = true,
+                Message = "Learners retrieved successfully",
+                Data = data
+            });
         }
     }
 }

@@ -10,6 +10,9 @@ namespace Backend_Connection.Models
     /// </summary>
     public class Instructor
     {
+        public List<Availability> Availabilities;
+        public List<Booking> Bookings;
+
         /// <summary> Unique identifier for the instructor. </summary>
         [Key]
         public int InstructorId { get; set; }
@@ -30,7 +33,7 @@ namespace Backend_Connection.Models
         public string InstructorPhone { get; set; }
 
         /// <summary> Hashed password for instructor access. </summary>
-        public string InstructorPasswordHash { get; set; }
+        public string? InstructorPasswordHash { get; set; }
 
         /// <summary> Type of car used for lessons (Manual or Automatic). </summary>
         public string InstructorCarType { get; set; }

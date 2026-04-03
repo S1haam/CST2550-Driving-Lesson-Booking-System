@@ -1,44 +1,41 @@
-﻿using Backend_Connection.Data;
-using Microsoft.AspNetCore.Mvc;
+﻿using Backend_Connection.Data;      // Gives access to the ApplicationDbContext (your database)
+using Backend_Connection.Models;    // Gives access to your ApiResponse and Availability model
+using Microsoft.AspNetCore.Mvc;     // Provides controller and HTTP response functionality
 
 namespace Backend_Connection.Controllers
 {
-
-
-    // API controller being used
-    //Used for automatic validation and cleaerer error responses
+    
+    // enables automatic model validation and consistent API behaviour
     [ApiController]
 
-
-    //Route for the controller
-    //[Controller] changes to the controller being used
-    //eg [Availabilty] would be api/[Availability]
-
+    // sets the base route for this controller
+    // URL for all endpoints inside this controller
     [Route("api/[controller]")]
     public class AvailabilityController : ControllerBase
     {
-        //Private variable to store the databse context
-        //Talks to the SQL server database
         private readonly ApplicationDbContext _context;
+        // The database context is injected so the controller can access the database
 
-
-        //Constructor Injection
-        //ASP.NET.CORE automtically provides the instance being used
         public AvailabilityController(ApplicationDbContext context)
         {
-            _context = context; //context saved to be used in the methods
+            _context = context;
+            // this gives us the database connection automatically
         }
 
-        // GET: api/availability
+        // Handles GET requests to: GET api/availability
         [HttpGet]
         public IActionResult GetAllAvailability()
         {
-
-            //fetch all the rows for the table stores in the SQL server
+            // Retrieves all availability records from the database.
             var data = _context.Availabilities.ToList();
 
-            //data is being returned in the form of a JSON
-            return Ok(data);
+            // Wraps the result in a consistent API response format.
+            return Ok(new ApiResponse<List<Availability>>
+            {
+                Success = true,                           // Indicates the request succeeded
+                Message = "Availabilities retrieved successfully", // output message
+                Data = data                               // The actual list of availability records
+            });
         }
     }
 }
