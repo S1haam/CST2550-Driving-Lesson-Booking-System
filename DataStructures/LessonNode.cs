@@ -1,7 +1,8 @@
-﻿using Backend_Connection.Models;
+﻿using DrivingLessonBookingSystem.Models;
 
-namespace Backend_Connection.DataStructures
+namespace DrivingLessonBookingSystem.DataStructures
 {
+    /// <summary> Node structure for storing lesson bookings </summary>
     public class LessonNode
     {
         public Booking Data { get; set; }

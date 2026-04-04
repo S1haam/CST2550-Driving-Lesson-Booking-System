@@ -1,7 +1,8 @@
-﻿using Backend_Connection.Models;
+﻿using DrivingLessonBookingSystem.Models;
 
-namespace Backend_Connection.DataStructures
+namespace DrivingLessonBookingSystem.DataStructures
 {
+    /// <summary> Custom list for managing Learner records </summary>
     public class CustomLearnerList
     {
         private LearnerNode head;
