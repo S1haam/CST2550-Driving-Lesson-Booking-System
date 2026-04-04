@@ -2,6 +2,7 @@
 
 namespace DrivingLessonBookingSystem.DataStructures
 {
+    /// <summary> Custom list for managing Learner records </summary>
     public class CustomLearnerList
     {
         private LearnerNode head;

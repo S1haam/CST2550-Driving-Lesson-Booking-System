@@ -2,6 +2,7 @@
 
 namespace DrivingLessonBookingSystem.DataStructures
 {
+    /// <summary> Custom list for managing lesson data </summary>
     public class CustomLessonList
     {
         private LessonNode head;
