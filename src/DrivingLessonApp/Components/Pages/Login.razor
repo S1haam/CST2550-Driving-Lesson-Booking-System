@@ -21,22 +21,22 @@
 
     <!-- create account -->
     <p class="link-text">
-    Don't have an account?
-    <span class="link-action" @onclick="GoToSignup">Create one</span>
-</p>
+        Don't have an account?
+        <span class="link-action" @onclick="GoToSignup">Create one</span>
+    </p>
 
 </div>
 
 @code {
-    string email;
-    string password;
-    string role;
+    string? email;
+    string? password;
+    string? role;
 
     // gets role from url
     protected override void OnInitialized()
     {
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
-        var query = Microsoft.AspNetCore.WebUtilities.QueryHelpers.ParseQuery(uri.Query);
+        var query = QueryHelpers.ParseQuery(uri.Query);
 
         if (query.TryGetValue("role", out var value))
         {
@@ -47,7 +47,22 @@
     // handles login
     void LoginUser()
     {
-        Nav.NavigateTo("/home");
+        if (role == "learner")
+        {
+            Nav.NavigateTo("/home");
+        }
+        else if (role == "instructor")
+        {
+            Nav.NavigateTo("/instructorHome");
+        }
+        else if (role == "admin")
+        {
+            Nav.NavigateTo("/adminHome"); // placeholder for now
+        }
+        else
+        {
+            Nav.NavigateTo("/");
+        }
     }
 
     // sends user to correct signup page

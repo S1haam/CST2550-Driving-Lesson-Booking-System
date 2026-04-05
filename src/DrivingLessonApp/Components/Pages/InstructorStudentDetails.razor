@@ -1,0 +1,36 @@
+@page "/instructor-student"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Student Details</h3>
+
+<!-- NAV -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+<div class="instructor-student-card">
+
+    <h2>@studentName</h2>
+
+    <ul>
+        <li>Contact Number: 077852 51594</li>
+        <li>Email: student@email.com</li>
+        <li>Emergency Contact: 07765 347495</li>
+    </ul>
+
+    <button class="instructor-danger-btn"
+            @onclick='() => Nav.NavigateTo("/instructor-remove-confirm")'>
+        Remove Student
+    </button>
+
+</div>
+
+@code {
+    string studentName = "Student Name";
+}

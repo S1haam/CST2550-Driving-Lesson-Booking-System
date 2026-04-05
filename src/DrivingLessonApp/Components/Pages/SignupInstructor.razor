@@ -7,28 +7,26 @@
     <h1>WELCOME TO SER DRIVING SCHOOL</h1>
     <h3>Sign Up: Instructor</h3>
 
+    <!-- error message -->
+    @if (!string.IsNullOrEmpty(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
     <!-- instructor id -->
-    <input placeholder="Instructor ID"
-           @bind="instructorId" />
+    <input placeholder="Instructor ID" @bind="instructorId" />
 
     <!-- name -->
-    <input placeholder="Full Name"
-           @bind="name" />
+    <input placeholder="Full Name" @bind="name" />
 
     <!-- email -->
-    <input type="email"
-           placeholder="Email Address"
-           @bind="email" />
+    <input type="email" placeholder="Email Address" @bind="email" />
 
     <!-- password -->
-    <input type="password"
-           placeholder="Password"
-           @bind="password" />
+    <input type="password" placeholder="Password" @bind="password" />
 
     <!-- confirm password -->
-    <input type="password"
-           placeholder="Confirm Password"
-           @bind="confirmPassword" />
+    <input type="password" placeholder="Confirm Password" @bind="confirmPassword" />
 
     <!-- car type -->
     <select @bind="carType" class="booking-select">
@@ -38,8 +36,7 @@
     </select>
 
     <!-- sign up -->
-    <button class="booking-btn"
-            @onclick="RegisterInstructor">
+    <button class="booking-btn" @onclick="RegisterInstructor">
         Sign Up
     </button>
 
@@ -59,10 +56,11 @@
     string? confirmPassword;
     string? carType;
 
-    // handles instructor signup
+    string? errorMessage;
+
     void RegisterInstructor()
     {
-        // basic validation
+        // check empty fields
         if (string.IsNullOrWhiteSpace(instructorId) ||
             string.IsNullOrWhiteSpace(name) ||
             string.IsNullOrWhiteSpace(email) ||
@@ -70,15 +68,21 @@
             string.IsNullOrWhiteSpace(confirmPassword) ||
             string.IsNullOrWhiteSpace(carType))
         {
+            errorMessage = "Please fill in all fields.";
             return;
         }
 
+        // check passwords
         if (password != confirmPassword)
         {
+            errorMessage = "Passwords do not match.";
             return;
         }
 
-        // simulate success → go to home
+        // clear error
+        errorMessage = null;
+
+        // navigate
         Nav.NavigateTo("/instructorHome");
     }
 }

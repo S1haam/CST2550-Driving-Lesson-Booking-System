@@ -1,0 +1,92 @@
+@page "/instructor-settings-status"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Settings</h3>
+
+<div class="row">
+
+    <!-- SIDEBAR -->
+    <div class="col-md-3 py-4 px-3">
+        <div class="card shadow-sm">
+            <input type="checkbox" id="settingsDropdown" class="dropdown-toggle" />
+
+            <div class="card-body">
+
+                <h5>Options:</h5>
+
+               <div class="instructor-settings-options">
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings-schedule")'>
+        Schedule Information
+    </button>
+
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings-account")'>
+        Account Information
+    </button>
+
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings-status")'>
+        Status
+    </button>
+</div>
+
+                <button class="btn btn-danger mt-4 w-100"
+                        @onclick='() => Nav.NavigateTo("/")'>
+                    Log out
+                </button>
+
+            </div>
+        </div>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="col-md-9 py-4 px-3">
+        <div class="card shadow-sm">
+            <div class="card-body">
+
+                <h5>Status</h5>
+
+                <!-- ✅ FINAL CORRECT RADIO -->
+              <div>
+    <input type="radio"
+           name="status"
+           checked="@(status == "Active")"
+           @onchange="@(() => status = "Active")" />
+    <label>Active</label>
+</div>
+
+<div>
+    <input type="radio"
+           name="status"
+           checked="@(status == "Inactive")"
+           @onchange="@(() => status = "Inactive")" />
+    <label>Inactive</label>
+</div>
+
+                <br />
+
+                <button class="btn btn-success" @onclick="Save">
+                    Save Changes
+                </button>
+
+                @if (saved)
+                {
+                    <p style="margin-top:15px;">Successfully Changed Status!</p>
+                }
+
+            </div>
+        </div>
+    </div>
+
+</div>
+
+@code {
+    string status = "Active";
+    bool saved = false;
+
+    void Save()
+    {
+        saved = true;
+    }
+}

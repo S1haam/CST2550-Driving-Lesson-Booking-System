@@ -74,6 +74,102 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xIb21lLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorCancelledNotification.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yQ2FuY2VsbGVkTm90aWZpY2F0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorChangeContactNumber.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yQ2hhbmdlQ29udGFjdE51bWJlci5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorChangePassword.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yQ2hhbmdlUGFzc3dvcmQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorConfirmNo.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yQ29uZmlybU5vLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorConfirmYes.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yQ29uZmlybVllcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorFaqs.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yRmFxcy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorHome.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9ySG9tZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorInbox.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9ySW5ib3gucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorInboxPinned.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9ySW5ib3hQaW5uZWQucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorLessonDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yTGVzc29uRGV0YWlscy5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorNotRemoved.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yTm90UmVtb3ZlZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorRemoveConfirm.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yUmVtb3ZlQ29uZmlybS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorRemoved.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yUmVtb3ZlZC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorRemovedNotifcation.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yUmVtb3ZlZE5vdGlmY2F0aW9uLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorRequest.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yUmVxdWVzdC5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorRescheduledNotification.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yUmVzY2hlZHVsZWROb3RpZmljYXRpb24ucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSchedule.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2NoZWR1bGUucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSettings.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2V0dGluZ3MucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSettingsAccount.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2V0dGluZ3NBY2NvdW50LnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSettingsChangeName.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2V0dGluZ3NDaGFuZ2VOYW1lLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSettingsSchedule.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2V0dGluZ3NTY2hlZHVsZS5yYXpvcg==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSettingsStatus.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2V0dGluZ3NTdGF0dXMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorSettingsSuccess.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU2V0dGluZ3NTdWNjZXNzLnJhem9y
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/InstructorStudentDetails.razor]
+build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xJbnN0cnVjdG9yU3R1ZGVudERldGFpbHMucmF6b3I=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/sihaam/source/repos/CST2550-Driving-Lesson-Booking-System/src/DrivingLessonApp/Components/Pages/LessonDetails.razor]
 build_metadata.AdditionalFiles.TargetPath = Q29tcG9uZW50c1xQYWdlc1xMZXNzb25EZXRhaWxzLnJhem9y
 build_metadata.AdditionalFiles.CssScope = 

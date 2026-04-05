@@ -1,0 +1,213 @@
+@page "/instructor-settings"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Settings</h3>
+
+<!-- NAV BAR-->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+<div class="instructor-settings-container">
+    <div class="instructor-settings-layout">
+
+        <div class="instructor-settings-sidebar">
+            <h4>Options:</h4>
+
+            <div class="instructor-settings-options">
+                <button class="@(instructorSelectedSection == "schedule" ? "active-option" : "")"
+                        @onclick='() => instructorSelectedSection = "schedule"'>
+                    Schedule Information
+                </button>
+
+                <button class="@(instructorSelectedSection == "account" ? "active-option" : "")"
+                        @onclick='() => instructorSelectedSection = "account"'>
+                    Account Information
+                </button>
+
+                <button class="@(instructorSelectedSection == "status" ? "active-option" : "")"
+                        @onclick='() => instructorSelectedSection = "status"'>
+                    Status
+                </button>
+            </div>
+
+            <button class="instructor-settings-logout"
+                    @onclick='() => Nav.NavigateTo("/")'>
+                Log Out
+            </button>
+        </div>
+
+        <div class="instructor-settings-content">
+
+            @if (instructorSelectedSection == "schedule")
+            {
+                <h4>Schedule Information</h4>
+                <p>Pick up to 5 available time slots.</p>
+                <p>Current times: @string.Join(", ", instructorCurrentTimes)</p>
+
+                <div class="instructor-time-grid">
+                    @foreach (var instructorTime in instructorAvailableTimes)
+                    {
+                        <button class="instructor-time-btn @(instructorSelectedTimes.Contains(instructorTime) ? "selected-time" : "")"
+                                @onclick="() => InstructorSelectTime(instructorTime)">
+                            @instructorTime
+                        </button>
+                    }
+                </div>
+
+                <button class="instructor-settings-save" @onclick="InstructorSaveSchedule">
+                    Save Changes
+                </button>
+
+                @if (instructorScheduleSaved)
+                {
+                    <p class="success-text">Schedule updated successfully.</p>
+                }
+            }
+
+            @if (instructorSelectedSection == "account")
+            {
+                <h4>Account Information</h4>
+                <div class="instructor-account-options">
+    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "name" ? "instructor-account-option-active" : "")"
+            @onclick='() => instructorSelectedAccountOption = "name"'>
+        Change Name
+    </button>
+
+    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "contact" ? "instructor-account-option-active" : "")"
+            @onclick='() => instructorSelectedAccountOption = "contact"'>
+        Change Contact Number
+    </button>
+
+    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "password" ? "instructor-account-option-active" : "")"
+            @onclick='() => instructorSelectedAccountOption = "password"'>
+        Change Password
+    </button>
+</div>
+                
+                <hr />
+
+                @if (instructorSelectedAccountOption == "name")
+                {
+                    <h5>Change Name</h5>
+                    <input class="settings-input" placeholder="Enter New Name..." @bind="instructorNewName" />
+                    <input class="settings-input" type="password" placeholder="Password" @bind="instructorAccountPassword" />
+                    <button class="instructor-settings-save" @onclick="InstructorSaveAccount">Save</button>
+                }
+                else if (instructorSelectedAccountOption == "contact")
+                {
+                    <h5>Change Contact Number</h5>
+                    <input class="settings-input" placeholder="Enter New Contact Number..." @bind="instructorNewContact" />
+                    <input class="settings-input" type="password" placeholder="Password" @bind="instructorAccountPassword" />
+                    <button class="instructor-settings-save" @onclick="InstructorSaveAccount">Save</button>
+                }
+                else if (instructorSelectedAccountOption == "password")
+                {
+                    <h5>Change Password</h5>
+                    <input class="settings-input" type="password" placeholder="Current Password" @bind="instructorCurrentPassword" />
+                    <input class="settings-input" type="password" placeholder="New Password" @bind="instructorNewPassword" />
+                    <button class="instructor-settings-save" @onclick="InstructorSaveAccount">Save</button>
+                }
+                else
+                {
+                    <p>Select an account option from above.</p>
+                }
+
+                @if (instructorAccountSaved)
+                {
+                    <p class="success-text">Account details updated successfully.</p>
+                }
+            }
+
+            @if (instructorSelectedSection == "status")
+            {
+                <h4>Status</h4>
+
+                <div class="status-setting-row">
+                    <input type="radio"
+                           name="instructorStatus"
+                           checked="@(instructorStatus == "Active")"
+                           @onchange='@(() => instructorStatus = "Active")' />
+                    <label>Active</label>
+                </div>
+
+                <div class="status-setting-row">
+                    <input type="radio"
+                           name="instructorStatus"
+                           checked="@(instructorStatus == "Inactive")"
+                           @onchange='@(() => instructorStatus = "Inactive")' />
+                    <label>Inactive</label>
+                </div>
+
+                <button class="instructor-settings-save" @onclick="InstructorSaveStatus">
+                    Save Changes
+                </button>
+
+                @if (instructorStatusSaved)
+                {
+                    <p class="success-text">Status updated successfully.</p>
+                }
+            }
+
+        </div>
+    </div>
+</div>
+
+@code {
+    string instructorSelectedSection = "account";
+    string instructorSelectedAccountOption = "";
+
+    List<string> instructorCurrentTimes = new() { "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm" };
+
+    List<string> instructorAvailableTimes = new()
+    {
+        "8:00am", "9:00am", "10:00am", "11:00am",
+        "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm"
+    };
+
+    List<string> instructorSelectedTimes = new();
+
+    string instructorStatus = "Active";
+
+    string? instructorNewName;
+    string? instructorNewContact;
+    string? instructorAccountPassword;
+    string? instructorCurrentPassword;
+    string? instructorNewPassword;
+
+    bool instructorScheduleSaved = false;
+    bool instructorAccountSaved = false;
+    bool instructorStatusSaved = false;
+
+    void InstructorSelectTime(string instructorTime)
+    {
+        instructorScheduleSaved = false;
+
+        if (instructorSelectedTimes.Contains(instructorTime))
+            instructorSelectedTimes.Remove(instructorTime);
+        else if (instructorSelectedTimes.Count < 5)
+            instructorSelectedTimes.Add(instructorTime);
+    }
+
+    void InstructorSaveSchedule()
+    {
+        instructorScheduleSaved = true;
+    }
+
+    void InstructorSaveAccount()
+    {
+        instructorAccountSaved = true;
+    }
+
+    void InstructorSaveStatus()
+    {
+        instructorStatusSaved = true;
+    }
+}
