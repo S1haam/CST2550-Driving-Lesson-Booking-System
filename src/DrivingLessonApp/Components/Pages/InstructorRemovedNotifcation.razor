@@ -1,0 +1,20 @@
+@page "/instructor-removed-notification"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Removed Student</h3>
+
+<div class="instructor-message-card">
+
+    <p>
+        A student has been removed from your schedule.
+    </p>
+
+    <button class="booking-btn"
+            @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
+        Back to Inbox
+    </button>
+
+</div>

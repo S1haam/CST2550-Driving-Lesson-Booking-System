@@ -200,27 +200,30 @@ h3 {
 /* search bar */
 .search-container {
     display: flex;
-    gap: 8px;
+    gap: 6px;
     align-items: center;
 }
 
+    /* smaller input */
     .search-container input {
-        padding: 8px 12px;
-        border-radius: 16px;
+        padding: 6px 10px;
+        border-radius: 14px;
         border: none;
         outline: none;
-        width: 180px;
+        width: 140px; /* reduced from 180px */
         background: white;
+        font-size: 13px;
     }
 
-    /* search button */
+    /* smaller button */
     .search-container button {
-        padding: 8px 14px;
-        border-radius: 16px;
+        padding: 6px 12px;
+        border-radius: 14px;
         border: none;
         background: #2d4ea2;
         color: white;
         cursor: pointer;
+        font-size: 13px;
     }
 
         .search-container button:hover {
@@ -730,4 +733,770 @@ h3 {
 /* smooth spacing */
 .faq-item + .faq-item {
     margin-top: 10px;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #e74c3c;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    .logout-btn:hover {
+        background: #c0392b;
+    }
+
+/* ============================= */
+/* INSTRUCTOR HOME  */
+/* ============================= */
+
+.instructor-home-panel {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #e9edf5;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* welcome */
+.welcome-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* notification bar */
+.notif-bar {
+    background: #5b8df5;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.notif-btn {
+    background: #bfbfbf;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* status */
+.status-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: #2ecc71;
+    border-radius: 50%;
+}
+
+/* grid */
+.home-grid {
+    display: flex;
+    gap: 20px;
+}
+
+/* cards */
+.home-card {
+    flex: 1;
+    background: #4a7bd0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* title */
+.card-title {
+    background: #bfbfbf;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* rows */
+.pill-row {
+    background: #d9d9d9;
+    border-radius: 20px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* button */
+.pill-btn {
+    background: #a4a4a6;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* student layout */
+.student-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* avatar */
+.avatar-circle {
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* student search bar */
+
+.student-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.student-card-title {
+    margin: 0;
+    margin-bottom: 0;
+    padding: 5px 10px;
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.student-search-container {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+    .student-search-container input {
+        width: 140px;
+    }
+
+    .student-search-container button {
+        padding: 6px 12px;
+    }
+/* ============================= */
+/* INSTRUCTOR SCHEDULE + LESSON DETAILS */
+/* ============================= */
+
+/* make notes blue for next lesson */
+.notes-blue {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+}
+
+/* ============================= */
+/* MAIN SCHEDULE CARD */
+/* ============================= */
+
+.card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+    /* spacing for top row */
+    .card > div:first-child {
+        margin-bottom: 10px;
+    }
+
+/* ============================= */
+/* TABS */
+/* ============================= */
+
+.tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.tab {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #dcdcdc;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+    .tab.active {
+        background: #2d4ea2;
+        color: white;
+    }
+
+
+
+/* ============================= */
+/* LESSON LIST */
+/* ============================= */
+
+.lesson-list {
+    margin-top: 10px;
+}
+
+.lesson-item {
+    background: #e6e6e6;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .lesson-item span {
+        font-weight: 500;
+    }
+
+    .lesson-item div {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* buttons inside lesson */
+    .lesson-item button {
+        border: none;
+        border-radius: 20px;
+        padding: 6px 12px;
+        cursor: pointer;
+        background: #2d4ea2;
+        color: white;
+        font-size: 12px;
+    }
+
+        .lesson-item button:hover {
+            background: #1f3f91;
+        }
+
+/* ============================= */
+/* INSTRUCTOR LESSON DETAILS */
+/* ============================= */
+
+.instructor-lesson-outer-card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+
+    .instructor-lesson-outer-card.secondary {
+        background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    }
+
+.instructor-lesson-section-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.instructor-lesson-inner-card {
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.instructor-lesson-info-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.instructor-lesson-info-box {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+    .instructor-lesson-info-box span {
+        display: inline-block;
+        background: #d9d9d9;
+        color: black;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+    }
+
+    .instructor-lesson-info-box strong {
+        display: block;
+        font-size: 14px;
+        color: white;
+    }
+
+.instructor-lesson-notes-card {
+    background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.instructor-lesson-notes-blue {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+}
+
+.instructor-lesson-notes-title {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.instructor-lesson-notes-content {
+    background: #e6e6e6;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+.instructor-notes-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+    outline: none;
+}
+    .instructor-notes-input:focus {
+        border-color: #4a7bd0;
+        box-shadow: 0 0 0 2px rgba(74,123,208,0.2);
+    }
+
+/* ============================= */
+/* INSTRUCTOR INBOX */
+/* ============================= */
+
+.inbox-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #4a7bd0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* header */
+.inbox-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px;
+}
+
+/* tabs */
+.inbox-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.tab {
+    background: #d9d9d9;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+    .tab.active {
+        background: #b1b1b1;
+    }
+
+/* list */
+.inbox-list {
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+}
+
+/* row */
+.inbox-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 50px 50px;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+    /* hover */
+    .inbox-row:hover {
+        background: #f0f4ff;
+    }
+
+/* message clickable */
+.inbox-message {
+    cursor: pointer;
+}
+
+/* buttons */
+.icon-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ============================= */
+/* INSTRUCTOR FAQ STYLING */
+/* ============================= */
+
+.instructor-faq-card {
+    text-align: left;
+}
+
+/* container */
+.instructor-faq-list {
+    margin-top: 15px;
+}
+
+/* each item */
+.instructor-faq-item {
+    background: #eef3fb;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: 0.25s;
+    border: 1px solid #d6e0f5;
+}
+
+    /* hover */
+    .instructor-faq-item:hover {
+        background: #e0eaff;
+        transform: translateY(-2px);
+    }
+
+/* header */
+.instructor-faq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2d4ea2;
+}
+
+    /* icon */
+    .instructor-faq-header span:last-child {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+/* answer */
+.instructor-faq-answer {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    padding-top: 6px;
+    border-top: 1px solid #d0d9f0;
+}
+
+/* ============================= */
+/* INSTRUCTOR SETTINGS */
+/* ============================= */
+
+body {
+    padding-top: 80px;
+}
+
+/* ============================= */
+/* NAV BAR (MATCHES YOUR RAZOR) */
+/* ============================= */
+
+.nav-bar {
+    background: #3f66c4;
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+    .nav-bar button {
+        background: #78a2f0;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        .nav-bar button:hover {
+            background: #5e8fe8;
+        }
+
+    /* active nav button */
+    .nav-bar .active,
+    .nav-bar .active-nav {
+        background: #274aa8;
+    }
+
+/* ============================= */
+/* MAIN BLUE CONTAINER */
+/* ============================= */
+
+.instructor-settings-container {
+    background: #4f7fd1;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px;
+}
+
+/* FLEX LAYOUT */
+.instructor-settings-layout {
+    display: flex;
+    gap: 25px;
+}
+
+/* ================= LEFT PANEL ================= */
+
+.instructor-settings-sidebar {
+    background: #e6e6e6;
+    padding: 15px;
+    border-radius: 10px;
+    width: 220px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+    .instructor-settings-sidebar h4 {
+        margin-bottom: 10px;
+    }
+
+/* OPTIONS */
+.instructor-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+    .instructor-settings-options button {
+        background: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: left;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+        .instructor-settings-options button:hover {
+            background: #c7d9ff;
+        }
+
+    /* ACTIVE LEFT OPTION */
+    .instructor-settings-options .active-option {
+        background: #c7d9ff;
+        font-weight: 600;
+    }
+
+/* LOGOUT */
+.instructor-settings-logout {
+    margin-top: 20px;
+    width: 100%;
+    background: #c85a5a;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= RIGHT PANEL ================= */
+
+.instructor-settings-content {
+    background: #e6e6e6;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+    .instructor-settings-content h4 {
+        margin-bottom: 10px;
+    }
+
+    .instructor-settings-content p {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+/* ================= TIME BUTTON GRID ================= */
+
+.instructor-time-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.instructor-time-btn {
+    background: #bfbfbf;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+    .instructor-time-btn:hover {
+        background: #9fc2ff;
+    }
+
+/* SELECTED TIME */
+.selected-time {
+    background: #9fc2ff !important;
+    font-weight: 600;
+}
+
+/* ================= SAVE BUTTON ================= */
+
+.instructor-settings-save {
+    margin-top: 15px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= ACCOUNT LINKS ================= */
+
+.settings-link {
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+    .settings-link:hover {
+        color: #274aa8;
+    }
+
+/* ================= INPUTS ================= */
+
+.settings-input {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* ================= STATUS ================= */
+
+.status-setting-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+/* ================= SUCCESS TEXT ================= */
+
+.success-text {
+    margin-top: 12px;
+    color: green;
+    font-weight: 600;
+}
+
+/* ================= ACCOUNT OPTION BUTTONS ================= */
+
+.instructor-account-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.instructor-account-option-btn {
+    background: white;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+    .instructor-account-option-btn:hover {
+        background: #c7d9ff;
+    }
+
+.instructor-account-option-active {
+    background: #c7d9ff;
+    font-weight: 600;
+}
+/* ============================= */
+/* INSTRUCTOR STUDENT PAGES */
+/* ============================= */
+
+.instructor-student-card {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #f7f7f7;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: left;
+}
+
+    .instructor-student-card ul {
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+.instructor-confirm-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.instructor-success-btn {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.instructor-danger-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
 }

@@ -1,0 +1,55 @@
+@page "/instructor-settings-account"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Settings</h3>
+
+<div class="instructor-settings-container">
+
+    <div class="instructor-settings-layout">
+
+        <!-- LEFT -->
+        <div class="instructor-settings-sidebar">
+
+            <h4>Options:</h4>
+
+            <div class="instructor-settings-options">
+                <button @onclick='() => Nav.NavigateTo("/instructor-settings-schedule")'>Schedule Information</button>
+                <button @onclick='() => Nav.NavigateTo("/instructor-settings-account")'>Account Information</button>
+                <button @onclick='() => Nav.NavigateTo("/instructor-settings-status")'>Status</button>
+            </div>
+
+            <button class="instructor-settings-logout"
+                    @onclick='() => Nav.NavigateTo("/")'>
+                Log Out
+            </button>
+
+        </div>
+
+        <!-- RIGHT -->
+        <div class="instructor-settings-content">
+
+            <h4>Account Information</h4>
+
+            <p class="account-option"
+               @onclick='() => Nav.NavigateTo("/instructor-change-name")'>
+                Change Name
+            </p>
+
+            <p class="account-option"
+               @onclick='() => Nav.NavigateTo("/instructor-change-contact")'>
+                Change Contact Number
+            </p>
+
+            <p class="account-option"
+               @onclick='() => Nav.NavigateTo("/instructor-change-password")'>
+                Change Password
+            </p>
+
+        </div>
+
+    </div>
+
+</div>
