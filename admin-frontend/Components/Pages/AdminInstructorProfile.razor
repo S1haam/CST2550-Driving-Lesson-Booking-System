@@ -1,0 +1,95 @@
+﻿@page "/admin/instructor/{id}"
+@inject NavigationManager Nav
+
+<div class="main-content">
+    <div class="brand-title">SER Driving School</div>
+
+    <h3>Instructor Profile</h3>
+
+    
+    <div class="nav-bar">
+        <button class="action-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+        <button class="action-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+        <button class="action-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+        <button class="action-btn" @onclick='() => Nav.NavigateTo("/")'>Log out</button>
+    </div>
+
+  
+    <div class="outer-card">
+        <div class="inner-card">
+
+            
+            <div class="section-label" style="color:#2d4ea2; font-weight:bold; margin-bottom:10px;">
+                Instructor Information:
+            </div>
+
+            <p><strong>Name:</strong> @Instructor.Name</p>
+            <p><strong>Email:</strong> @Instructor.Email</p>
+            <p><strong>Phone Number:</strong> @Instructor.Phone</p>
+            <p><strong>Account Status:</strong> @Instructor.Status</p>
+
+            <br />
+
+         
+            <div class="section-label" style="color:#2d4ea2; font-weight:bold; margin-bottom:10px;">
+                Teaching Details:
+            </div>
+
+            <p><strong>Lessons Taught:</strong> @Instructor.LessonsTaught</p>
+            <p><strong>Current number of students:</strong> @Instructor.CurrentStudents</p>
+            <p><strong>Date of next lesson:</strong> @Instructor.NextLesson</p>
+            <p><strong>Student Name:</strong> @Instructor.NextStudent</p>
+
+            <br />
+
+            
+            <div class="section-label" style="color:#2d4ea2; font-weight:bold; margin-bottom:10px;">
+                Additional Details:
+            </div>
+
+            <p><strong>Joined on:</strong> @Instructor.JoinedOn</p>
+            <p><strong>Last login:</strong> @Instructor.LastLogin</p>
+
+        </div>
+    </div>
+
+    <div style="text-align:center; margin-top:20px;">
+        <button class="tab" @onclick='() => Nav.NavigateTo("/admin/instructors")'>
+            Back to Instructor Database
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string id { get; set; }
+
+    public class InstructorProfile
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Status { get; set; } = "";
+        public int LessonsTaught { get; set; }
+        public int CurrentStudents { get; set; }
+        public string NextLesson { get; set; } = "";
+        public string NextStudent { get; set; } = "";
+        public string JoinedOn { get; set; } = "";
+        public string LastLogin { get; set; } = "";
+    }
+
+    // sample data — i will replace with real data later
+    public InstructorProfile Instructor { get; set; } = new InstructorProfile
+    {
+        Name = "Kat Valentine",
+        Email = "kg@gmail.com",
+        Phone = "07987654321",
+        Status = "Active",
+        LessonsTaught = 37,
+        CurrentStudents = 5,
+        NextLesson = "07/01/2026",
+        NextStudent = "Olive Smith",
+        JoinedOn = "02/08/2024",
+        LastLogin = "05/01/2026"
+    };
+}
