@@ -1,0 +1,84 @@
+@page "/admin/students"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content admin-students-page admin-database-page">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Student Database</h3>
+
+    <div class="admin-home-nav-wrap">
+        <div class="admin-home-nav">
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
+        </div>
+    </div>
+
+    <div class="admin-outer-card">
+        <div class="admin-inner-card">
+            <div class="admin-table-shell admin-database-shell">
+                <table class="admin-student-table admin-database-table">
+                    <thead>
+                        <tr>
+                            <th>Student ID</th>
+                            <th>Name</th>
+                            <th>Email</th>
+                            <th>Phone Number</th>
+                            <th>Lessons Booked</th>
+                            <th>Profile</th>
+                        </tr>
+                    </thead>
+
+                    <tbody>
+                        @foreach (var s in Students)
+                        {
+                            <tr class="admin-table-row">
+                                <td><span class="admin-table-pill">@s.StudentId</span></td>
+                                <td><span class="admin-table-pill">@s.Name</span></td>
+                                <td><span class="admin-table-pill">@s.Email</span></td>
+                                <td><span class="admin-table-pill">@s.Phone</span></td>
+                                <td><span class="admin-table-pill">@s.LessonsBooked</span></td>
+                                <td>
+                                    <button class="admin-view-btn admin-database-view-btn" @onclick='() => ViewProfile(s.StudentId)'>
+                                        View
+                                    </button>
+                                </td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-back-container">
+        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin")'>
+            Back to Home
+        </button>
+    </div>
+</div>
+
+@code {
+    public List<Student> Students { get; set; } = new()
+    {
+        new Student { StudentId = "001", Name = "John", Email = "j@gmail.com", Phone = "07123", LessonsBooked = 2 },
+        new Student { StudentId = "002", Name = "Olive", Email = "o@gmail.com", Phone = "07456", LessonsBooked = 3 },
+        new Student { StudentId = "003", Name = "Kat", Email = "k@gmail.com", Phone = "07789", LessonsBooked = 1 }
+    };
+
+    public class Student
+    {
+        public string StudentId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public int LessonsBooked { get; set; }
+    }
+
+    void ViewProfile(string id)
+    {
+        Nav.NavigateTo($"/admin/student/{id}");
+    }
+}

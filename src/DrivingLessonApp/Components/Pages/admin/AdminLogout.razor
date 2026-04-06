@@ -1,0 +1,21 @@
+@page "/admin/logout"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Logout</h3>
+
+    <div class="admin-outer-card">
+        <div class="admin-inner-card">
+            <p>You have successfully logged out.</p>
+        </div>
+    </div>
+
+    <div class="admin-back-container">
+        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/")'>
+            Return to start page
+        </button>
+    </div>
+</div>

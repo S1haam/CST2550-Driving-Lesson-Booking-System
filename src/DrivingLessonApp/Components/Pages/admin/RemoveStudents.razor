@@ -1,0 +1,90 @@
+@page "/admin/remove-students"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Managing Inactive Students</h3>
+
+    <div class="admin-home-nav-wrap">
+    <div class="admin-home-nav">
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
+    </div>
+</div>
+
+    <div class="admin-outer-card">
+        <div class="admin-inner-card">
+
+            <p class="admin-info-text">
+                The students listed below have been inactive for over 100 days.
+                You can remove them from the system.
+            </p>
+
+            <table class="admin-student-table">
+                <thead>
+                    <tr>
+                        <th>Student ID</th>
+                        <th>Name</th>
+                        <th>Email</th>
+                        <th>Last Active</th>
+                        <th>Remove</th>
+                    </tr>
+                </thead>
+
+                <tbody>
+                    @foreach (var s in InactiveStudents)
+                    {
+                        <tr>
+                            <td>@s.StudentId</td>
+                            <td>@s.Name</td>
+                            <td>@s.Email</td>
+                            <td>@s.LastActive</td>
+                            <td>
+                                <button class="admin-view-btn" @onclick='() => RemoveStudent(s.StudentId)'>
+                                    Remove
+                                </button>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+
+        </div>
+    </div>
+
+    <div class="admin-back-container">
+        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin")'>
+            Back to Home
+        </button>
+    </div>
+</div>
+
+@code {
+    public class InactiveStudent
+    {
+        public string StudentId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string LastActive { get; set; } = "";
+    }
+
+    // Sample data
+    public List<InactiveStudent> InactiveStudents { get; set; } = new()
+    {
+        new InactiveStudent { StudentId = "010", Name = "Phil", Email = "p@gmail.com", LastActive = "25/04/24" },
+        new InactiveStudent { StudentId = "011", Name = "Sam", Email = "s@gmail.com", LastActive = "09/07/25" }
+    };
+
+    void RemoveStudent(string id)
+    {
+        var student = InactiveStudents.FirstOrDefault(s => s.StudentId == id);
+        if (student != null)
+        {
+            InactiveStudents.Remove(student);
+        }
+    }
+}

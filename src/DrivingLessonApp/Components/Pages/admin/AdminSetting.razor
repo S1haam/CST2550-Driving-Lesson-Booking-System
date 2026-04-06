@@ -1,0 +1,90 @@
+@page "/admin/settings"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content admin-settings-page admin-detail-page">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Settings</h3>
+
+    <div class="admin-home-nav-wrap">
+        <div class="admin-home-nav">
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
+        </div>
+    </div>
+
+    <div class="admin-outer-card">
+        <div class="admin-inner-card">
+            <div class="admin-detail-panel">
+                <div class="admin-detail-grid">
+
+                    <div class="admin-detail-box">
+                        <div class="admin-section-label">Account Settings</div>
+                        <p><strong>Name:</strong> @Admin.Name</p>
+                        <p><strong>Email:</strong> @Admin.Email</p>
+                        <p><strong>Phone Number:</strong> @Admin.Phone</p>
+                        <p>
+                            <strong>Account Status:</strong>
+                            <span class="admin-status-pill">@Admin.Status</span>
+                        </p>
+                    </div>
+
+                    <div class="admin-detail-box">
+                        <div class="admin-section-label">Security & Notifications</div>
+                        <p><strong>Last password change:</strong> @Admin.LastPasswordChange</p>
+                        <p>
+                            <strong>Login History:</strong>
+                            <span class="admin-link-chip">View Activity</span>
+                        </p>
+                    </div>
+
+                    <div class="admin-detail-box admin-detail-box-wide">
+                        <div class="admin-section-label">Make Changes</div>
+
+                        <div class="admin-meta-row">
+    <button class="admin-mini-card action-card" type="button">
+                                <span>Email</span>
+                                <strong>Update Email</strong>
+                            </button>
+                            <button class="admin-mini-card action-card" type="button">
+                                <span>Password</span>
+                                <strong>Change Password</strong>
+                            </button>
+                        </div>
+
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-back-container">
+        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin")'>
+            Back to Home
+        </button>
+    </div>
+</div>
+
+@code {
+    public class SettingsModel
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Status { get; set; } = "";
+        public string LastPasswordChange { get; set; } = "";
+    }
+
+    public SettingsModel Admin { get; set; } = new SettingsModel
+    {
+        Name = "Admin User",
+        Email = "au@gmail.com",
+        Phone = "07345678912",
+        Status = "Active",
+        LastPasswordChange = "05/10/2025"
+    };
+}
