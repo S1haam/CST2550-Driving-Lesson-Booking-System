@@ -1,0 +1,48 @@
+@page "/admin"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content admin-home-page">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Welcome, Admin</h3>
+
+    <div class="admin-home-nav-wrap">
+        <div class="admin-home-nav">
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
+        </div>
+    </div>
+
+    <div class="admin-home-card">
+        <div class="admin-home-grid">
+            <button class="admin-home-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>
+                <span>View:</span>
+                <strong>Student database</strong>
+            </button>
+
+            <button class="admin-home-btn" @onclick='() => Nav.NavigateTo("/admin/system-activity")'>
+                <span>View:</span>
+                <strong>System Activity</strong>
+            </button>
+
+            <button class="admin-home-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>
+                <span>View:</span>
+                <strong>Instructor database</strong>
+            </button>
+
+            <button class="admin-home-btn" @onclick='() => Nav.NavigateTo("/admin/profile")'>
+                <span>View:</span>
+                <strong>Admin Profile</strong>
+            </button>
+        </div>
+
+        <div class="admin-home-settings-row">
+            <button class="admin-home-settings-btn" @onclick='() => Nav.NavigateTo("/admin/settings")'>
+                Settings
+            </button>
+        </div>
+    </div>
+</div>

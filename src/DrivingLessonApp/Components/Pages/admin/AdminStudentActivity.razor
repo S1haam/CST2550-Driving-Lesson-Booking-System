@@ -1,0 +1,80 @@
+@page "/admin/student-activity/{id}"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Student Activity</h3>
+
+    <div class="admin-nav-bar">
+        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/")'>Log out</button>
+    </div>
+
+    <div class="admin-outer-card">
+        <div class="admin-inner-card">
+
+            <div class="admin-section-label">
+                Student Summary:
+            </div>
+
+            <p><strong>Name:</strong> @Student.Name</p>
+            <p><strong>Email:</strong> @Student.Email</p>
+            <p><strong>Phone Number:</strong> @Student.Phone</p>
+            <p><strong>Lessons Booked:</strong> @Student.LessonsBooked</p>
+
+            <br />
+
+            <div class="admin-section-label">
+                Activity Timeline:
+            </div>
+
+            <div class="admin-activity-list">
+                @foreach (var entry in Student.ActivityTimeline)
+                {
+                    <p class="admin-activity-item">@entry</p>
+                }
+            </div>
+
+        </div>
+    </div>
+
+    <div class="admin-back-container">
+        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin")'>
+            Back to Home
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string id { get; set; } = "";
+
+    public class StudentActivityModel
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public int LessonsBooked { get; set; }
+        public List<string> ActivityTimeline { get; set; } = new();
+    }
+
+    // sample data — ill replace w real data later
+    public StudentActivityModel Student { get; set; } = new StudentActivityModel
+    {
+        Name = "John Smith",
+        Email = "j@gmail.com",
+        Phone = "07123456789",
+        LessonsBooked = 5,
+        ActivityTimeline = new List<string>
+        {
+            "03/03/2025 - Account created",
+            "05/03/2025 - Logged in",
+            "09/03/2025 - Booked lesson",
+            "10/03/2025 - Lesson completed"
+        }
+    };
+}

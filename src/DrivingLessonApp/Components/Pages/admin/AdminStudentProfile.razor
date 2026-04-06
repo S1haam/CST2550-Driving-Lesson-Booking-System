@@ -1,0 +1,101 @@
+@page "/admin/student/{id}"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="admin-main-content admin-student-profile-page">
+    <div class="admin-brand-title">SER Driving School</div>
+
+    <h3 class="admin-page-title">Student Profile</h3>
+
+    <div class="admin-home-nav-wrap">
+        <div class="admin-home-nav">
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
+        </div>
+    </div>
+
+    <div class="admin-outer-card">
+        <div class="admin-inner-card">
+            <div class="admin-detail-panel">
+                <div class="admin-detail-grid">
+
+                    <div class="admin-detail-box">
+                        <div class="admin-section-label">Student Information</div>
+                        <p><strong>Name:</strong> @Student.Name</p>
+                        <p><strong>Email:</strong> @Student.Email</p>
+                        <p><strong>Phone Number:</strong> @Student.Phone</p>
+                        <p>
+                            <strong>Account Status:</strong>
+                            <span class="admin-status-pill">@Student.Status</span>
+                        </p>
+                    </div>
+
+                    <div class="admin-detail-box">
+                        <div class="admin-section-label">Lesson Details</div>
+                        <p><strong>Lessons Booked:</strong> @Student.LessonsBooked</p>
+                        <p><strong>Date of last lesson:</strong> @Student.LastLesson</p>
+                        <p><strong>Date of next lesson:</strong> @Student.NextLesson</p>
+                        <p><strong>Lesson Instructor:</strong> @Student.InstructorName</p>
+                    </div>
+
+                    <div class="admin-detail-box admin-detail-box-wide">
+                        <div class="admin-section-label">Additional Details</div>
+                        <div class="admin-student-meta-row">
+                            <div class="admin-student-mini-card">
+                                <span>Joined on</span>
+                                <strong>@Student.JoinedOn</strong>
+                            </div>
+
+                            <div class="admin-student-mini-card">
+                                <span>Last login</span>
+                                <strong>@Student.LastLogin</strong>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="admin-back-container">
+        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin/students")'>
+            Back to Student Database
+        </button>
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public string id { get; set; } = "";
+
+    public class StudentProfile
+    {
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Status { get; set; } = "";
+        public int LessonsBooked { get; set; }
+        public string LastLesson { get; set; } = "";
+        public string NextLesson { get; set; } = "";
+        public string InstructorName { get; set; } = "";
+        public string JoinedOn { get; set; } = "";
+        public string LastLogin { get; set; } = "";
+    }
+
+    public StudentProfile Student { get; set; } = new StudentProfile
+    {
+        Name = "Olive Smith",
+        Email = "o@gmail.com",
+        Phone = "07123456789",
+        Status = "Active",
+        LessonsBooked = 3,
+        LastLesson = "01/01/2026",
+        NextLesson = "07/01/2026",
+        InstructorName = "Kat Valentine",
+        JoinedOn = "13/11/2025",
+        LastLogin = "30/12/2025"
+    };
+}
