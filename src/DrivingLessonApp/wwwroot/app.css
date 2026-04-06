@@ -26,6 +26,9 @@ h3 {
     margin-bottom: 20px;
 }
 
+/*                   */
+/*    LEARNER        */
+/*                   */
 /* nav bar */
 .nav-bar {
     background: linear-gradient(135deg, #4a7bd0, #2d4ea2);
@@ -63,7 +66,6 @@ h3 {
 }
 
 
-
 /* outer card */
 .outer-card {
     background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
@@ -91,14 +93,13 @@ h3 {
     border-radius: 12px;
 }
 
-/*  FIXED ROW */
 .info-row {
     display: flex;
     gap: 12px;
     align-items: center;
 }
 
-/*  FIXED BOXES */
+
 .info-box {
     flex: 1;
     min-width: 0;
@@ -109,7 +110,6 @@ h3 {
     color: white;
 }
 
-    /*  LABEL STRIP */
     .info-box span {
         display: inline-block;
         background: #d9d9d9;
@@ -126,7 +126,7 @@ h3 {
         font-size: 14px;
     }
 
-/*  BUTTON FIX */
+
 .action-btn {
     flex-shrink: 0;
     background: #d9d9d9;
@@ -210,7 +210,7 @@ h3 {
         border-radius: 14px;
         border: none;
         outline: none;
-        width: 140px; /* reduced from 180px */
+        width: 140px; 
         background: white;
         font-size: 13px;
     }
@@ -1501,8 +1501,9 @@ body {
     cursor: pointer;
 }
 
+
 /* ============================= */
-/* ADMIN SHARED LAYOUT */
+/* admin shared layout */
 /* ============================= */
 
 .admin-main-content {
@@ -1530,7 +1531,7 @@ body {
 }
 
 /* ============================= */
-/* ADMIN NAV */
+/* admin nav */
 /* ============================= */
 
 .admin-home-nav-wrap {
@@ -1571,7 +1572,7 @@ body {
     }
 
 /* ============================= */
-/* ADMIN HOME PAGE */
+/* admin home page */
 /* ============================= */
 
 .admin-home-page {
@@ -1648,8 +1649,9 @@ body {
     .admin-home-settings-btn:hover {
         background: #cfcfcf;
     }
+
 /* ============================= */
-/* ADMIN OUTER CONTAINERS */
+/* admin shared cards */
 /* ============================= */
 
 .admin-outer-card {
@@ -1668,93 +1670,337 @@ body {
 }
 
 /* ============================= */
-/* ADMIN DATABASE TABLE PAGES */
-/* ============================= */
-/* ============================= */
-/* ADMIN DATABASE TABLE PAGES */
+/* admin shared database pages */
 /* ============================= */
 
-.admin-table-shell {
-    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
-    border-radius: 20px;
-    padding: 22px; /* more space around table */
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+.admin-database-page .admin-inner-card {
+    background: #d0d0d0;
+    border-radius: 22px;
+    padding: 22px;
 }
 
-/* TABLE LAYOUT FIX */
+.admin-database-page .admin-table-shell {
+    background: linear-gradient(135deg, #4f7fd8, #6a98f0);
+    border-radius: 24px;
+    padding: 24px 20px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    overflow-x: auto;
+}
+
 .admin-database-table {
     width: 100%;
     border-collapse: separate;
-    border-spacing: 0 20px; /* MORE vertical spacing */
-    font-size: 15px;
-    table-layout: auto; /* 🔥 FIX squashing */
+    border-spacing: 0 18px;
+    table-layout: fixed;
 }
 
-    /* HEADER */
     .admin-database-table thead th {
-        background: #bfbfbf;
+        background: #c6c6c6;
         color: #111;
-        padding: 12px 16px; /* more spacing */
+        padding: 11px 12px;
         text-align: left;
         font-weight: 600;
         font-size: 13px;
-        border-radius: 8px;
+        border-radius: 10px;
     }
 
-    /* ROW BLOCKS */
     .admin-database-table tbody tr.admin-table-row td {
-        background: #3f6fc0;
-        padding: 16px 14px; /* 🔥 BIGGER = less squashed */
+        background: #4473c7;
+        padding: 12px 10px;
         vertical-align: middle;
     }
 
-        /* rounded row edges */
         .admin-database-table tbody tr.admin-table-row td:first-child {
-            border-top-left-radius: 16px;
-            border-bottom-left-radius: 16px;
+            border-top-left-radius: 18px;
+            border-bottom-left-radius: 18px;
         }
 
         .admin-database-table tbody tr.admin-table-row td:last-child {
-            border-top-right-radius: 16px;
-            border-bottom-right-radius: 16px;
+            border-top-right-radius: 18px;
+            border-bottom-right-radius: 18px;
         }
 
-/* DATA PILLS */
 .admin-table-pill {
-    display: inline-block;
-    background: #bfbfbf;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #d7d3cc;
     color: #111;
-    padding: 10px 14px; /* 🔥 bigger pills */
-    border-radius: 8px;
-    min-width: 60px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    min-height: 40px;
+    width: 100%;
     font-size: 13px;
     text-align: center;
     white-space: nowrap;
+    box-sizing: border-box;
 }
 
-/* VIEW BUTTON */
-.admin-view-btn {
-    background: #e7dfd2;
+.admin-view-btn,
+.admin-database-view-btn {
+    background: #eee4d4;
     color: #111;
     border: none;
-    padding: 12px 20px; /* 🔥 bigger button */
-    border-radius: 14px;
+    padding: 12px 18px;
+    border-radius: 16px;
     cursor: pointer;
-    font-size: 14px;
-    font-weight: 500;
-    transition: background 0.2s ease, transform 0.2s ease;
+    font-size: 15px;
+    font-weight: 600;
+    min-width: 78px;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
 }
 
-    .admin-view-btn:hover {
-        background: #dbd1c4;
+    .admin-view-btn:hover,
+    .admin-database-view-btn:hover {
+        background: #e3d8c8;
         transform: translateY(-1px);
+        box-shadow: 0 5px 10px rgba(0,0,0,0.10);
     }
 
+/* ============================= */
+/* admin student database columns */
+/* ============================= */
 
+.admin-students-page .admin-database-table th:nth-child(1),
+.admin-students-page .admin-database-table td:nth-child(1) {
+    width: 14%;
+}
 
+.admin-students-page .admin-database-table th:nth-child(2),
+.admin-students-page .admin-database-table td:nth-child(2) {
+    width: 13%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(3),
+.admin-students-page .admin-database-table td:nth-child(3) {
+    width: 22%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(4),
+.admin-students-page .admin-database-table td:nth-child(4) {
+    width: 18%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(5),
+.admin-students-page .admin-database-table td:nth-child(5) {
+    width: 18%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(6),
+.admin-students-page .admin-database-table td:nth-child(6) {
+    width: 15%;
+}
 
 /* ============================= */
-/* ADMIN BACK BUTTON */
+/* admin instructor database columns */
+/* ============================= */
+
+.admin-instructors-page .admin-database-table th:nth-child(1),
+.admin-instructors-page .admin-database-table td:nth-child(1) {
+    width: 14%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(2),
+.admin-instructors-page .admin-database-table td:nth-child(2) {
+    width: 16%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(3),
+.admin-instructors-page .admin-database-table td:nth-child(3) {
+    width: 22%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(4),
+.admin-instructors-page .admin-database-table td:nth-child(4) {
+    width: 18%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(5),
+.admin-instructors-page .admin-database-table td:nth-child(5) {
+    width: 15%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(6),
+.admin-instructors-page .admin-database-table td:nth-child(6) {
+    width: 15%;
+}
+
+/* ============================= */
+/* admin shared detail pages */
+/* ============================= */
+
+.admin-detail-page .admin-detail-panel {
+    background: linear-gradient(135deg, #3567b8, #4f86e8);
+    border-radius: 22px;
+    padding: 20px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+}
+
+.admin-detail-page .admin-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    align-items: stretch;
+}
+
+.admin-detail-page .admin-detail-box {
+    background: #ececec;
+    border-radius: 18px;
+    padding: 18px 20px;
+    min-height: 170px;
+    box-sizing: border-box;
+    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
+}
+
+.admin-detail-page .admin-detail-box-wide {
+    grid-column: 1 / span 2;
+    min-height: auto;
+}
+
+.admin-detail-page .admin-section-label {
+    font-size: 22px;
+    font-weight: 700;
+    color: #111;
+    margin-bottom: 14px;
+    line-height: 1.1;
+}
+
+.admin-detail-page .admin-detail-box p {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.45;
+    color: #111;
+}
+
+.admin-detail-page .admin-detail-box strong {
+    font-weight: 700;
+    color: #111;
+}
+
+.admin-status-pill {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #dff3e4;
+    color: #1d6b36;
+    font-size: 13px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.admin-link-chip {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #dbe7ff;
+    color: #24579d;
+    font-size: 13px;
+    font-weight: 600;
+    vertical-align: middle;
+}
+
+.admin-meta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+.admin-mini-card {
+    background: #dfe7f7;
+    border-radius: 14px;
+    padding: 14px 16px;
+    min-width: 180px;
+    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
+}
+
+    .admin-mini-card span {
+        display: block;
+        font-size: 13px;
+        font-weight: 600;
+        color: #24579d;
+        margin-bottom: 6px;
+    }
+
+    .admin-mini-card strong {
+        display: block;
+        font-size: 15px;
+        color: #111;
+    }
+
+.action-card {
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+        background: #d6e2fb;
+    }
+
+    .action-card:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+/* ============================= */
+/* admin student profile overrides */
+/* ============================= */
+
+.admin-student-profile-page.admin-detail-page .admin-detail-panel {
+    border-radius: 24px;
+    padding: 22px;
+}
+
+.admin-student-profile-page.admin-detail-page .admin-detail-box {
+    background: #f1f3f7;
+    border-radius: 20px;
+    padding: 20px 22px;
+    min-height: 190px;
+    border: 1px solid rgba(53,103,184,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-student-profile-page.admin-detail-page .admin-section-label {
+    font-size: 24px;
+    color: #12396f;
+    margin-bottom: 16px;
+}
+
+.admin-student-profile-page.admin-detail-page .admin-detail-box p {
+    margin: 0 0 14px;
+}
+
+    .admin-student-profile-page.admin-detail-page .admin-detail-box p:last-child {
+        margin-bottom: 0;
+    }
+
+.admin-student-profile-page .admin-meta-row {
+    margin-top: 2px;
+    gap: 16px;
+}
+
+.admin-student-profile-page .admin-mini-card {
+    border-radius: 16px;
+    padding: 16px 18px;
+    min-width: 200px;
+}
+
+    .admin-student-profile-page .admin-mini-card span {
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+/* ============================= */
+/* admin back button */
 /* ============================= */
 
 .admin-back-container {
@@ -1779,7 +2025,7 @@ body {
     }
 
 /* ============================= */
-/* RESPONSIVE */
+/* responsive */
 /* ============================= */
 
 @media (max-width: 900px) {
@@ -1806,1012 +2052,69 @@ body {
         padding: 10px 14px;
     }
 
+    .admin-home-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-database-page .admin-inner-card {
+        padding: 16px;
+    }
+
+    .admin-database-page .admin-table-shell {
+        padding: 16px 14px;
+    }
+
     .admin-database-table {
-        font-size: 12px;
+        min-width: 760px;
+        border-spacing: 0 14px;
     }
 
         .admin-database-table thead th {
-            font-size: 11px;
-            padding: 8px 8px;
+            font-size: 12px;
+            padding: 9px 10px;
         }
 
         .admin-database-table tbody tr.admin-table-row td {
-            padding: 10px 6px;
+            padding: 10px 8px;
         }
 
     .admin-table-pill {
-        font-size: 11px;
-        padding: 6px 8px;
-        min-width: 40px;
-    }
-
-    .admin-view-btn {
-        padding: 8px 12px;
         font-size: 12px;
-    }
-}
-
-/* ============================= */
-/* ADMIN STUDENT PROFILE ONLY */
-/* ============================= */
-
-.admin-student-profile-page .admin-detail-panel {
-    background: linear-gradient(135deg, #3567b8, #5a8ff0);
-    border-radius: 24px;
-    padding: 22px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-student-profile-page .admin-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 20px;
-    align-items: stretch;
-}
-
-.admin-student-profile-page .admin-detail-box {
-    background: #f1f3f7;
-    border-radius: 20px;
-    padding: 20px 22px;
-    min-height: 190px;
-    box-sizing: border-box;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border: 1px solid rgba(53,103,184,0.08);
-}
-
-.admin-student-profile-page .admin-detail-box-wide {
-    grid-column: 1 / span 2;
-    min-height: auto;
-}
-
-.admin-student-profile-page .admin-section-label {
-    font-size: 24px;
-    font-weight: 700;
-    color: #12396f;
-    margin-bottom: 16px;
-    line-height: 1.1;
-}
-
-.admin-student-profile-page .admin-detail-box p {
-    margin: 0 0 14px;
-    font-size: 16px;
-    line-height: 1.45;
-    color: #111;
-}
-
-    .admin-student-profile-page .admin-detail-box p:last-child {
-        margin-bottom: 0;
+        min-height: 36px;
+        padding: 8px 10px;
     }
 
-.admin-student-profile-page .admin-detail-box strong {
-    font-weight: 700;
-    color: #111;
-}
-
-.admin-student-profile-page .admin-status-pill {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 6px 14px;
-    border-radius: 999px;
-    background: #dff3e4;
-    color: #1d6b36;
-    font-size: 13px;
-    font-weight: 700;
-    vertical-align: middle;
-}
-
-.admin-student-profile-page .admin-student-meta-row {
-    display: flex;
-    gap: 16px;
-    flex-wrap: wrap;
-    margin-top: 2px;
-}
-
-.admin-student-profile-page .admin-student-mini-card {
-    background: #dfe7f7;
-    border-radius: 16px;
-    padding: 16px 18px;
-    min-width: 200px;
-    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
-}
-
-    .admin-student-profile-page .admin-student-mini-card span {
-        display: block;
+    .admin-view-btn,
+    .admin-database-view-btn {
         font-size: 13px;
-        font-weight: 700;
-        color: #24579d;
-        margin-bottom: 8px;
-        text-transform: uppercase;
-        letter-spacing: 0.3px;
+        padding: 10px 14px;
     }
 
-    .admin-student-profile-page .admin-student-mini-card strong {
-        display: block;
-        font-size: 15px;
-        color: #111;
-    }
-
-@media (max-width: 900px) {
-    .admin-student-profile-page .admin-detail-grid {
+    .admin-detail-page .admin-detail-grid {
         grid-template-columns: 1fr;
     }
 
-    .admin-student-profile-page .admin-detail-box-wide {
+    .admin-detail-page .admin-detail-box-wide {
         grid-column: auto;
     }
 
-    .admin-student-profile-page .admin-detail-box {
+    .admin-detail-page .admin-detail-box {
         min-height: auto;
-        padding: 18px;
     }
 
-    .admin-student-profile-page .admin-section-label {
+    .admin-detail-page .admin-section-label {
         font-size: 20px;
     }
 
-    .admin-student-profile-page .admin-detail-box p {
+    .admin-detail-page .admin-detail-box p {
         font-size: 15px;
     }
 
-    .admin-student-profile-page .admin-student-mini-card {
+    .admin-mini-card {
         min-width: 100%;
     }
-}
-/* ============================= */
-/* ADMIN INSTRUCTOR PROFILE ONLY */
-/* ============================= */
 
-.admin-instructor-profile-page .admin-detail-panel {
-    background: linear-gradient(135deg, #3567b8, #4f86e8);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-instructor-profile-page .admin-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    align-items: stretch;
-}
-
-.admin-instructor-profile-page .admin-detail-box {
-    background: #ececec;
-    border-radius: 18px;
-    padding: 18px 20px;
-    min-height: 170px;
-    box-sizing: border-box;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-}
-
-.admin-instructor-profile-page .admin-detail-box-wide {
-    grid-column: 1 / span 2;
-    min-height: auto;
-}
-
-.admin-instructor-profile-page .admin-section-label {
-    font-size: 22px;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 14px;
-    line-height: 1.1;
-}
-
-.admin-instructor-profile-page .admin-detail-box p {
-    margin: 12px 0;
-    font-size: 16px;
-    line-height: 1.45;
-    color: #111;
-}
-
-.admin-instructor-profile-page .admin-detail-box strong {
-    font-weight: 700;
-}
-
-.admin-instructor-profile-page .admin-status-pill {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dff3e4;
-    color: #1d6b36;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-instructor-profile-page .admin-instructor-meta-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-}
-
-.admin-instructor-profile-page .admin-instructor-mini-card {
-    background: #dfe7f7;
-    border-radius: 14px;
-    padding: 14px 16px;
-    min-width: 180px;
-    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
-}
-
-    .admin-instructor-profile-page .admin-instructor-mini-card span {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #24579d;
-        margin-bottom: 6px;
-    }
-
-    .admin-instructor-profile-page .admin-instructor-mini-card strong {
-        display: block;
-        font-size: 15px;
-        color: #111;
-    }
-
-@media (max-width: 900px) {
-    .admin-instructor-profile-page .admin-detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-instructor-profile-page .admin-detail-box-wide {
-        grid-column: auto;
-    }
-
-    .admin-instructor-profile-page .admin-detail-box {
-        min-height: auto;
-    }
-
-    .admin-instructor-profile-page .admin-section-label {
-        font-size: 20px;
-    }
-
-    .admin-instructor-profile-page .admin-detail-box p {
-        font-size: 15px;
-    }
-}
-
-/* ============================= */
-/* ADMIN SYSTEM ACTIVITY ONLY */
-/* ============================= */
-
-.admin-system-activity-page .admin-detail-panel {
-    background: linear-gradient(135deg, #3567b8, #4f86e8);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-system-activity-page .admin-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    align-items: stretch;
-}
-
-.admin-system-activity-page .admin-detail-box {
-    background: #ececec;
-    border-radius: 18px;
-    padding: 18px 20px;
-    min-height: 170px;
-    box-sizing: border-box;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-}
-
-.admin-system-activity-page .admin-detail-box-wide {
-    grid-column: 1 / span 2;
-    min-height: auto;
-}
-
-.admin-system-activity-page .admin-section-label {
-    font-size: 22px;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 14px;
-    line-height: 1.1;
-}
-
-.admin-system-activity-page .admin-detail-box p {
-    margin: 12px 0;
-    font-size: 16px;
-    line-height: 1.45;
-    color: #111;
-}
-
-.admin-system-activity-page .admin-detail-box strong {
-    font-weight: 700;
-}
-
-.admin-system-activity-page .admin-status-pill {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dff3e4;
-    color: #1d6b36;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-system-activity-page .admin-link-chip {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dbe7ff;
-    color: #24579d;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-system-activity-page .admin-system-meta-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-    margin-bottom: 14px;
-}
-
-.admin-system-activity-page .admin-system-mini-card {
-    background: #dfe7f7;
-    border-radius: 14px;
-    padding: 14px 16px;
-    min-width: 180px;
-    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
-}
-
-    .admin-system-activity-page .admin-system-mini-card span {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #24579d;
-        margin-bottom: 6px;
-    }
-
-    .admin-system-activity-page .admin-system-mini-card strong {
-        display: block;
-        font-size: 15px;
-        color: #111;
-    }
-
-@media (max-width: 900px) {
-    .admin-system-activity-page .admin-detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-system-activity-page .admin-detail-box-wide {
-        grid-column: auto;
-    }
-
-    .admin-system-activity-page .admin-detail-box {
-        min-height: auto;
-    }
-
-    .admin-system-activity-page .admin-section-label {
-        font-size: 20px;
-    }
-
-    .admin-system-activity-page .admin-detail-box p {
-        font-size: 15px;
-    }
-}
-
-.admin-system-activity-page .action-card {
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-    .admin-system-activity-page .action-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-        background: #d6e2fb;
-    }
-
-    .admin-system-activity-page .action-card:active {
-        transform: translateY(0);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-
-/* ============================= */
-/* ADMIN PROFILE ONLY */
-/* ============================= */
-
-.admin-profile-page .admin-detail-panel {
-    background: linear-gradient(135deg, #3567b8, #4f86e8);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-profile-page .admin-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    align-items: stretch;
-}
-
-.admin-profile-page .admin-detail-box {
-    background: #ececec;
-    border-radius: 18px;
-    padding: 18px 20px;
-    min-height: 170px;
-    box-sizing: border-box;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-}
-
-.admin-profile-page .admin-detail-box-wide {
-    grid-column: 1 / span 2;
-    min-height: auto;
-}
-
-.admin-profile-page .admin-section-label {
-    font-size: 22px;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 14px;
-    line-height: 1.1;
-}
-
-.admin-profile-page .admin-detail-box p {
-    margin: 12px 0;
-    font-size: 16px;
-    line-height: 1.45;
-    color: #111;
-}
-
-.admin-profile-page .admin-detail-box strong {
-    font-weight: 700;
-}
-
-.admin-profile-page .admin-status-pill {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dff3e4;
-    color: #1d6b36;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-profile-page .admin-link-chip {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dbe7ff;
-    color: #24579d;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-profile-page .admin-profile-meta-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-    margin-bottom: 14px;
-}
-
-.admin-profile-page .admin-profile-mini-card {
-    background: #dfe7f7;
-    border-radius: 14px;
-    padding: 14px 16px;
-    min-width: 180px;
-    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
-}
-
-    .admin-profile-page .admin-profile-mini-card span {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #24579d;
-        margin-bottom: 6px;
-    }
-
-    .admin-profile-page .admin-profile-mini-card strong {
-        display: block;
-        font-size: 15px;
-        color: #111;
-    }
-
-.admin-profile-page .action-card {
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-    .admin-profile-page .action-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-        background: #d6e2fb;
-    }
-
-    .admin-profile-page .action-card:active {
-        transform: translateY(0);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-
-@media (max-width: 900px) {
-    .admin-profile-page .admin-detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-profile-page .admin-detail-box-wide {
-        grid-column: auto;
-    }
-
-    .admin-profile-page .admin-detail-box {
-        min-height: auto;
-    }
-
-    .admin-profile-page .admin-section-label {
-        font-size: 20px;
-    }
-
-    .admin-profile-page .admin-detail-box p {
-        font-size: 15px;
-    }
-}
-
-/* ============================= */
-/* ADMIN SETTINGS ONLY */
-/* ============================= */
-
-.admin-settings-page .admin-detail-panel {
-    background: linear-gradient(135deg, #3567b8, #4f86e8);
-    border-radius: 22px;
-    padding: 20px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-settings-page .admin-detail-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 18px;
-    align-items: stretch;
-}
-
-.admin-settings-page .admin-detail-box {
-    background: #ececec;
-    border-radius: 18px;
-    padding: 18px 20px;
-    min-height: 170px;
-    box-sizing: border-box;
-    box-shadow: 0 3px 10px rgba(0,0,0,0.06);
-}
-
-.admin-settings-page .admin-detail-box-wide {
-    grid-column: 1 / span 2;
-    min-height: auto;
-}
-
-.admin-settings-page .admin-section-label {
-    font-size: 22px;
-    font-weight: 700;
-    color: #111;
-    margin-bottom: 14px;
-    line-height: 1.1;
-}
-
-.admin-settings-page .admin-detail-box p {
-    margin: 12px 0;
-    font-size: 16px;
-    line-height: 1.45;
-    color: #111;
-}
-
-.admin-settings-page .admin-detail-box strong {
-    font-weight: 700;
-}
-
-.admin-settings-page .admin-status-pill {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dff3e4;
-    color: #1d6b36;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-settings-page .admin-link-chip {
-    display: inline-block;
-    margin-left: 8px;
-    padding: 5px 12px;
-    border-radius: 999px;
-    background: #dbe7ff;
-    color: #24579d;
-    font-size: 13px;
-    font-weight: 600;
-    vertical-align: middle;
-}
-
-.admin-settings-page .admin-settings-meta-row {
-    display: flex;
-    gap: 14px;
-    flex-wrap: wrap;
-    margin-top: 4px;
-    margin-bottom: 14px;
-}
-
-.admin-settings-page .admin-settings-mini-card {
-    background: #dfe7f7;
-    border-radius: 14px;
-    padding: 14px 16px;
-    min-width: 180px;
-    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
-}
-
-    .admin-settings-page .admin-settings-mini-card span {
-        display: block;
-        font-size: 13px;
-        font-weight: 600;
-        color: #24579d;
-        margin-bottom: 6px;
-    }
-
-    .admin-settings-page .admin-settings-mini-card strong {
-        display: block;
-        font-size: 15px;
-        color: #111;
-    }
-
-.admin-settings-page .action-card {
-    border: none;
-    cursor: pointer;
-    text-align: left;
-    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-}
-
-    .admin-settings-page .action-card:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
-        background: #d6e2fb;
-    }
-
-    .admin-settings-page .action-card:active {
-        transform: translateY(0);
-        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
-    }
-
-@media (max-width: 900px) {
-    .admin-settings-page .admin-detail-grid {
-        grid-template-columns: 1fr;
-    }
-
-    .admin-settings-page .admin-detail-box-wide {
-        grid-column: auto;
-    }
-
-    .admin-settings-page .admin-detail-box {
-        min-height: auto;
-    }
-
-    .admin-settings-page .admin-section-label {
-        font-size: 20px;
-    }
-
-    .admin-settings-page .admin-detail-box p {
-        font-size: 15px;
-    }
-}
-
-/* ============================= */
-/* ADMIN STUDENTS DATABASE ONLY */
-/* ============================= */
-
-.admin-students-page .admin-inner-card {
-    background: #d0d0d0;
-    border-radius: 22px;
-    padding: 22px;
-}
-
-.admin-students-page .admin-table-shell {
-    background: linear-gradient(135deg, #4f7fd8, #6a98f0);
-    border-radius: 24px;
-    padding: 24px 20px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-students-page .admin-database-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 18px;
-    table-layout: fixed;
-}
-
-    .admin-students-page .admin-database-table th:nth-child(1),
-    .admin-students-page .admin-database-table td:nth-child(1) {
-        width: 14%;
-    }
-
-    .admin-students-page .admin-database-table th:nth-child(2),
-    .admin-students-page .admin-database-table td:nth-child(2) {
-        width: 13%;
-    }
-
-    .admin-students-page .admin-database-table th:nth-child(3),
-    .admin-students-page .admin-database-table td:nth-child(3) {
-        width: 22%;
-    }
-
-    .admin-students-page .admin-database-table th:nth-child(4),
-    .admin-students-page .admin-database-table td:nth-child(4) {
-        width: 18%;
-    }
-
-    .admin-students-page .admin-database-table th:nth-child(5),
-    .admin-students-page .admin-database-table td:nth-child(5) {
-        width: 18%;
-    }
-
-    .admin-students-page .admin-database-table th:nth-child(6),
-    .admin-students-page .admin-database-table td:nth-child(6) {
-        width: 15%;
-    }
-
-    .admin-students-page .admin-database-table thead th {
-        background: #c6c6c6;
-        color: #111;
-        padding: 11px 12px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 13px;
-        border-radius: 10px;
-    }
-
-    .admin-students-page .admin-database-table tbody tr.admin-table-row td {
-        background: #4473c7;
-        padding: 12px 10px;
-        vertical-align: middle;
-    }
-
-        .admin-students-page .admin-database-table tbody tr.admin-table-row td:first-child {
-            border-top-left-radius: 18px;
-            border-bottom-left-radius: 18px;
-        }
-
-        .admin-students-page .admin-database-table tbody tr.admin-table-row td:last-child {
-            border-top-right-radius: 18px;
-            border-bottom-right-radius: 18px;
-        }
-
-.admin-students-page .admin-table-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #d7d3cc;
-    color: #111;
-    padding: 10px 12px;
-    border-radius: 10px;
-    min-height: 40px;
-    min-width: 0;
-    width: 100%;
-    font-size: 13px;
-    text-align: center;
-    white-space: nowrap;
-    box-sizing: border-box;
-}
-
-.admin-students-page .admin-database-view-btn,
-.admin-students-page .admin-view-btn {
-    background: #eee4d4;
-    color: #111;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 16px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    min-width: 78px;
-    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-}
-
-    .admin-students-page .admin-database-view-btn:hover,
-    .admin-students-page .admin-view-btn:hover {
-        background: #e3d8c8;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.10);
-    }
-
-@media (max-width: 900px) {
-    .admin-students-page .admin-inner-card {
-        padding: 16px;
-    }
-
-    .admin-students-page .admin-table-shell {
-        padding: 16px 14px;
-        overflow-x: auto;
-    }
-
-    .admin-students-page .admin-database-table {
-        min-width: 760px;
-        border-spacing: 0 14px;
-    }
-
-        .admin-students-page .admin-database-table thead th {
-            font-size: 12px;
-            padding: 9px 10px;
-        }
-
-        .admin-students-page .admin-database-table tbody tr.admin-table-row td {
-            padding: 10px 8px;
-        }
-
-    .admin-students-page .admin-table-pill {
-        font-size: 12px;
-        min-height: 36px;
-        padding: 8px 10px;
-    }
-
-    .admin-students-page .admin-database-view-btn,
-    .admin-students-page .admin-view-btn {
-        font-size: 13px;
-        padding: 10px 14px;
-    }
-}
-/* ============================= */
-/* ADMIN INSTRUCTORS DATABASE ONLY */
-/* ============================= */
-
-.admin-instructors-page .admin-inner-card {
-    background: #d0d0d0;
-    border-radius: 22px;
-    padding: 22px;
-}
-
-.admin-instructors-page .admin-table-shell {
-    background: linear-gradient(135deg, #4f7fd8, #6a98f0);
-    border-radius: 24px;
-    padding: 24px 20px;
-    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
-}
-
-.admin-instructors-page .admin-database-table {
-    width: 100%;
-    border-collapse: separate;
-    border-spacing: 0 18px;
-    table-layout: fixed;
-}
-
-    /* COLUMN WIDTHS */
-    .admin-instructors-page .admin-database-table th:nth-child(1),
-    .admin-instructors-page .admin-database-table td:nth-child(1) {
-        width: 14%;
-    }
-
-    .admin-instructors-page .admin-database-table th:nth-child(2),
-    .admin-instructors-page .admin-database-table td:nth-child(2) {
-        width: 16%;
-    }
-
-    .admin-instructors-page .admin-database-table th:nth-child(3),
-    .admin-instructors-page .admin-database-table td:nth-child(3) {
-        width: 22%;
-    }
-
-    .admin-instructors-page .admin-database-table th:nth-child(4),
-    .admin-instructors-page .admin-database-table td:nth-child(4) {
-        width: 18%;
-    }
-
-    .admin-instructors-page .admin-database-table th:nth-child(5),
-    .admin-instructors-page .admin-database-table td:nth-child(5) {
-        width: 15%;
-    }
-
-    .admin-instructors-page .admin-database-table th:nth-child(6),
-    .admin-instructors-page .admin-database-table td:nth-child(6) {
-        width: 15%;
-    }
-
-    /* HEADER */
-    .admin-instructors-page .admin-database-table thead th {
-        background: #c6c6c6;
-        color: #111;
-        padding: 11px 12px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 13px;
-        border-radius: 10px;
-    }
-
-    /* ROW */
-    .admin-instructors-page .admin-database-table tbody tr.admin-table-row td {
-        background: #4473c7;
-        padding: 12px 10px;
-        vertical-align: middle;
-    }
-
-        .admin-instructors-page .admin-database-table tbody tr.admin-table-row td:first-child {
-            border-top-left-radius: 18px;
-            border-bottom-left-radius: 18px;
-        }
-
-        .admin-instructors-page .admin-database-table tbody tr.admin-table-row td:last-child {
-            border-top-right-radius: 18px;
-            border-bottom-right-radius: 18px;
-        }
-
-/* PILLS */
-.admin-instructors-page .admin-table-pill {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    background: #d7d3cc;
-    color: #111;
-    padding: 10px 12px;
-    border-radius: 10px;
-    width: 100%;
-    min-height: 40px;
-    font-size: 13px;
-    text-align: center;
-    white-space: nowrap;
-}
-
-/* BUTTON */
-.admin-instructors-page .admin-view-btn {
-    background: #eee4d4;
-    color: #111;
-    border: none;
-    padding: 12px 18px;
-    border-radius: 16px;
-    cursor: pointer;
-    font-size: 15px;
-    font-weight: 600;
-    min-width: 78px;
-    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
-}
-
-    .admin-instructors-page .admin-view-btn:hover {
-        background: #e3d8c8;
-        transform: translateY(-1px);
-        box-shadow: 0 5px 10px rgba(0,0,0,0.10);
-    }
-
-/* MOBILE */
-@media (max-width: 900px) {
-    .admin-instructors-page .admin-inner-card {
-        padding: 16px;
-    }
-
-    .admin-instructors-page .admin-table-shell {
-        padding: 16px 14px;
-        overflow-x: auto;
-    }
-
-    .admin-instructors-page .admin-database-table {
-        min-width: 760px;
-        border-spacing: 0 14px;
-    }
-
-        .admin-instructors-page .admin-database-table thead th {
-            font-size: 12px;
-            padding: 9px 10px;
-        }
-
-        .admin-instructors-page .admin-database-table tbody tr.admin-table-row td {
-            padding: 10px 8px;
-        }
-
-    .admin-instructors-page .admin-table-pill {
-        font-size: 12px;
-        min-height: 36px;
-        padding: 8px 10px;
-    }
-
-    .admin-instructors-page .admin-view-btn {
-        font-size: 13px;
-        padding: 10px 14px;
+    .admin-student-profile-page .admin-mini-card {
+        min-width: 100%;
     }
 }

@@ -2,7 +2,7 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 
-<div class="admin-main-content admin-student-profile-page">
+<div class="admin-main-content admin-student-profile-page admin-detail-page">
     <div class="admin-brand-title">SER Driving School</div>
 
     <h3 class="admin-page-title">Student Profile</h3>
@@ -42,17 +42,18 @@
 
                     <div class="admin-detail-box admin-detail-box-wide">
                         <div class="admin-section-label">Additional Details</div>
-                        <div class="admin-student-meta-row">
-                            <div class="admin-student-mini-card">
-                                <span>Joined on</span>
-                                <strong>@Student.JoinedOn</strong>
-                            </div>
+                        
+                        <div class="admin-meta-row">
+    <div class="admin-mini-card">
+        <span>Joined on</span>
+        <strong>@Student.JoinedOn</strong>
+    </div>
 
-                            <div class="admin-student-mini-card">
-                                <span>Last login</span>
-                                <strong>@Student.LastLogin</strong>
-                            </div>
-                        </div>
+    <div class="admin-mini-card">
+        <span>Last login</span>
+        <strong>@Student.LastLogin</strong>
+    </div>
+</div>
                     </div>
 
                 </div>

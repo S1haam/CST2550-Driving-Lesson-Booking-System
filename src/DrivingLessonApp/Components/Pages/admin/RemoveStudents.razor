@@ -7,12 +7,14 @@
 
     <h3 class="admin-page-title">Managing Inactive Students</h3>
 
-    <div class="admin-nav-bar">
-        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
-        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
-        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
-        <button class="admin-action-btn" @onclick='() => Nav.NavigateTo("/")'>Log out</button>
+    <div class="admin-home-nav-wrap">
+    <div class="admin-home-nav">
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
+        <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
     </div>
+</div>
 
     <div class="admin-outer-card">
         <div class="admin-inner-card">
