@@ -522,6 +522,60 @@ h3 {
     cursor: pointer;
 }
 
+
+.confirm-message {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    margin-bottom: 18px;
+    margin-top: 8px;
+}
+
+.single-summary {
+    max-width: 520px;
+    margin: 0 auto 24px;
+}
+
+.centered-summary {
+    text-align: center;
+    font-weight: 500;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.confirm-btn {
+    background: #d4d0c8;
+    color: black;
+    border: none;
+    padding: 10px 34px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+    .confirm-btn:hover {
+        background: #c7c2b9;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* instructor card */
 .instructor-card {
     padding: 35px;

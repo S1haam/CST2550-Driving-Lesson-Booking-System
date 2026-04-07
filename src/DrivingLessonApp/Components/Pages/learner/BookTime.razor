@@ -1,16 +1,16 @@
 @page "/book-time"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@using Microsoft.AspNetCore.WebUtilities
 
 <h3>Select Time</h3>
 
-<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
     <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
-      <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
-   <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
 </div>
 
 <div class="booking-card">
@@ -52,12 +52,10 @@
 
     </div>
 
-    <!-- goes back to date selection -->
-    <button class="booking-back" @onclick='() => Nav.NavigateTo("/book")'>
+    <button class="booking-back" @onclick="GoBack">
         Back
     </button>
 
-    <!-- goes to summary page -->
     <button class="booking-btn" @onclick="GoToSummary">
         Next: summary selection
     </button>
@@ -65,20 +63,55 @@
 </div>
 
 @code {
-    string selectedTime;
+    string? selectedTime;
+    string? selectedDate;
+    string? mode;
 
-    // stores selected time
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("date", out var dateValue))
+        {
+            selectedDate = dateValue;
+        }
+
+        if (query.TryGetValue("mode", out var modeValue))
+        {
+            mode = modeValue;
+        }
+    }
+
     void SelectTime(string time)
     {
         selectedTime = time;
     }
 
-    // navigates to summary page
+    void GoBack()
+    {
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo("/book?mode=reschedule");
+        }
+        else
+        {
+            Nav.NavigateTo("/book");
+        }
+    }
+
     void GoToSummary()
     {
         if (!string.IsNullOrEmpty(selectedTime))
         {
-            Nav.NavigateTo("/book-summary");
+            if (mode == "reschedule")
+            {
+                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&mode=reschedule");
+            }
+            else
+            {
+                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}");
+            }
         }
     }
 }

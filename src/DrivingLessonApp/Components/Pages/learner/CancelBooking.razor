@@ -1,0 +1,39 @@
+@page "/cancel-booking"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Cancelling Page</h3>
+
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <p class="confirm-message">You are cancelling:</p>
+
+    <div class="summary-box single-summary">
+        <div class="summary-item centered-summary">
+            15/08/2025, 12:00 - 14:00
+        </div>
+    </div>
+
+    <p class="confirm-message">Is this correct?</p>
+
+    <div class="confirm-actions">
+        <button class="confirm-btn"
+                @onclick='() => Nav.NavigateTo("/cancel-summary")'>
+            YES
+        </button>
+
+        <button class="confirm-btn"
+                @onclick='() => Nav.NavigateTo("/schedule")'>
+            NO
+        </button>
+    </div>
+
+</div>
