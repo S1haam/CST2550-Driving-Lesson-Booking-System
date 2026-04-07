@@ -1,0 +1,47 @@
+@page "/instructor-cancel-confirmed"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<h3>Cancellation Confirmed</h3>
+
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Your lesson has been cancelled</h1>
+
+    <div class="summary-box">
+
+        <div class="summary-item">
+            <strong>Booking ID:</strong> 12340586
+        </div>
+
+        <div class="summary-item">
+            <strong>Date:</strong> 15/08/2025
+        </div>
+
+        <div class="summary-item">
+            <strong>Time:</strong> 12:00 - 14:00
+        </div>
+
+        <div class="summary-item">
+            <strong>Refund Issued:</strong> £67
+        </div>
+
+    </div>
+
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/instructorHome")'>
+        Return to home
+    </button>
+
+    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/instructor-schedule")'>
+        Back to schedule
+    </button>
+
+</div>
