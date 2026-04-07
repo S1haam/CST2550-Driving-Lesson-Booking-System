@@ -415,6 +415,22 @@ h3 {
         color: #174ea6;
     }
 
+/* login back button */
+.login-back {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+    .login-back:hover {
+        background: #333;
+    }
+
 /* signup card spacing */
 .signup-card {
     padding: 35px;
