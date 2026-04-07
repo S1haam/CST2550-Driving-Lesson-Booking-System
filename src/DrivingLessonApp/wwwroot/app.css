@@ -563,16 +563,56 @@ h3 {
     }
 
 
+/*editable setting*/
+
+.editable-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.settings-input-inline {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 220px;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #5b8df7, #3f6fd1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .edit-btn:hover {
+        background: linear-gradient(135deg, #4f7fe6, #355fc0);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .edit-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+.save-info-btn {
+    margin-top: 10px;
+}
 
 
 
 
 
 
-
-
-
-
+/*Instructor*/
 
 
 
