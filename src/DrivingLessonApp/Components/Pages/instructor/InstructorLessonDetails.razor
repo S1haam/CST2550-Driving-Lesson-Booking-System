@@ -67,9 +67,17 @@
 
 </div>
 
+<!--  BACK BUTTON -->
+<div style="text-align:center; margin-top:20px;">
+    <button class="booking-back" @onclick="GoBackToSchedule">
+        Go Back to My Schedule
+    </button>
+</div>
+
 @code {
     string instructorLessonTypeText = "Previous Lesson";
     bool instructorIsNext = false;
+    string instructorScheduleTab = "previous";
 
     string instructorNotesText = "Student should improve clutch control and mirror checks.";
     bool instructorNotesSaved = false;
@@ -84,8 +92,14 @@
             {
                 instructorLessonTypeText = "Next Lesson";
                 instructorIsNext = true;
+                instructorScheduleTab = "next";
             }
         }
+    }
+
+    void GoBackToSchedule()
+    {
+        Nav.NavigateTo($"/instructor-schedule?tab={instructorScheduleTab}");
     }
 
     void InstructorSaveNotes()

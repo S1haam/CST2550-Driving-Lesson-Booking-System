@@ -39,9 +39,15 @@
         Back
     </button>
 
+   
     <button class="booking-btn"
-            @onclick='() => Nav.NavigateTo("/instructor-cancel-confirmed")'>
+            @onclick='() => Nav.NavigateTo($"/instructor-cancel-confirmed?name={studentName}")'>
         Confirm cancellation
     </button>
 
 </div>
+
+@code {
+    //  temporary hardcoded student name
+    string studentName = "David";
+}
