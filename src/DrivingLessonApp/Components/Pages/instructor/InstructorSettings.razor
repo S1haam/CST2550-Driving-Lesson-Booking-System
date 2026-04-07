@@ -6,7 +6,6 @@
 
 <h3>Settings</h3>
 
-<!-- NAV BAR-->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
@@ -42,6 +41,11 @@
                     @onclick='() => Nav.NavigateTo("/")'>
                 Log Out
             </button>
+
+            <button class="instructor-settings-logout"
+                    @onclick='() => Nav.NavigateTo("/instructor-delete-account")'>
+                Delete Account
+            </button>
         </div>
 
         <div class="instructor-settings-content">
@@ -75,23 +79,24 @@
             @if (instructorSelectedSection == "account")
             {
                 <h4>Account Information</h4>
+
                 <div class="instructor-account-options">
-    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "name" ? "instructor-account-option-active" : "")"
-            @onclick='() => instructorSelectedAccountOption = "name"'>
-        Change Name
-    </button>
+                    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "name" ? "instructor-account-option-active" : "")"
+                            @onclick='() => instructorSelectedAccountOption = "name"'>
+                        Change Name
+                    </button>
 
-    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "contact" ? "instructor-account-option-active" : "")"
-            @onclick='() => instructorSelectedAccountOption = "contact"'>
-        Change Contact Number
-    </button>
+                    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "contact" ? "instructor-account-option-active" : "")"
+                            @onclick='() => instructorSelectedAccountOption = "contact"'>
+                        Change Contact Number
+                    </button>
 
-    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "password" ? "instructor-account-option-active" : "")"
-            @onclick='() => instructorSelectedAccountOption = "password"'>
-        Change Password
-    </button>
-</div>
-                
+                    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "password" ? "instructor-account-option-active" : "")"
+                            @onclick='() => instructorSelectedAccountOption = "password"'>
+                        Change Password
+                    </button>
+                </div>
+
                 <hr />
 
                 @if (instructorSelectedAccountOption == "name")
