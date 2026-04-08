@@ -1,9 +1,9 @@
-@page "/book-confirmed"
+@page "/reschedule-confirmed"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 @using Microsoft.AspNetCore.WebUtilities
 
-<h3>Booking Confirmed</h3>
+<h3>Reschedule Confirmed</h3>
 
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
@@ -14,7 +14,7 @@
 
 <div class="booking-card">
 
-    <h1>Your booking has been confirmed!</h1>
+    <h1>Your booking has been rescheduled!</h1>
 
     <div class="summary-box">
 
@@ -23,15 +23,15 @@
         </div>
 
         <div class="summary-item">
-            <strong>Date:</strong> @selectedDate
+            <strong>New Date:</strong> @selectedDate
         </div>
 
         <div class="summary-item">
-            <strong>Time:</strong> @selectedTime
+            <strong>New Time:</strong> @selectedTime
         </div>
 
         <div class="summary-item">
-            <strong>Fee:</strong> £67
+            <strong>Fee:</strong> £0
         </div>
 
     </div>

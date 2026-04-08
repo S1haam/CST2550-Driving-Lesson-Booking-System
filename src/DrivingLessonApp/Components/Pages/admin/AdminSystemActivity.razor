@@ -22,38 +22,67 @@
                 <div class="admin-detail-grid">
 
                     <div class="admin-detail-box">
-                        <div class="admin-section-label">Account Information</div>
-                        <p><strong>Name:</strong> @Admin.Name</p>
-                        <p><strong>Email:</strong> @Admin.Email</p>
-                        <p><strong>Phone Number:</strong> @Admin.Phone</p>
-                        <p>
-                            <strong>Account Status:</strong>
-                            <span class="admin-status-pill">@Admin.Status</span>
-                        </p>
+                        <div class="admin-section-label">Activity Overview</div>
+                        <p><strong>Total Students:</strong> @Overview.TotalStudents</p>
+                        <p><strong>Active This Week:</strong> @Overview.ActiveThisWeek</p>
+                        <p><strong>Inactive Over 100 Days:</strong> @Overview.InactiveStudents</p>
+                        <p><strong>Lessons Booked This Week:</strong> @Overview.WeeklyBookings</p>
                     </div>
 
                     <div class="admin-detail-box">
-                        <div class="admin-section-label">Security Settings</div>
-                        <p><strong>Last password change:</strong> @Admin.LastPasswordChange</p>
-                        <p>
-                            <strong>Login History:</strong>
-                            <span class="admin-link-chip">View Activity</span>
-                        </p>
+                        <div class="admin-section-label">Quick Actions</div>
+                        <div class="admin-meta-row">
+                            <button class="admin-mini-card action-card" type="button"
+                                    @onclick='() => Nav.NavigateTo("/admin/remove-students")'>
+                                <span>Inactive Students</span>
+                                <strong>Manage Removals</strong>
+                            </button>
+
+                            <button class="admin-mini-card action-card" type="button"
+                                    @onclick='() => Nav.NavigateTo("/admin/students")'>
+                                <span>Student Records</span>
+                                <strong>Open Student Database</strong>
+                            </button>
+                        </div>
                     </div>
 
                     <div class="admin-detail-box admin-detail-box-wide">
-                        <div class="admin-section-label">Additional Actions</div>
-                        <div class="admin-meta-row">
-    <button class="admin-mini-card action-card" type="button">
-                                <span>Password</span>
-                                <strong>Change Password</strong>
-                            </button>
-                            <button class="admin-mini-card action-card" type="button">
-                                <span>Email</span>
-                                <strong>Update Email</strong>
-                            </button>
-                        </div>
+                        <div class="admin-section-label">Recent Student Activity</div>
 
+                        <div class="admin-activity-table-wrap">
+                            <table class="admin-activity-table">
+                                <thead>
+                                    <tr>
+                                        <th>Student ID</th>
+                                        <th>Name</th>
+                                        <th>Last Activity</th>
+                                        <th>Status</th>
+                                        <th>View</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach (var student in Students)
+                                    {
+                                        <tr>
+                                            <td>@student.StudentId</td>
+                                            <td>@student.Name</td>
+                                            <td>@student.LastActivity</td>
+                                            <td>
+                                                <span class="@(student.IsInactive ? "admin-status-pill admin-status-warning" : "admin-status-pill")">
+                                                    @(student.IsInactive ? "Inactive" : "Active")
+                                                </span>
+                                            </td>
+                                            <td>
+                                                <button class="admin-view-btn"
+                                                        @onclick='() => Nav.NavigateTo($"/admin/student-activity/{student.StudentId}")'>
+                                                    View Activity
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    }
+                                </tbody>
+                            </table>
+                        </div>
                     </div>
 
                 </div>
@@ -69,21 +98,35 @@
 </div>
 
 @code {
-    public class SystemActivityModel
+    public class SystemOverviewModel
     {
-        public string Name { get; set; } = "";
-        public string Email { get; set; } = "";
-        public string Phone { get; set; } = "";
-        public string Status { get; set; } = "";
-        public string LastPasswordChange { get; set; } = "";
+        public int TotalStudents { get; set; }
+        public int ActiveThisWeek { get; set; }
+        public int InactiveStudents { get; set; }
+        public int WeeklyBookings { get; set; }
     }
 
-    public SystemActivityModel Admin { get; set; } = new SystemActivityModel
+    public class StudentActivitySummary
     {
-        Name = "Admin User",
-        Email = "au@gmail.com",
-        Phone = "07345678912",
-        Status = "Active",
-        LastPasswordChange = "05/10/2025"
+        public string StudentId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string LastActivity { get; set; } = "";
+        public bool IsInactive { get; set; }
+    }
+
+    public SystemOverviewModel Overview { get; set; } = new()
+    {
+        TotalStudents = 42,
+        ActiveThisWeek = 28,
+        InactiveStudents = 2,
+        WeeklyBookings = 19
+    };
+
+    public List<StudentActivitySummary> Students { get; set; } = new()
+    {
+        new StudentActivitySummary { StudentId = "001", Name = "John Smith", LastActivity = "10/03/2025 - Lesson completed", IsInactive = false },
+        new StudentActivitySummary { StudentId = "002", Name = "Amy Jones", LastActivity = "09/03/2025 - Logged in", IsInactive = false },
+        new StudentActivitySummary { StudentId = "010", Name = "Phil", LastActivity = "25/04/2024 - Last login", IsInactive = true },
+        new StudentActivitySummary { StudentId = "011", Name = "Sam", LastActivity = "09/07/2024 - Last booking", IsInactive = true }
     };
 }

@@ -1,16 +1,16 @@
 @page "/book-summary"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@using Microsoft.AspNetCore.WebUtilities
 
 <h3>Booking Summary</h3>
 
-<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
     <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
     <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
-  <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
 </div>
 
 <div class="booking-card">
@@ -19,29 +19,35 @@
 
     <p>Please review your booking details:</p>
 
-    <!-- summary details -->
     <div class="summary-box">
 
         <div class="summary-item">
-            <strong>Date:</strong> selected date
+            <strong>Date:</strong> @selectedDate
         </div>
 
         <div class="summary-item">
-            <strong>Time:</strong> selected time
+            <strong>Time:</strong> @selectedTime
         </div>
 
-        <div class="summary-item">
-            <strong>Fee:</strong> £67
-        </div>
+        @if (mode == "reschedule")
+        {
+            <div class="summary-item">
+                <strong>Fee:</strong> £0
+            </div>
+        }
+        else
+        {
+            <div class="summary-item">
+                <strong>Fee:</strong> £67
+            </div>
+        }
 
     </div>
 
-    <!-- back button -->
-    <button class="booking-back" @onclick='() => Nav.NavigateTo("/book-time")'>
+    <button class="booking-back" @onclick="GoBack">
         Back
     </button>
 
-    <!-- confirm booking -->
     <button class="booking-btn" @onclick="ConfirmBooking">
         Confirm booking
     </button>
@@ -49,9 +55,52 @@
 </div>
 
 @code {
-    // moves to confirmed page
+    string? selectedDate;
+    string? selectedTime;
+    string? mode;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("date", out var dateValue))
+        {
+            selectedDate = dateValue;
+        }
+
+        if (query.TryGetValue("time", out var timeValue))
+        {
+            selectedTime = timeValue;
+        }
+
+        if (query.TryGetValue("mode", out var modeValue))
+        {
+            mode = modeValue;
+        }
+    }
+
+    void GoBack()
+    {
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule");
+        }
+        else
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}");
+        }
+    }
+
     void ConfirmBooking()
     {
-        Nav.NavigateTo("/book-confirmed");
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/reschedule-confirmed?date={selectedDate}&time={selectedTime}");
+        }
+        else
+        {
+            Nav.NavigateTo($"/book-confirmed?date={selectedDate}&time={selectedTime}");
+        }
     }
 }

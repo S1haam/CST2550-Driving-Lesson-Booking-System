@@ -6,7 +6,6 @@
 
 <h3>Settings</h3>
 
-<!-- NAV BAR-->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
@@ -42,6 +41,11 @@
                     @onclick='() => Nav.NavigateTo("/")'>
                 Log Out
             </button>
+
+            <button class="instructor-settings-logout"
+                    @onclick='() => Nav.NavigateTo("/instructor-delete-account")'>
+                Delete Account
+            </button>
         </div>
 
         <div class="instructor-settings-content">
@@ -75,55 +79,118 @@
             @if (instructorSelectedSection == "account")
             {
                 <h4>Account Information</h4>
-                <div class="instructor-account-options">
-    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "name" ? "instructor-account-option-active" : "")"
-            @onclick='() => instructorSelectedAccountOption = "name"'>
-        Change Name
-    </button>
 
-    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "contact" ? "instructor-account-option-active" : "")"
-            @onclick='() => instructorSelectedAccountOption = "contact"'>
-        Change Contact Number
-    </button>
+                <div class="instructor-account-info-card">
 
-    <button class="instructor-account-option-btn @(instructorSelectedAccountOption == "password" ? "instructor-account-option-active" : "")"
-            @onclick='() => instructorSelectedAccountOption = "password"'>
-        Change Password
-    </button>
-</div>
-                
-                <hr />
+                    <div class="editable-row">
+                        <strong>Name:</strong>
+                        @if (editingField == "name")
+                        {
+                            <input class="settings-input-inline" @bind="InstructorName" />
+                        }
+                        else
+                        {
+                            <span>@InstructorName</span>
+                        }
+                        <button class="edit-btn" @onclick='() => StartEditing("name")'>Edit</button>
+                    </div>
 
-                @if (instructorSelectedAccountOption == "name")
-                {
-                    <h5>Change Name</h5>
-                    <input class="settings-input" placeholder="Enter New Name..." @bind="instructorNewName" />
-                    <input class="settings-input" type="password" placeholder="Password" @bind="instructorAccountPassword" />
-                    <button class="instructor-settings-save" @onclick="InstructorSaveAccount">Save</button>
-                }
-                else if (instructorSelectedAccountOption == "contact")
-                {
-                    <h5>Change Contact Number</h5>
-                    <input class="settings-input" placeholder="Enter New Contact Number..." @bind="instructorNewContact" />
-                    <input class="settings-input" type="password" placeholder="Password" @bind="instructorAccountPassword" />
-                    <button class="instructor-settings-save" @onclick="InstructorSaveAccount">Save</button>
-                }
-                else if (instructorSelectedAccountOption == "password")
-                {
-                    <h5>Change Password</h5>
-                    <input class="settings-input" type="password" placeholder="Current Password" @bind="instructorCurrentPassword" />
-                    <input class="settings-input" type="password" placeholder="New Password" @bind="instructorNewPassword" />
-                    <button class="instructor-settings-save" @onclick="InstructorSaveAccount">Save</button>
-                }
-                else
-                {
-                    <p>Select an account option from above.</p>
-                }
+                    <div class="editable-row">
+                        <strong>Email:</strong>
+                        @if (editingField == "email")
+                        {
+                            <input class="settings-input-inline" @bind="InstructorEmail" />
+                        }
+                        else
+                        {
+                            <span>@InstructorEmail</span>
+                        }
+                        <button class="edit-btn" @onclick='() => StartEditing("email")'>Edit</button>
+                    </div>
 
-                @if (instructorAccountSaved)
-                {
-                    <p class="success-text">Account details updated successfully.</p>
-                }
+                    <div class="editable-row">
+                        <strong>Password:</strong>
+                        @if (showPasswordForm)
+                        {
+                            <div class="inline-password-form">
+                                <input type="password"
+                                       class="settings-input-inline instructor-password-input"
+                                       placeholder="Current Password"
+                                       @bind="currentPassword" />
+
+                                <input type="password"
+                                       class="settings-input-inline instructor-password-input"
+                                       placeholder="New Password"
+                                       @bind="newPassword" />
+
+                                <input type="password"
+                                       class="settings-input-inline instructor-password-input"
+                                       placeholder="Confirm New Password"
+                                       @bind="confirmPassword" />
+
+                                <button class="admin-password-update-btn"
+                                        type="button"
+                                        @onclick="UpdateInstructorPassword">
+                                    Update Password
+                                </button>
+
+                                <button class="admin-password-back-btn"
+                                        type="button"
+                                        @onclick="ClosePasswordForm">
+                                    Back
+                                </button>
+
+                                @if (passwordChanged)
+                                {
+                                    <p class="success-text">Password changed successfully. Redirecting to start page...</p>
+                                }
+                            </div>
+                        }
+                        else
+                        {
+                            <button class="admin-primary-btn"
+                                    type="button"
+                                    @onclick="OpenPasswordForm">
+                                Change Password
+                            </button>
+                        }
+                    </div>
+
+                    <div class="editable-row">
+                        <strong>Phone Number:</strong>
+                        @if (editingField == "phone")
+                        {
+                            <input class="settings-input-inline" @bind="InstructorPhoneNumber" />
+                        }
+                        else
+                        {
+                            <span>@InstructorPhoneNumber</span>
+                        }
+                        <button class="edit-btn" @onclick='() => StartEditing("phone")'>Edit</button>
+                    </div>
+
+                    <div class="editable-row">
+                        <strong>Instructor ID:</strong>
+                        @if (editingField == "id")
+                        {
+                            <input class="settings-input-inline" @bind="InstructorId" />
+                        }
+                        else
+                        {
+                            <span>@InstructorId</span>
+                        }
+                        <button class="edit-btn" @onclick='() => StartEditing("id")'>Edit</button>
+                    </div>
+
+                    <button class="small-btn save-info-btn" @onclick="SaveInstructorChanges">
+                        Save Changes
+                    </button>
+
+                    @if (instructorAccountSaved)
+                    {
+                        <p class="success-text">Changes saved</p>
+                    }
+                </div>
             }
 
             @if (instructorSelectedSection == "status")
@@ -162,7 +229,6 @@
 
 @code {
     string instructorSelectedSection = "account";
-    string instructorSelectedAccountOption = "";
 
     List<string> instructorCurrentTimes = new() { "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm" };
 
@@ -176,11 +242,19 @@
 
     string instructorStatus = "Active";
 
-    string? instructorNewName;
-    string? instructorNewContact;
-    string? instructorAccountPassword;
-    string? instructorCurrentPassword;
-    string? instructorNewPassword;
+    string InstructorName = "David Smith";
+    string InstructorEmail = "david@gmail.com";
+    string InstructorPhoneNumber = "07958294911";
+    string InstructorId = "INS2045";
+
+    string editingField = "";
+
+    string? currentPassword;
+    string? newPassword;
+    string? confirmPassword;
+
+    bool showPasswordForm = false;
+    bool passwordChanged = false;
 
     bool instructorScheduleSaved = false;
     bool instructorAccountSaved = false;
@@ -201,9 +275,52 @@
         instructorScheduleSaved = true;
     }
 
-    void InstructorSaveAccount()
+    void StartEditing(string field)
     {
+        editingField = field;
+        instructorAccountSaved = false;
+    }
+
+    void SaveInstructorChanges()
+    {
+        editingField = "";
         instructorAccountSaved = true;
+    }
+
+    void OpenPasswordForm()
+    {
+        showPasswordForm = true;
+        passwordChanged = false;
+    }
+
+    void ClosePasswordForm()
+    {
+        showPasswordForm = false;
+        currentPassword = "";
+        newPassword = "";
+        confirmPassword = "";
+        passwordChanged = false;
+    }
+
+    async Task UpdateInstructorPassword()
+    {
+        if (string.IsNullOrWhiteSpace(currentPassword) ||
+            string.IsNullOrWhiteSpace(newPassword) ||
+            string.IsNullOrWhiteSpace(confirmPassword))
+        {
+            return;
+        }
+
+        if (newPassword != confirmPassword)
+        {
+            return;
+        }
+
+        passwordChanged = true;
+
+        await Task.Delay(2000);
+
+        Nav.NavigateTo("/");
     }
 
     void InstructorSaveStatus()

@@ -59,9 +59,17 @@
 
 </div>
 
+<!-- back to schedule -->
+<div style="text-align:center; margin-top:20px;">
+    <button class="booking-back" @onclick="GoBackToSchedule">
+        Go Back to My Schedule
+    </button>
+</div>
+
 @code {
     string lessonTypeText = "Previous Lesson";
     bool isNext = false;
+    string scheduleTab = "previous";
 
     protected override void OnInitialized()
     {
@@ -73,7 +81,13 @@
             {
                 lessonTypeText = "Next Lesson";
                 isNext = true;
+                scheduleTab = "next";
             }
         }
+    }
+
+    void GoBackToSchedule()
+    {
+        Nav.NavigateTo($"/schedule?tab={scheduleTab}");
     }
 }

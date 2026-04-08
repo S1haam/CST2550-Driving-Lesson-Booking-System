@@ -24,11 +24,68 @@
 
             <!-- personal info -->
             <div class="settings-card">
-                <h2>Personal Information</h2>
-                <p><strong>Name:</strong> John</p>
-                <p><strong>Email:</strong> john@gmail.com</p>
-                <p><strong>Phone Number:</strong> 07958294911</p>
-                <p><strong>Address:</strong> 23 Bromley Rd</p>
+                <h2>Account Information</h2>
+
+                <div class="editable-row">
+                    <strong>Name:</strong>
+                    @if (editingField == "name")
+                    {
+                        <input class="settings-input-inline" @bind="Name" />
+                    }
+                    else
+                    {
+                        <span>@Name</span>
+                    }
+                    <button class="edit-btn" @onclick='() => StartEditing("name")'>Edit</button>
+                </div>
+
+                <div class="editable-row">
+                    <strong>Email:</strong>
+                    @if (editingField == "email")
+                    {
+                        <input class="settings-input-inline" @bind="Email" />
+                    }
+                    else
+                    {
+                        <span>@Email</span>
+                    }
+                    <button class="edit-btn" @onclick='() => StartEditing("email")'>Edit</button>
+                </div>
+
+                <div class="editable-row">
+                    <strong>Phone Number:</strong>
+                    @if (editingField == "phone")
+                    {
+                        <input class="settings-input-inline" @bind="PhoneNumber" />
+                    }
+                    else
+                    {
+                        <span>@PhoneNumber</span>
+                    }
+                    <button class="edit-btn" @onclick='() => StartEditing("phone")'>Edit</button>
+                </div>
+
+                <div class="editable-row">
+                    <strong>Address:</strong>
+                    @if (editingField == "address")
+                    {
+                        <input class="settings-input-inline" @bind="Address" />
+                    }
+                    else
+                    {
+                        <span>@Address</span>
+                    }
+                    <button class="edit-btn" @onclick='() => StartEditing("address")'>Edit</button>
+                </div>
+
+                <button class="small-btn save-info-btn" @onclick="SaveChanges">
+                    Save Changes
+                </button>
+
+                @if (changesSaved)
+                {
+                    <p class="success-text">Changes saved</p>
+                }
             </div>
 
             <!-- license -->
@@ -79,3 +136,25 @@
     </div>
 
 </div>
+
+@code {
+    string Name = "John";
+    string Email = "john@gmail.com";
+    string PhoneNumber = "07958294911";
+    string Address = "23 Bromley Rd";
+
+    string editingField = "";
+    bool changesSaved = false;
+
+    void StartEditing(string field)
+    {
+        editingField = field;
+        changesSaved = false;
+    }
+
+    void SaveChanges()
+    {
+        editingField = "";
+        changesSaved = true;
+    }
+}

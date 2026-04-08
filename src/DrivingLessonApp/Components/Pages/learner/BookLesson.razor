@@ -1,10 +1,10 @@
 @page "/book"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@using Microsoft.AspNetCore.WebUtilities
 
 <h3>Book Lessons</h3>
 
-<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
@@ -58,20 +58,37 @@
 </div>
 
 @code {
-    string selectedDate;
+    string? selectedDate;
+    string? mode;
 
-    // stores selected date
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("mode", out var value))
+        {
+            mode = value;
+        }
+    }
+
     void SelectDate(string date)
     {
         selectedDate = date;
     }
 
-    // navigates to next step
     void GoToTimeSelection()
     {
         if (!string.IsNullOrEmpty(selectedDate))
         {
-            Nav.NavigateTo($"/book-time?date={selectedDate}");
+            if (mode == "reschedule")
+            {
+                Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule");
+            }
+            else
+            {
+                Nav.NavigateTo($"/book-time?date={selectedDate}");
+            }
         }
     }
 }

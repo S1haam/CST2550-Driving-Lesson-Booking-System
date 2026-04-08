@@ -13,7 +13,7 @@
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
     <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
     <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
- <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
 </div>
 
 <div class="card next-card">
@@ -47,7 +47,33 @@
         {
             <div class="lesson-item">
                 <span>@searchResult.Date @searchResult.Time</span>
-                <button @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>VIEW</button>
+
+                @if (searchResult.IsNextLesson)
+                {
+                    <div>
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/lesson-details?type=next")'>
+                            VIEW
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/reschedule-booking")'>
+                            RESCHEDULE
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/cancel-booking")'>
+                            CANCEL
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <button class="schedule-action-btn"
+                            @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>
+                        VIEW
+                    </button>
+                }
             </div>
         }
         @* shows next lessons *@
@@ -58,9 +84,20 @@
                 <div class="lesson-item">
                     <span>@lesson.Date @lesson.Time</span>
                     <div>
-                        <button @onclick='() => Nav.NavigateTo("/lesson-details?type=next")'>VIEW</button>
-                        <button>RESCHEDULE</button>
-                        <button>CANCEL</button>
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/lesson-details?type=next")'>
+                            VIEW
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/reschedule-booking")'>
+                            RESCHEDULE
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/cancel-booking")'>
+                            CANCEL
+                        </button>
                     </div>
                 </div>
             }
@@ -72,7 +109,10 @@
             {
                 <div class="lesson-item">
                     <span>@lesson.Date @lesson.Time</span>
-                    <button @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>VIEW</button>
+                    <button class="schedule-action-btn"
+                            @onclick='() => Nav.NavigateTo("/lesson-details?type=previous")'>
+                        VIEW
+                    </button>
                 </div>
             }
         }
@@ -82,16 +122,12 @@
 </div>
 
 @code {
-    // controls active tab
     bool showNext = true;
 
-    // stores search input
-    string searchId;
+    string? searchId;
 
-    // stores found lesson
-    Lesson searchResult;
+    Lesson? searchResult;
 
-    // sets tab from url
     protected override void OnInitialized()
     {
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
@@ -102,20 +138,17 @@
         }
     }
 
-    // list of next lessons
     List<Lesson> nextLessons = new()
     {
-        new Lesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00" },
-        new Lesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00" }
+        new Lesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00", IsNextLesson = true },
+        new Lesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00", IsNextLesson = true }
     };
 
-    // list of previous lessons
     List<Lesson> previousLessons = new()
     {
-        new Lesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00" }
+        new Lesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00", IsNextLesson = false }
     };
 
-    // finds lesson by id
     void SearchBooking()
     {
         searchResult = null;
@@ -139,11 +172,11 @@
         }
     }
 
-    // lesson model
     class Lesson
     {
         public int Id { get; set; }
-        public string Date { get; set; }
-        public string Time { get; set; }
+        public string Date { get; set; } = "";
+        public string Time { get; set; } = "";
+        public bool IsNextLesson { get; set; }
     }
 }

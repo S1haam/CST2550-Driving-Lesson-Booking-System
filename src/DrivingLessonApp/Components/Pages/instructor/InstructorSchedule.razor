@@ -1,4 +1,3 @@
-
 @page "/instructor-schedule"
 @using Microsoft.AspNetCore.WebUtilities
 @rendermode InteractiveServer
@@ -8,7 +7,6 @@
 
 <h3>My Schedule</h3>
 
-<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
@@ -46,7 +44,28 @@
         {
             <div class="lesson-item">
                 <span>@instructorSearchResult.Date @instructorSearchResult.Time</span>
-                <button @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=previous")'>VIEW</button>
+
+                @if (instructorSearchResult.IsNextLesson)
+                {
+                    <div>
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=next")'>
+                            VIEW
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/instructor-cancel-booking")'>
+                            CANCEL
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <button class="schedule-action-btn"
+                            @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=previous")'>
+                        VIEW
+                    </button>
+                }
             </div>
         }
         else if (instructorShowNext)
@@ -56,9 +75,15 @@
                 <div class="lesson-item">
                     <span>@instructorLesson.Date @instructorLesson.Time</span>
                     <div>
-                        <button @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=next")'>VIEW</button>
-                        <button>RESCHEDULE</button>
-                        <button>CANCEL</button>
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=next")'>
+                            VIEW
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo("/instructor-cancel-booking")'>
+                            CANCEL
+                        </button>
                     </div>
                 </div>
             }
@@ -69,7 +94,10 @@
             {
                 <div class="lesson-item">
                     <span>@instructorLesson.Date @instructorLesson.Time</span>
-                    <button @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=previous")'>VIEW</button>
+                    <button class="schedule-action-btn"
+                            @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=previous")'>
+                        VIEW
+                    </button>
                 </div>
             }
         }
@@ -97,13 +125,13 @@
 
     List<InstructorLesson> instructorNextLessons = new()
     {
-        new InstructorLesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00" },
-        new InstructorLesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00" }
+        new InstructorLesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00", IsNextLesson = true },
+        new InstructorLesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00", IsNextLesson = true }
     };
 
     List<InstructorLesson> instructorPreviousLessons = new()
     {
-        new InstructorLesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00" }
+        new InstructorLesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00", IsNextLesson = false }
     };
 
     void InstructorSearchBooking()
@@ -134,5 +162,6 @@
         public int Id { get; set; }
         public string Date { get; set; } = "";
         public string Time { get; set; } = "";
+        public bool IsNextLesson { get; set; }
     }
 }
