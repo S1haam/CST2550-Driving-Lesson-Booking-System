@@ -776,6 +776,30 @@ h3 {
     font-size: 15px;
     margin-bottom: 25px;
 }
+/*account info*/
+
+.instructor-account-info-card {
+    background: #f3f3f3;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-top: 12px;
+}
+
+    .instructor-account-info-card p {
+        margin: 0 0 18px;
+        font-size: 17px;
+        line-height: 1.5;
+        color: #111;
+    }
+
+        .instructor-account-info-card p:last-child {
+            margin-bottom: 0;
+        }
+
+    .instructor-account-info-card strong {
+        font-weight: 700;
+        color: #111;
+    }
 
 /* dropdown styling */
 .booking-select {
@@ -2268,6 +2292,169 @@ body {
     font-size: 15px;
     color: #111827;
 }
+
+
+
+/* ============================= */
+/* setting */
+/* ============================= */
+.editable-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.settings-input-inline {
+    padding: 8px 10px;
+    border: 1px solid #c9d3e7;
+    border-radius: 8px;
+    min-width: 220px;
+    font-size: 14px;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #5b8df7, #3f6fd1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .edit-btn:hover {
+        background: linear-gradient(135deg, #4f7fe6, #355fc0);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .edit-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+.save-info-btn {
+    margin-top: 10px;
+}
+
+.status-toggle-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-toggle-btn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background: #e6ebf5;
+    color: #1f2937;
+}
+
+    .status-toggle-btn:hover {
+        transform: translateY(-1px);
+    }
+
+.status-selected-active {
+    background: #dff3e4;
+    color: #1d6b36;
+}
+
+.status-selected-inactive {
+    background: #f8d7da;
+    color: #a1262d;
+}
+
+.admin-status-inactive {
+    background: #f8d7da;
+    color: #a1262d;
+}
+
+
+/* ============================= */
+/* admin change password */
+/* ============================= */
+
+.admin-password-shell {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.admin-password-card {
+    width: 100%;
+    max-width: 560px;
+    background: #f3f3f3;
+    border-radius: 18px;
+    padding: 34px 30px 30px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.admin-password-heading {
+    margin: 0 0 24px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #111;
+}
+
+.admin-password-input {
+    display: block;
+    width: 100%;
+    margin: 0 auto 14px;
+    padding: 12px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: white;
+}
+
+.admin-password-update-btn {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    background: linear-gradient(135deg, #2f6ecf, #2558b2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .admin-password-update-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(37, 88, 178, 0.22);
+    }
+
+.admin-password-back-btn {
+    display: inline-block;
+    margin-top: 16px;
+    background: #4a4a4a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+    .admin-password-back-btn:hover {
+        background: #383838;
+    }
 
 /* ============================= */
 /* responsive */

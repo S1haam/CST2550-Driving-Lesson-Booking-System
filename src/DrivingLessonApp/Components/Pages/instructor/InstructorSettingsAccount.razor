@@ -10,7 +10,6 @@
 
     <div class="instructor-settings-layout">
 
-        <!-- LEFT -->
         <div class="instructor-settings-sidebar">
 
             <h4>Options:</h4>
@@ -28,7 +27,6 @@
 
         </div>
 
-        <!-- RIGHT -->
         <div class="instructor-settings-content">
 
             <h4>Account Information</h4>
@@ -36,6 +34,11 @@
             <p class="account-option"
                @onclick='() => Nav.NavigateTo("/instructor-change-name")'>
                 Change Name
+            </p>
+
+            <p class="account-option"
+               @onclick='() => Nav.NavigateTo("/instructor-change-email")'>
+                Change Email
             </p>
 
             <p class="account-option"
