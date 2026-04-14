@@ -19,6 +19,7 @@ namespace Backend_Connection.Data
         public DbSet<Admin> Admins { get; set; }
         public DbSet<StudentRequest> StudentRequests { get; set; }
         public DbSet<LessonOutcome> LessonOutcomes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         // Configure relationships + seed sample data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
