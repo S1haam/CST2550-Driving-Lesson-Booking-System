@@ -1,4 +1,4 @@
-﻿namespace WebAPI.Models
+﻿namespace Backend_Connection.Models
 {
     public class Notification
     {
