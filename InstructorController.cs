@@ -1,4 +1,3 @@
-﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Backend_Connection.Data;
 using Backend_Connection.Models;
@@ -25,7 +24,7 @@ namespace Backend_Connection.Controllers
         public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications(int id)
         {
             //Queries the notifications table for notificaitions related to specific instructor
-            return await _context.Notification
+            return await _context.Notifications
                 .Where(n => n.InstructorId == id && !n.IsDeleted)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
