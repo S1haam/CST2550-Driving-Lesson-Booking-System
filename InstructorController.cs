@@ -1,18 +1,21 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using WebAPI.Data;
-using WebAPI.Models;
+using Backend_Connection.Data;
+using Backend_Connection.Models;
+using System.Threading.Tasks;
 
-namespace WebAPI.Controllers
+namespace Backend_Connection.Controllers
 {
-    //Api Controller for Instructor
+    //Api Controller for Instructor - Makes all routes start with /api/Instructor
+    //Handles all CRUD operations for Instructor.
     [ApiController]
     [Route("api/[controller]")]
     public class InstructorController : ControllerBase
     {
-        private readonly WebAPIContext _context;
+        //Access to SQL through EF Core
+        private readonly ApplicationDbContext _context;
 
-        public InstructorController(WebAPIContext context)
+        public InstructorController(ApplicationDbContext context)
         {
             _context = context;
         }
@@ -21,8 +24,9 @@ namespace WebAPI.Controllers
         [HttpGet("{id}/notifications")]
         public async Task<ActionResult<IEnumerable<Notification>>> GetNotifications(int id)
         {
+            //Queries the notifications table for notificaitions related to specific instructor
             return await _context.Notification
-                .Where(n => n.InstructorId == id)
+                .Where(n => n.InstructorId == id && !n.IsDeleted)
                 .OrderByDescending(n => n.CreatedAt)
                 .ToListAsync();
         }
@@ -31,7 +35,9 @@ namespace WebAPI.Controllers
         //GET: /api/Instructor/Learner?name=name = returning filtered list of learners querying by name
         [HttpGet("learners")]
         public async Task<ActionResult<IEnumerable<Learner>>> SearchLearner(string? name, string? email)
+
         {
+            //Queries the Learner Table by matching name and email parameters.
             var query = _context.Learner.AsQueryable();
 
             if (!string.IsNullOrEmpty(name))
@@ -47,6 +53,7 @@ namespace WebAPI.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Instructor>>> GetInstructors()
         {
+            //reads entire Instructors Table and returns as a list.
             return await _context.Instructor.ToListAsync();
         }
 
@@ -55,6 +62,8 @@ namespace WebAPI.Controllers
         [HttpGet("{id}")]
         public async Task<ActionResult<Instructor>> GetInstructor(int id)
         {
+            //Reads the instructor table and matches the id parameter.
+            //Fetches primary key
             var instructor = await _context.Instructor.FindAsync(id);
 
             if (instructor == null)
@@ -68,6 +77,7 @@ namespace WebAPI.Controllers
         [HttpPost]
         public async Task<ActionResult<Instructor>> CreateInstructor (Instructor instructor)
         {
+            //Adds new row to the instructors table.
             _context.Instructor.Add(instructor);
             await _context.SaveChangesAsync();
 
@@ -79,6 +89,7 @@ namespace WebAPI.Controllers
         [HttpPost("request")]
         public async Task<ActionResult<StudentRequest>> CreateStudentRequest(StudentRequest request)
         {
+            //Writes to StudentRequest Table and Notification Table when a student requests to be taught.
             _context.StudentRequest.Add(request);
 
             _context.Notification.Add(new Notification
@@ -96,6 +107,7 @@ namespace WebAPI.Controllers
         [HttpPost("{instructorId}/removed-student/{learnerId}")]
         public async Task<IActionResult> NotifyRemovedStudent(int instructorId, int learnerId)
         {
+            //Writes to notification table when instructor removed them from their list of students.
             _context.Notification.Add(new Notification
             {
                 InstructorId = instructorId,
@@ -112,6 +124,7 @@ namespace WebAPI.Controllers
         [HttpPost("{instructorId}/booking/{bookingId}/rescheduled")]
         public async Task<IActionResult> NotifyRescheduledBooking(int instructorId, int bookingId)
         {
+            //Adds row to notification table when booking is rescheduled
             _context.Notification.Add(new Notification
             {
                 InstructorId = instructorId,
@@ -128,6 +141,7 @@ namespace WebAPI.Controllers
         [HttpPost("{instructorId}/booking/{bookingId}/cancelled")]
         public async Task<IActionResult> NotifyCancelledBooking(int instructorId, int bookingId)
         {
+            //Adds tow to notification table when booking is cancelled by the learner
             _context.Notification.Add(new Notification
             {
                 InstructorId = instructorId,
@@ -144,6 +158,9 @@ namespace WebAPI.Controllers
         [HttpPut("request/{requestId}/accept")]
         public async Task<IActionResult> AcceptRequest(int requestId, [FromBody] string acceptanceMessage)
         {
+            //Updates the StudentRequest Table when accepting a request
+            //Sets timestamps for request acceptance and updates
+            //adds acceptance message
             var request = await _context.StudentRequest.FindAsync(requestId);
             if (request == null)
                 return NotFound("Request not found.");
@@ -167,6 +184,9 @@ namespace WebAPI.Controllers
         [HttpPut("request/{requestId}/decline")]
         public async Task<IActionResult> DeclineRequest(int requestId, [FromBody] string rejectionReason)
         {
+            //Updates the StudentRequest Table when declining a request
+            //Sets time stamps for request rejection and updates
+            //adds rejecttion message/reason
             var request = await _context.StudentRequest.FindAsync(requestId);
             if (request == null)
                 return NotFound("Request not found.");
@@ -190,6 +210,8 @@ namespace WebAPI.Controllers
         [HttpPut("notifications/{notificationId}/read")]
         public async Task<IActionResult> MarkNotificationRead(int notificationId)
         {
+            //Updates notification table when the message is read by the instructor. 
+            //Sets IsRead to true.
             var notif = await _context.Notification.FindAsync(notificationId);
             if (notif == null) 
                 return NotFound();
@@ -201,10 +223,84 @@ namespace WebAPI.Controllers
         }
 
 
+        //PUT: /api/Instructor/notifications/{notificationId}/pin = pinning notifcations that are pinned by instructor.
+        [HttpPut("notifications/{notificationId}/pin")]
+        public async Task<IActionResult> PinNotification(int notificationId)
+        {
+            //Updates notification table when the message is pinned by instructor
+            //Sets IsPinned to true.
+            //Returns message confirming pin
+            var notif = await _context.Notifications.FindAsync(notificationId);
+            if (notif == null)
+                return NotFound();
+
+            notif.IsPinned = true;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Notification is pinned." });
+        }
+
+
+        //PUT: /api/Instructor/Notifications/{notificationId}/unpin = unpinning notifications that rae unpinned by instructor.
+        [HttpPut("notifications/{notificationId}/unpin")]
+        public async Task<IActionResult> UnpinNotification(int notificationId)
+        {
+            //Updates notifcation table when message is unpinned by instuctor
+            //Sets IsPinned to false.
+            //Returns confirmation message.
+            var notif = await _context.Notifications.FindAsync(notificationId);
+            if (notif == null)
+                return NotFound();
+
+            notif.IsPinned = false;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Notification is Unpinned." });
+        }
+
+
+        //PUT: /api/Instructor/notifications/{notificationId}/delete = deleting notifications that are deleted by instructor.
+        [HttpPut("notifications/{notificationId}/delete")]
+        public async Task<IActionResult> DeleteNotification(int notificationId)
+        {
+            //Updates notifcation table when message is deleted by instuctor
+            //Sets IsDeleted to true.
+            //Returns confirmation message.
+            var notif = await _context.Notifications.FindAsync(notificationId);
+            if (notif == null)
+                return NotFound();
+
+            notif.IsDeleted = true;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Notification is Deleted." });
+        }
+
+
+        //PUT: /api/Instructor/notifications/{notificationId}/restore = restoring deleted notifications
+        [HttpPut("notifications/{notificationId}/restore")]
+        public async Task<IActionResult> RestoreNotification(int notificationId)
+        {
+            //Updates notifcation table when message is restored by instuctor
+            //Sets IsDeleted to false.
+            //Returns confirmation message.
+            var notif = await _context.Notifications.FindAsync(notificationId);
+            if (notif == null)
+                return NotFound();
+
+            notif.IsDeleted = false;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Notification is restored." });
+        }
+
+
         //PUT: /api/Instructor/id = updating an Instructor
         [HttpPut("{id}")]
         public async Task<IActionResult> UpdateInstructor(int id, Instructor instructor)
         {
+            //Updates intructor table when their details are changed.
+            //Makes sure that the ID is matched to the primary key.
             if (id != instructor.InstructorId)
                 return BadRequest("ID mismatch");
 
@@ -229,6 +325,7 @@ namespace WebAPI.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteInstructor(int id)
         {
+            //Updates instructor table when an instructor is deleted.
             var instructor = await _context.Instructor.FindAsync(id);
             if (instructor == null)
                 return NotFound();
