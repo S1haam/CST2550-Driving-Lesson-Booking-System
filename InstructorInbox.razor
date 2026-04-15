@@ -1,0 +1,161 @@
+@page "/instructor-inbox"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Instructor Inbox</h3>
+
+<!-- NAV -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+<div class="inbox-container">
+
+    <!-- HEADER -->
+    <div class="inbox-header-row">
+        <h3>Inbox</h3>
+
+        <div class="inbox-tabs">
+            <button class="@GetTabClass("all")" @onclick='() => SetTab("all")'>Inbox</button>
+            <button class="@GetTabClass("pinned")" @onclick='() => SetTab("pinned")'>Pinned</button>
+            <button class="@GetTabClass("deleted")" @onclick='() => SetTab("deleted")'>Deleted</button>
+        </div>
+    </div>
+
+    <!-- LIST -->
+    <div class="inbox-list">
+
+        @if (notifications == null)
+        {
+            <p>Loading...</p>
+        }
+        else
+        {
+            @foreach (var item in FilteredNotifications)
+            {
+                <div class="inbox-row">
+
+                    <!-- time -->
+                    <div class="inbox-time">@item.CreatedAt.ToString("HH:mm")</div>
+
+                    <!-- message -->
+                    <div class="inbox-message"
+                         @onclick='() => OpenMessage(item)'>
+                        @item.Message
+                    </div>
+
+                    <!-- date -->
+                    <div class="inbox-date">@item.CreatedAt.ToString("dd MMM yyyy")</div>
+
+                    <!-- pin -->
+                    <button class="icon-btn"
+                            @onclick="() => TogglePin(item)">
+                        @(item.IsPinned ? "📌" : "📍")
+                    </button>
+
+                    <!-- delete -->
+                    <button class="icon-btn"
+                            @onclick="() => ToggleDelete(item)">
+                        🗑
+                    </button>
+
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+    string currentTab = "all";
+    int instructorId = 1; // TEMP — replace with logged-in instructor later
+
+    List<Notification> notifications;
+
+    IEnumerable<Notification> FilteredNotifications =>
+        currentTab switch
+        {
+            "pinned" => notifications?.Where(x => x.IsPinned && !x.IsDeleted),
+            "deleted" => notifications?.Where(x => x.IsDeleted),
+            _ => notifications?.Where(x => !x.IsDeleted)
+        };
+
+    protected override async Task OnInitializedAsync()
+    {
+        notifications = await Http.GetFromJsonAsync<List<Notification>>(
+            $"api/Instructor/{instructorId}/notifications"
+        );
+    }
+
+    void SetTab(string tab)
+    {
+        currentTab = tab;
+    }
+
+    string GetTabClass(string tab)
+    {
+        return currentTab == tab ? "tab active" : "tab";
+    }
+
+    async Task TogglePin(Notification item)
+    {
+        if (item.IsPinned)
+            await Http.PutAsync($"api/Instructor/notifications/{item.NotificationId}/unpin", null);
+        else
+            await Http.PutAsync($"api/Instructor/notifications/{item.NotificationId}/pin", null);
+
+        item.IsPinned = !item.IsPinned;
+    }
+
+    async Task ToggleDelete(Notification item)
+    {
+        if (item.IsDeleted)
+            await Http.PutAsync($"api/Instructor/notifications/{item.NotificationId}/restore", null);
+        else
+            await Http.PutAsync($"api/Instructor/notifications/{item.NotificationId}/delete", null);
+
+        item.IsDeleted = !item.IsDeleted;
+    }
+
+    void OpenMessage(Notification item)
+    {
+        switch (item.NotificationType)
+        {
+            case "StudentRequest":
+                Nav.NavigateTo("/instructor-request");
+                break;
+
+            case "RescheduledBooking":
+                Nav.NavigateTo("/instructor-rescheduled-notification");
+                break;
+
+            case "CancelledBooking":
+                Nav.NavigateTo("/instructor-cancelled-notification");
+                break;
+
+            case "RemovedStudent":
+                Nav.NavigateTo("/instructor-removed-notification");
+                break;
+        }
+    }
+
+    public class Notification
+    {
+        public int NotificationId { get; set; }
+        public int InstructorId { get; set; }
+        public string Message { get; set; }
+        public string NotificationType { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public bool IsRead { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+}
