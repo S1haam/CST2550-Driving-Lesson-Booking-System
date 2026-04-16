@@ -1,0 +1,75 @@
+﻿@using System.Text.Json
+@inject HttpClient Http
+
+<div class="chatbot-container" style="position:fixed; bottom:20px; right:20px; width:320px; z-index:9999; font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;">
+    @* Chat Header *@
+    <div @onclick="ToggleChat" style="background:#007bff; color:white; padding:12px; border-radius:10px 10px 0 0; cursor:pointer; font-weight:bold; box-shadow: 0 -2px 10px rgba(0,0,0,0.1);">
+        💬 SER Driving Assistant
+    </div>
+
+    @if (isExpanded)
+    {
+        <div style="background:white; border:1px solid #ccc; border-top:none; height:350px; display:flex; flex-direction:column; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+            @* Message Window *@
+            <div style="flex:1; overflow-y:auto; padding:10px; font-size:14px;">
+                @foreach (var msg in chatHistory)
+                {
+                    <div style="margin-bottom:10px; text-align:@(msg.IsUser ? "right" : "left")">
+                        <span style="display:inline-block; padding:8px 12px; border-radius:10px; background:@(msg.IsUser ? "#007bff" : "#f1f1f1"); color:@(msg.IsUser ? "white" : "black")">
+                            @msg.Content
+                        </span>
+                    </div>
+                }
+                @if (isTyping)
+                {
+                    <div style="font-style:italic; font-size:12px; color:#888;">Bot is thinking...</div>
+                }
+            </div>
+
+            @* Input Area *@
+            <div style="display:flex; padding:10px; border-top:1px solid #eee;">
+                <input @bind="userInput" @onkeyup="HandleKeyPress" style="flex:1; padding:8px; border:1px solid #ddd; border-radius:4px;" placeholder="Ask about lessons..." />
+                <button @onclick="SendMessage" style="margin-left:5px; padding:8px 12px; background:#28a745; color:white; border:none; border-radius:4px; cursor:pointer;">Send</button>
+            </div>
+        </div>
+    }
+</div>
+
+@code {
+    private bool isExpanded = false;
+    private bool isTyping = false;
+    private string userInput = "";
+    private List<MessageEntry> chatHistory = new();
+
+    private void ToggleChat() => isExpanded = !isExpanded;
+
+    private async Task HandleKeyPress(KeyboardEventArgs e)
+    {
+        if (e.Key == "Enter") await SendMessage();
+    }
+
+    private async Task SendMessage()
+    {
+        if (string.IsNullOrWhiteSpace(userInput)) return;
+
+        var userRequest = userInput;
+        chatHistory.Add(new MessageEntry { Content = userRequest, IsUser = true });
+        userInput = "";
+        isTyping = true;
+
+        // This calls the Controller
+        var response = await Http.PostAsJsonAsync("api/chat/ask", new { message = userRequest });
+        
+        if (response.IsSuccessStatusCode)
+        {
+            var json = await response.Content.ReadAsStringAsync();
+            using var doc = JsonDocument.Parse(json);
+            var botReply = doc.RootElement.GetProperty("choices")[0].GetProperty("message").GetProperty("content").GetString();
+            chatHistory.Add(new MessageEntry { Content = botReply, IsUser = false });
+        }
+        
+        isTyping = false;
+    }
+
+    private class MessageEntry { public string Content { get; set; } public bool IsUser { get; set; } }
+}
