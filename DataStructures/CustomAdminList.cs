@@ -1,11 +1,13 @@
-﻿using Backend_Connection.Models;
+﻿using DrivingLessonBookingSystem.Models;
 
-namespace Backend_Connection.DataStructures
+namespace DrivingLessonBookingSystem.DataStructures
 {
+    /// <summary> Custom linked list for managing Admin users </summary>
     public class CustomAdminList
     {
         private AdminNode head;
 
+        /// <summary> Adds a new Admin to the list </summary>
         public void AddAdmin(Admin admin)
         {
             AdminNode newNode = new AdminNode(admin);
@@ -22,6 +24,7 @@ namespace Backend_Connection.DataStructures
             current.Next = newNode;
         }
 
+        /// <summary> Removes an Admin by their ID </summary>
         public bool RemoveAdmin(int id)
         {
             if (head == null) return false;
@@ -37,7 +40,7 @@ namespace Backend_Connection.DataStructures
             {
                 if (current.Next.Data.AdminId == id)
                 {
-                    current.Next = current.Next.Next; 
+                    current.Next = current.Next.Next;
                     return true;
                 }
                 current = current.Next;

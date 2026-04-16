@@ -1,7 +1,8 @@
-﻿using Backend_Connection.Models;
+﻿using DrivingLessonBookingSystem.Models;
 
-namespace Backend_Connection.DataStructures
+namespace DrivingLessonBookingSystem.DataStructures
 {
+    /// <summary> Custom list to handle Instructor data operations </summary>
     public class CustomInstructorList
     {
         private InstructorNode head;
@@ -22,6 +23,7 @@ namespace Backend_Connection.DataStructures
             current.Next = newNode;
         }
 
+        /// <summary> Finds an Instructor based on their unique ID </summary>
         public Instructor FindInstructor(int id)
         {
             InstructorNode current = head;
