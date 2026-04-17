@@ -1,0 +1,73 @@
+@page "/instructor-remove-confirm/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Confirm Removal</h3>
+
+@if (student == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+<div class="instructor-student-card">
+
+    <h2>@student.Name</h2>
+
+    <p>
+        Are you sure you want to remove this student?
+    </p>
+
+    <div class="instructor-confirm-actions">
+
+        <button class="instructor-success-btn"
+                @onclick="RemoveStudent">
+            Yes
+        </button>
+
+        <button class="instructor-danger-btn"
+                @onclick='() => Nav.NavigateTo("/instructor-not-removed")'>
+            No
+        </button>
+
+    </div>
+</div>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    StudentDto? student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await Http.GetFromJsonAsync<StudentDto>(
+            $"/api/Instructor/student/{id}"
+        );
+    }
+
+    async Task RemoveStudent()
+    {
+        var response = await Http.DeleteAsync($"/api/Instructor/student/{id}");
+        if (response.IsSuccessStatusCode)
+        {
+            Nav.NavigateTo("/instructor-removed");
+        }
+        else
+        {
+            Nav.NavigateTo("/instructor-not-removed");
+        }
+    }
+
+    class StudentDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string EmergencyContact { get; set; } = "";
+    }
+}
