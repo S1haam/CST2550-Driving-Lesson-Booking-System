@@ -72,6 +72,20 @@ namespace Backend_Connection.Controllers
         }
 
 
+        //GET: api/Instructor/notification/{notficationId} - returns one notification
+        [HttpGet("notification/{notificationId}")]
+        public async Task<ActionResult<Notification>> GetNotification(int notificationId)
+        {
+            //Finds one specific notification for the instructor
+            var notif = await _context.Notifications.FindAsync(notificationId);
+
+            if (notif == null)
+                return NotFound();
+
+            return Ok(notif);    
+        }
+
+
         //POST: /api/Instructor = Creating a new Instructor
         [HttpPost]
         public async Task<ActionResult<Instructor>> CreateInstructor (Instructor instructor)
