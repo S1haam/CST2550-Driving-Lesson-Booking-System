@@ -1,0 +1,37 @@
+@page "/instructor-rescheduled-notification/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+<div class="brand-title"> SER Driving School</div>
+
+@if (Notification == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+    <h3>Rescheduled Booking</h3>
+
+    <div class="instructor-message-card">
+       <h3>@Notification.NotificationType</h3>
+       <p>@Notification.Message</p>
+       <p>@Notification.CreatedAt</p>
+    </div>
+
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
+        Back
+    </button>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    Notification? Notification;
+
+    protected override async Task OnInitializedAsync()
+    {
+        Notification = await Http.GetFromJsonAsync<Notification>(
+            $"/api/Instructor/notification/{id}"
+        );
+    }
+}
