@@ -1,0 +1,60 @@
+@page "/instructor-student/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Student Details</h3>
+
+<!-- NAV -->
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+@if (student == null)
+{
+    <p>Loading...</p>
+}
+else
+{
+
+<div class="instructor-student-card">
+
+    <h2>@student.Name</h2>
+
+    <ul>
+        <li>Contact Number: @student.Phone</li>
+        <li>Email: @student.Email</li>
+        <li>Emergency Contact: @student.EmergencyContact</li>
+    </ul>
+
+    <button class="instructor-danger-btn"
+            @onclick='() => Nav.NavigateTo($"/instructor-remove-confirm/{id}")'>
+        Remove Student
+    </button>
+</div>
+}
+@code {
+    [Parameter] public int id { get; set; }
+
+    StudentDto? student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await Http.GetFromJsonAsync<StudentDto>(
+            $"/api/Instructor/student/{id}"
+        );
+    }
+
+    class StudentDto {
+        public int Id { get; set;}
+        public string Name { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string EmergencyContact { get; set; } = "";
+    }
+}
