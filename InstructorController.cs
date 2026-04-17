@@ -99,6 +99,31 @@ namespace Backend_Connection.Controllers
             return Ok(notif);    
         }
 
+        //GET /api/Instructor/settings/{id} = retriving settings information
+        [HttpGet("settings/{id}")]
+        public async Task<ActionResult<InstructorSettingsDto>> GetSettings(int id)
+        {
+           var instructor = await _context.Instructors
+                .Include(i => i.DbAvailabilities)
+                .FirstOrDefaultAsync(i => i.InstructorId == id);
+
+           if (instructor == null)
+                    return NotFound();
+
+            return new InstructorSettingsDto
+            {
+                InstructorId = instructor.InstructorId,
+                InstructorCode = instructor.InstructorCode,
+                InstructorName = instructor.InstructorName,
+                InstructorEmail = instructor.InstructorEmail,
+                InstructorPhone = instructor.InstructorPhone,
+                InstructorStatus = instructor.InstructorStatus,
+                CurrentTimes = instructor.DbAvailabilities
+                     .Select(a => a.TimeSlot)
+                     .ToList()
+            };
+        }
+
 
         //POST: /api/Instructor = Creating a new Instructor
         [HttpPost]
@@ -347,6 +372,21 @@ namespace Backend_Connection.Controllers
             return NoContent();
         }
 
+        //PUT: /api/Instructor/update-info = updating Instructor Information such as Name, Email, Phone and Status
+        [HttpPut("update-info")]
+        public async Task<IActionResult> UpdateInfo(UpdateInstructorInfoDto dto)
+        {
+           var instructor = await _context.Instructors.FindAsync(dto.InstructorId);
+           if (instructor == null) return NotFound();
+
+            instructor.InstructorName = dto.InstructorName;
+            instructor.InstructorEmail = dto.InstructorEmail;
+            instructor.InstructorPhone = dto.InstructorPhone;
+            instructor.InstructorStatus = dto.InstructorStatus;
+
+            await _context.SaveChangesAsync();
+            return NoContent();
+        }
 
         //DELETE: /api/Instructor/id = deleting an Instructor
         [HttpDelete("{id}")]
