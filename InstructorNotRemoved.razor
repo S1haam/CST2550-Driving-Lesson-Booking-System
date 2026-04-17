@@ -1,0 +1,52 @@
+@page "/instructor-not-removed/{id:int}"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Action Cancelled</h3>
+
+@if (student == null)
+{
+    <p>Loading...</p>
+}
+else 
+{
+
+<div class="instructor-student-card">
+
+    <h2>@student.Name</h2>
+
+    <p>
+        @student.Name was NOT removed from your list.
+    </p>
+
+    <button class="booking-btn"
+            @onclick='() => Nav.NavigateTo("/instructorHome")'>
+        Back to Home
+    </button>
+
+</div>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+    StudentDto? student;
+
+    protected override async Task OnInitializedAsync()
+    {
+        student = await Http.GetFromJsonAsync<StudentDto>(
+            $"/api/Instructor/student/{id}"
+        );
+    }
+
+    class StudentDto
+    {
+        public int Id { get; set; }
+        public string Name { get; set; } = "";
+        public string Phone { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string EmergencyContact { get; set; } = "";
+    }
+}
