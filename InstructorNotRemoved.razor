@@ -7,7 +7,7 @@
 
 <h3>Action Cancelled</h3>
 
-@if (student == null)
+@if (learner == null)
 {
     <p>Loading...</p>
 }
@@ -16,10 +16,10 @@ else
 
 <div class="instructor-student-card">
 
-    <h2>@student.Name</h2>
+    <h2>@learner.LearnerName</h2>
 
     <p>
-        @student.Name was NOT removed from your list.
+        @learner.LearnerName was NOT removed from your list.
     </p>
 
     <button class="booking-btn"
@@ -32,21 +32,21 @@ else
 
 @code {
     [Parameter] public int id { get; set; }
-    StudentDto? student;
+    LearnerDto? learner;
 
     protected override async Task OnInitializedAsync()
     {
-        student = await Http.GetFromJsonAsync<StudentDto>(
-            $"/api/Instructor/student/{id}"
+        learner = await Http.GetFromJsonAsync<LearnerDto>(
+            $"/api/Instructor/learner/{id}"
         );
     }
 
-    class StudentDto
+    class LearnerDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Phone { get; set; } = "";
-        public string Email { get; set; } = "";
-        public string EmergencyContact { get; set; } = "";
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerStatus { get; set; } = "";
     }
 }
