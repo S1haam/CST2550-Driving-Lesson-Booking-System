@@ -31,6 +31,20 @@ namespace Backend_Connection.Controllers
         }
 
 
+        //GET: /api/Instructor/learner/{id} = retrieving all Learners for Student List.
+        [HttpGet("learner/{id}")]
+        public async Task<ActionResult<Learner>> GetLearner(int id)
+        {
+            //Finds learner IDs for the Student list
+            var learner = await _context.Learner.FindAsync(id);
+
+            if (learner == null)
+                return NotFound();
+
+            return Ok(learner);
+        }
+
+
         //GET: /api/Instructor/Learner?name=name = returning filtered list of learners querying by name
         [HttpGet("learners")]
         public async Task<ActionResult<IEnumerable<Learner>>> SearchLearner(string? name, string? email)
