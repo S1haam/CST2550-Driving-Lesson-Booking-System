@@ -7,7 +7,7 @@
 
 <h3>Confirm Removal</h3>
 
-@if (student == null)
+@if (learner == null)
 {
     <p>Loading...</p>
 }
@@ -15,21 +15,21 @@ else
 {
 <div class="instructor-student-card">
 
-    <h2>@student.Name</h2>
+    <h2>@learner.LearnerName</h2>
 
     <p>
-        Are you sure you want to remove this student?
+        Are you sure you want to remove this Learner?
     </p>
 
     <div class="instructor-confirm-actions">
 
         <button class="instructor-success-btn"
-                @onclick="RemoveStudent">
+                @onclick="RemoveLearner">
             Yes
         </button>
 
         <button class="instructor-danger-btn"
-                @onclick='() => Nav.NavigateTo("/instructor-not-removed")'>
+                @onclick='() => Nav.NavigateTo($"/instructor-not-removed/{id}")'>
             No
         </button>
 
@@ -40,34 +40,34 @@ else
 @code {
     [Parameter] public int id { get; set; }
 
-    StudentDto? student;
+    LearnerDto? learner;
 
     protected override async Task OnInitializedAsync()
     {
-        student = await Http.GetFromJsonAsync<StudentDto>(
-            $"/api/Instructor/student/{id}"
+        learner = await Http.GetFromJsonAsync<LearnerDto>(
+            $"/api/Instructor/learner/{id}"
         );
     }
 
-    async Task RemoveStudent()
+    async Task RemoveLearner()
     {
-        var response = await Http.DeleteAsync($"/api/Instructor/student/{id}");
+        var response = await Http.DeleteAsync($"/api/Instructor/learner/{id}");
         if (response.IsSuccessStatusCode)
         {
-            Nav.NavigateTo("/instructor-removed");
+            Nav.NavigateTo($"/instructor-removed/{id}");
         }
         else
         {
-            Nav.NavigateTo("/instructor-not-removed");
+            Nav.NavigateTo($"/instructor-not-removed/{id}");
         }
     }
 
-    class StudentDto
+    class LearnerDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Phone { get; set; } = "";
-        public string Email { get; set; } = "";
-        public string EmergencyContact { get; set; } = "";
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerStatus { get; set; } = "";
     }
 }
