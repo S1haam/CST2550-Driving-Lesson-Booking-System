@@ -5,7 +5,7 @@
 
 <div class="brand-title">SER Driving School</div>
 
-<h3>Booking Request</h3>
+<h3>Learner Request</h3>
 
 <!-- NAV BAR -->
 <div class="nav-bar">
@@ -17,9 +17,9 @@
 
 <div class="instructor-message-card">
 
-    <h2>Booking Request</h2>
+    <h2>Learner Request</h2>
 
-    <p>Student is now being instructed by you.</p>
+    <p>The Learner is now being instructed by you.</p>
 
     <button class="booking-btn"
             @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
@@ -33,6 +33,6 @@
 
     protected override async Task OnInitializedAsync()
     {
-        await Http.PutAsync($"/api/Instructor/request/{id}/accept", null);
+        await Http.PutAsJsonAsync($"/api/Instructor/request/{id}/accept", "");
     }
 }
