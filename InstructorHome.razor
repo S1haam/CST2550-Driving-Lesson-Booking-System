@@ -22,7 +22,7 @@
     <p class="welcome-text">Welcome Instructor,</p>
 
     <div class="notif-bar">
-        <span>You have 2 new notifications</span>
+        <span>You have @NotificationCount new notifications</span>
         <button class="notif-btn"
                 @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
             Check Inbox
@@ -40,52 +40,52 @@
         <div class="home-card">
             <div class="card-title">Upcoming lessons</div>
 
-            @foreach (var instructorLesson in instructorLessons)
+            @foreach (var lesson in UpcomingLessons ?? new List<LessonDto>())
             {
                 <div class="pill-row">
-                    <span>@instructorLesson.DisplayText</span>
+                    <span>@lesson.DisplayText</span>
                     <button class="pill-btn"
-                            @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorLesson.Id}&type=next")'>
+                            @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={lesson.Id}&type=next")'>
                         View
                     </button>
                 </div>
             }
         </div>
 
-        <!-- STUDENTS -->
+        <!-- LEARNERS -->
         <div class="home-card">
             <div class="student-header-row">
-    <div class="card-title student-card-title">Students</div>
+                <div class="card-title student-card-title">Learners</div>
 
-    <div class="search-container student-search-container">
-        <input @bind="instructorStudentSearch"
-               placeholder="Search by ID" />
-        <button type="button">Search</button>
-    </div>
-</div>
+                <div class="search-container student-search-container">
+                    <input @bind="LearnerSearch"
+                           placeholder="Search by name" />
+                    <button type="button">Search</button>
+                </div>
+            </div>
 
             @{
-                var filteredInstructorStudents = FilteredInstructorStudents();
+                var filteredLearners = FilteredLearners();
             }
 
-            @foreach (var instructorStudent in filteredInstructorStudents)
+            @foreach (var learner in filteredLearners)
             {
                 <div class="pill-row">
                     <div class="student-left">
-                        <div class="avatar-circle">@instructorStudent.Initials</div>
-                        <span>@instructorStudent.Name</span>
+                        <div class="avatar-circle">@learner.Initials</div>
+                        <span>@learner.LearnerName</span>
                     </div>
 
                     <button class="pill-btn"
-                            @onclick='() => Nav.NavigateTo($"/instructor-student?id={instructorStudent.Id}")'>
+                            @onclick='() => Nav.NavigateTo($"/instructor-learner/{learner.LearnerId}")'>
                         View
                     </button>
                 </div>
             }
 
-            @if (!filteredInstructorStudents.Any())
+            @if (!filteredLearners.Any())
             {
-                <p>No students found.</p>
+                <p>No learners found.</p>
             }
 
         </div>
@@ -99,15 +99,15 @@
 
     int NotificationCount = 0;
     List<LessonDto>? UpcomingLessons;
-    List<StudentDto>? InstructorStudents;
+    List<LearnerDto>? InstructorLearners;
 
-    string StudentSearch = "";
+    string LearnerSearch = "";
 
     protected override async Task OnInitializedAsync()
     {
         await LoadNotifications();
         await LoadLessons();
-        await LoadStudents();
+        await LoadLearners();
     }
 
     async Task LoadNotifications()
@@ -126,19 +126,19 @@
         );
     }
 
-    async Task LoadStudents()
+    async Task LoadLearners()
     {
-        InstructorStudents = await Http.GetFromJsonAsync<List<StudentDto>>(
-            $"/api/Instructor/learners?name={StudentSearch}&email="
+        InstructorLearners = await Http.GetFromJsonAsync<List<LearnerDto>>(
+            $"/api/Instructor/learners?name={LearnerSearch}&email="
         );
     }
 
-    IEnumerable<StudentDto> FilteredInstructorStudents =>
-        InstructorStudents?
-            .Where(s =>
-                s.Name.Contains(StudentSearch, StringComparison.OrdinalIgnoreCase)
+    IEnumerable<LearnerDto> FilteredLearners() =>
+        InstructorLearners?
+            .Where(l =>
+                l.LearnerName.Contains(LearnerSearch, StringComparison.OrdinalIgnoreCase)
             )
-        ?? Enumerable.Empty<StudentDto>();
+        ?? Enumerable.Empty<LearnerDto>();
 
     class LessonDto
     {
@@ -146,10 +146,10 @@
         public string DisplayText { get; set; } = "";
     }
 
-    class StudentDto
+    class LearnerDto
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Initials => string.Join("", Name.Split(' ').Select(n => n[0]));
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string Initials => string.Join("", LearnerName.Split(' ').Select(n => n[0]));
     }
 }
