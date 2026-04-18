@@ -1,9 +1,24 @@
 @page "/instructor-lesson-details"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading lesson details...</p>
+}
 
 <h3>Lesson Details</h3>
 
@@ -24,22 +39,22 @@
 
             <div class="instructor-lesson-info-box">
                 <span>ID</span>
-                <strong>12342386</strong>
+                <strong>@bookingIdText</strong>
             </div>
 
             <div class="instructor-lesson-info-box">
                 <span>Student</span>
-                <strong>David</strong>
+                <strong>@learnerNameText</strong>
             </div>
 
             <div class="instructor-lesson-info-box">
                 <span>Date</span>
-                <strong>02/08/2025</strong>
+                <strong>@lessonDateText</strong>
             </div>
 
             <div class="instructor-lesson-info-box">
                 <span>Time</span>
-                <strong>13:00-15:00</strong>
+                <strong>@lessonTimeText</strong>
             </div>
 
         </div>
@@ -67,7 +82,6 @@
 
 </div>
 
-<!--  BACK BUTTON -->
 <div style="text-align:center; margin-top:20px;">
     <button class="booking-back" @onclick="GoBackToSchedule">
         Go Back to My Schedule
@@ -79,14 +93,26 @@
     bool instructorIsNext = false;
     string instructorScheduleTab = "previous";
 
-    string instructorNotesText = "Student should improve clutch control and mirror checks.";
+    int bookingId;
+    string bookingIdText = "-";
+    string learnerNameText = "-";
+    string lessonDateText = "-";
+    string lessonTimeText = "-";
+
+    string instructorNotesText = "";
     bool instructorNotesSaved = false;
+    string? errorMessage;
+    bool isLoading = true;
 
-    protected override void OnInitialized()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        var instructorUri = Nav.ToAbsoluteUri(Nav.Uri);
+        if (!firstRender)
+            return;
 
-        if (QueryHelpers.ParseQuery(instructorUri.Query).TryGetValue("type", out var instructorType))
+        var instructorUri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(instructorUri.Query);
+
+        if (query.TryGetValue("type", out var instructorType))
         {
             if (instructorType == "next")
             {
@@ -95,6 +121,64 @@
                 instructorScheduleTab = "next";
             }
         }
+
+        if (query.TryGetValue("id", out var bookingValue))
+        {
+            int.TryParse(bookingValue, out bookingId);
+        }
+
+        await LoadLessonDetails();
+        StateHasChanged();
+    }
+
+    private async Task LoadLessonDetails()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync($"api/instructor/lesson-details/{bookingId}");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                errorMessage = "failed to load lesson details";
+                isLoading = false;
+                return;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<InstructorLessonDetailsDto>>();
+
+            if (result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = "could not read lesson details";
+                isLoading = false;
+                return;
+            }
+
+            bookingIdText = result.Data.BookingId.ToString();
+            learnerNameText = result.Data.LearnerName;
+            lessonDateText = result.Data.LessonDate.ToString("dd/MM/yyyy");
+            lessonTimeText = result.Data.LessonTime.ToString(@"hh\:mm");
+            instructorNotesText = result.Data.InstructorNotes ?? "";
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading lesson details";
+            isLoading = false;
+        }
     }
 
     void GoBackToSchedule()
@@ -102,8 +186,69 @@
         Nav.NavigateTo($"/instructor-schedule?tab={instructorScheduleTab}");
     }
 
-    void InstructorSaveNotes()
+    async Task InstructorSaveNotes()
     {
-        instructorNotesSaved = true;
+        instructorNotesSaved = false;
+        errorMessage = null;
+
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var request = new UpdateInstructorNotesRequest
+            {
+                InstructorNotes = instructorNotesText
+            };
+
+            var response = await Http.PutAsJsonAsync(
+                $"api/instructor/lesson-details/{bookingId}/notes",
+                request);
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success)
+            {
+                errorMessage = result?.Message ?? "failed to save notes";
+                return;
+            }
+
+            instructorNotesSaved = true;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while saving notes";
+        }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class InstructorLessonDetailsDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string BookingStatus { get; set; } = "";
+        public string? InstructorNotes { get; set; }
+    }
+
+    public class UpdateInstructorNotesRequest
+    {
+        public string InstructorNotes { get; set; } = "";
     }
 }

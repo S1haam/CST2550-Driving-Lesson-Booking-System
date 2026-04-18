@@ -37,6 +37,7 @@ namespace Backend_Connection.Controllers
                     LessonTime = x.LessonTime,
                     LessonType = x.LessonType,
                     BookingStatus = x.BookingStatus,
+                    InstructorNotes = x.InstructorNotes,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt
                 })
@@ -52,7 +53,7 @@ namespace Backend_Connection.Controllers
 
         // this gets one booking by id for the logged in learner
         [Authorize(Roles = "Learner")]
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetBookingById(int id)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -97,6 +98,7 @@ namespace Backend_Connection.Controllers
                     LessonTime = booking.LessonTime,
                     LessonType = booking.LessonType,
                     BookingStatus = booking.BookingStatus,
+                    InstructorNotes = booking.InstructorNotes,
                     CreatedAt = booking.CreatedAt,
                     UpdatedAt = booking.UpdatedAt
                 }
@@ -192,6 +194,7 @@ namespace Backend_Connection.Controllers
                 LessonTime = availability.AvailableDateTime.TimeOfDay,
                 LessonType = lessonType,
                 BookingStatus = "Confirmed",
+                InstructorNotes = null,
                 CreatedAt = DateTime.Now,
                 UpdatedAt = DateTime.Now
             };
@@ -219,6 +222,7 @@ namespace Backend_Connection.Controllers
                     LessonTime = booking.LessonTime,
                     LessonType = booking.LessonType,
                     BookingStatus = booking.BookingStatus,
+                    InstructorNotes = booking.InstructorNotes,
                     CreatedAt = booking.CreatedAt,
                     UpdatedAt = booking.UpdatedAt
                 }
@@ -227,7 +231,7 @@ namespace Backend_Connection.Controllers
 
         // this cancels a booking for the logged in learner
         [Authorize(Roles = "Learner")]
-        [HttpPut("cancel/{id}")]
+        [HttpPut("cancel/{id:int}")]
         public async Task<IActionResult> CancelBooking(int id)
         {
             var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
@@ -299,7 +303,7 @@ namespace Backend_Connection.Controllers
 
         // this reschedules a booking for the logged in learner
         [Authorize(Roles = "Learner")]
-        [HttpPut("reschedule/{id}")]
+        [HttpPut("reschedule/{id:int}")]
         public async Task<IActionResult> RescheduleBooking(int id, [FromBody] RescheduleBookingRequest request)
         {
             if (request == null)
@@ -416,6 +420,7 @@ namespace Backend_Connection.Controllers
                     LessonTime = booking.LessonTime,
                     LessonType = booking.LessonType,
                     BookingStatus = booking.BookingStatus,
+                    InstructorNotes = booking.InstructorNotes,
                     CreatedAt = booking.CreatedAt,
                     UpdatedAt = booking.UpdatedAt
                 }
@@ -460,6 +465,7 @@ namespace Backend_Connection.Controllers
                     LessonTime = x.LessonTime,
                     LessonType = x.LessonType,
                     BookingStatus = x.BookingStatus,
+                    InstructorNotes = x.InstructorNotes,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt
                 })
@@ -511,6 +517,7 @@ namespace Backend_Connection.Controllers
                     LessonTime = x.LessonTime,
                     LessonType = x.LessonType,
                     BookingStatus = x.BookingStatus,
+                    InstructorNotes = x.InstructorNotes,
                     CreatedAt = x.CreatedAt,
                     UpdatedAt = x.UpdatedAt
                 })
@@ -547,6 +554,7 @@ namespace Backend_Connection.Controllers
         public TimeSpan LessonTime { get; set; }
         public string LessonType { get; set; } = "";
         public string BookingStatus { get; set; } = "";
+        public string? InstructorNotes { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

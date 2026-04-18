@@ -15,6 +15,7 @@ namespace Backend_Connection.Models
 
         /// <summary> Foreign key for the associated learner </summary>
         public int LearnerId { get; set; }
+
         /// <summary> Foreign key for the associated instructor </summary>
         public int InstructorId { get; set; }
 
@@ -27,21 +28,26 @@ namespace Backend_Connection.Models
         public TimeSpan LessonTime { get; set; }
 
         /// <summary> The type of lesson (Beginners or Mock Test) </summary>
-        public string LessonType { get; set; }
+        public string LessonType { get; set; } = string.Empty;
+
         /// <summary> Current status of the booking (Pending or Confirmed or Cancelled) </summary>
-        public string BookingStatus { get; set; }
+        public string BookingStatus { get; set; } = string.Empty;
+
+        /// <summary> Notes added by the instructor for this lesson </summary>
+        public string? InstructorNotes { get; set; }
 
         /// <summary> Timestamp of when the booking was created </summary>
         public DateTime CreatedAt { get; set; } = DateTime.Now;
+
         /// <summary> Timestamp of the last update to this booking </summary>
         public DateTime UpdatedAt { get; set; } = DateTime.Now;
 
         /// <summary> Navigation property for the Learner </summary>
         [ForeignKey("LearnerId")]
-        public virtual Learner Learner { get; set; }
+        public virtual Learner Learner { get; set; } = null!;
 
         /// <summary> Navigation property for the Instructor </summary>
         [ForeignKey("InstructorId")]
-        public virtual Instructor Instructor { get; set; }
+        public virtual Instructor Instructor { get; set; } = null!;
     }
 }

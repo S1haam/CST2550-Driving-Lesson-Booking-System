@@ -28,7 +28,8 @@
     {
         <p style="color:red; margin-bottom:10px;">@errorMessage</p>
     }
-    else if (isLoading)
+
+    @if (isLoading)
     {
         <p>loading available times...</p>
     }
@@ -71,7 +72,6 @@
 
     List<AvailabilityResponseDto> availableSlots = new();
 
-    // this runs when the page first loads
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
@@ -99,7 +99,6 @@
         StateHasChanged();
     }
 
-    // this gets the learner's current instructor and loads times for the selected date
     async Task LoadLearnerAndTimes()
     {
         try
@@ -134,6 +133,13 @@
 
             instructorId = learnerResult.Data.InstructorId;
 
+            if (instructorId <= 0)
+            {
+                errorMessage = "no instructor assigned.";
+                isLoading = false;
+                return;
+            }
+
             var availabilityResponse = await Http.GetAsync($"api/availability/instructor/{instructorId}");
             var availabilityResult = await availabilityResponse.Content.ReadFromJsonAsync<ApiResponse<List<AvailabilityResponseDto>>>();
 
@@ -145,7 +151,9 @@
             }
 
             availableSlots = availabilityResult.Data
-                .Where(x => x.AvailableDateTime.ToString("dd/MM/yyyy") == selectedDate)
+                .Where(x => !x.IsTaken &&
+                            x.AvailableDateTime > DateTime.Now &&
+                            x.AvailableDateTime.ToString("dd/MM/yyyy") == selectedDate)
                 .OrderBy(x => x.AvailableDateTime)
                 .ToList();
 
@@ -158,14 +166,13 @@
         }
     }
 
-    // this stores the selected time and slot id
     void SelectTime(AvailabilityResponseDto slot)
     {
         selectedAvailabilityId = slot.AvailabilityId;
         selectedTime = slot.AvailableDateTime.ToString("HH:mm");
+        errorMessage = null;
     }
 
-    // this goes back to the date selection page
     void GoBack()
     {
         if (mode == "reschedule")
@@ -178,19 +185,21 @@
         }
     }
 
-    // this moves to the booking summary page
     void GoToSummary()
     {
-        if (!string.IsNullOrEmpty(selectedTime) && selectedAvailabilityId > 0)
+        if (string.IsNullOrWhiteSpace(selectedTime) || selectedAvailabilityId <= 0)
         {
-            if (mode == "reschedule")
-            {
-                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}&mode=reschedule&bookingId={bookingId}");
-            }
-            else
-            {
-                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}");
-            }
+            errorMessage = "please select a time before continuing.";
+            return;
+        }
+
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}&mode=reschedule&bookingId={bookingId}");
+        }
+        else
+        {
+            Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}");
         }
     }
 

@@ -1,8 +1,23 @@
 @page "/instructorHome"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading instructor home...</p>
+}
 
 <h3>Instructor Home</h3>
 
@@ -18,10 +33,10 @@
 <!-- MAIN PANEL -->
 <div class="instructor-home-panel">
 
-    <p class="welcome-text">Welcome Instructor,</p>
+    <p class="welcome-text">Welcome Instructor, @instructorName</p>
 
     <div class="notif-bar">
-        <span>You have 2 new notifications</span>
+        <span>You have 0 new notifications</span>
         <button class="notif-btn"
                 @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
             Check Inbox
@@ -30,7 +45,7 @@
 
     <div class="status-row">
         <span class="status-dot"></span>
-        <span>Active</span>
+        <span>@instructorStatus</span>
     </div>
 
     <div class="home-grid">
@@ -49,19 +64,24 @@
                     </button>
                 </div>
             }
+
+            @if (!instructorLessons.Any())
+            {
+                <p>No upcoming lessons.</p>
+            }
         </div>
 
         <!-- STUDENTS -->
         <div class="home-card">
             <div class="student-header-row">
-    <div class="card-title student-card-title">Students</div>
+                <div class="card-title student-card-title">Students</div>
 
-    <div class="search-container student-search-container">
-        <input @bind="instructorStudentSearch"
-               placeholder="Search by ID" />
-        <button type="button">Search</button>
-    </div>
-</div>
+                <div class="search-container student-search-container">
+                    <input @bind="instructorStudentSearch"
+                           placeholder="Search by ID" />
+                    <button type="button">Search</button>
+                </div>
+            </div>
 
             @{
                 var filteredInstructorStudents = FilteredInstructorStudents();
@@ -72,11 +92,11 @@
                 <div class="pill-row">
                     <div class="student-left">
                         <div class="avatar-circle">@instructorStudent.Initials</div>
-                        <span>@instructorStudent.Name</span>
+                        <span>@instructorStudent.LearnerName</span>
                     </div>
 
                     <button class="pill-btn"
-                            @onclick='() => Nav.NavigateTo($"/instructor-student?id={instructorStudent.Id}")'>
+                            @onclick='() => Nav.NavigateTo($"/instructor-learner/{instructorStudent.LearnerId}")'>
                         View
                     </button>
                 </div>
@@ -94,23 +114,106 @@
 </div>
 
 @code {
+    string? errorMessage;
+    bool isLoading = true;
+
+    string instructorName = "Instructor";
+    string instructorStatus = "Active";
     string instructorStudentSearch = "";
 
-    List<InstructorHomeLesson> instructorLessons = new()
-    {
-        new InstructorHomeLesson { Id = 12340586, DisplayText = "MON, 01/12/25, 1:00" },
-        new InstructorHomeLesson { Id = 12340587, DisplayText = "TUE, 02/12/25, 2:00" },
-        new InstructorHomeLesson { Id = 12340588, DisplayText = "WED, 03/12/25, 3:00" },
-        new InstructorHomeLesson { Id = 12340589, DisplayText = "THU, 04/12/25, 4:00" }
-    };
+    List<InstructorHomeLesson> instructorLessons = new();
+    List<InstructorHomeStudent> instructorStudents = new();
 
-    List<InstructorHomeStudent> instructorStudents = new()
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        new InstructorHomeStudent { Id = 1001, Name = "Alice Evans", Initials = "AE" },
-        new InstructorHomeStudent { Id = 1002, Name = "John Smith", Initials = "JS" },
-        new InstructorHomeStudent { Id = 1003, Name = "David Lee", Initials = "DL" },
-        new InstructorHomeStudent { Id = 1004, Name = "Sarah Khan", Initials = "SK" }
-    };
+        if (!firstRender)
+            return;
+
+        await LoadInstructorHomeData();
+        StateHasChanged();
+    }
+
+    private async Task LoadInstructorHomeData()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            await LoadInstructorProfile();
+            await LoadUpcomingLessons();
+            await LoadStudents();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading instructor home";
+            isLoading = false;
+        }
+    }
+
+    private async Task LoadInstructorProfile()
+    {
+        var response = await Http.GetAsync("api/instructor/me");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            errorMessage = "failed to load instructor profile";
+            return;
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<InstructorProfileDto>>();
+
+        if (result == null || !result.Success || result.Data == null)
+        {
+            errorMessage = "could not read instructor profile";
+            return;
+        }
+
+        instructorName = result.Data.InstructorName;
+        instructorStatus = result.Data.InstructorStatus;
+    }
+
+    private async Task LoadUpcomingLessons()
+    {
+        var response = await Http.GetAsync("api/instructor/home/upcoming-lessons");
+
+        if (!response.IsSuccessStatusCode)
+            return;
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InstructorHomeLesson>>>();
+
+        if (result == null || !result.Success || result.Data == null)
+            return;
+
+        instructorLessons = result.Data;
+    }
+
+    private async Task LoadStudents()
+    {
+        var response = await Http.GetAsync("api/instructor/home/students");
+
+        if (!response.IsSuccessStatusCode)
+            return;
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InstructorHomeStudent>>>();
+
+        if (result == null || !result.Success || result.Data == null)
+            return;
+
+        instructorStudents = result.Data;
+    }
 
     List<InstructorHomeStudent> FilteredInstructorStudents()
     {
@@ -119,21 +222,46 @@
 
         return instructorStudents
             .Where(instructorStudent =>
-                instructorStudent.Name.Contains(instructorStudentSearch, StringComparison.OrdinalIgnoreCase)
-                || instructorStudent.Id.ToString().Contains(instructorStudentSearch))
+                instructorStudent.LearnerName.Contains(instructorStudentSearch, StringComparison.OrdinalIgnoreCase)
+                || instructorStudent.LearnerId.ToString().Contains(instructorStudentSearch))
             .ToList();
     }
 
-    class InstructorHomeLesson
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class InstructorProfileDto
+    {
+        public int InstructorId { get; set; }
+        public string InstructorCode { get; set; } = "";
+        public string InstructorName { get; set; } = "";
+        public string InstructorEmail { get; set; } = "";
+        public string InstructorPhone { get; set; } = "";
+        public string InstructorCarType { get; set; } = "";
+        public string InstructorStatus { get; set; } = "";
+    }
+
+    public class InstructorHomeLesson
     {
         public int Id { get; set; }
+        public string LearnerName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
         public string DisplayText { get; set; } = "";
     }
 
-    class InstructorHomeStudent
+    public class InstructorHomeStudent
     {
-        public int Id { get; set; }
-        public string Name { get; set; } = "";
-        public string Initials { get; set; } = "";
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+
+        public string Initials =>
+            string.Join("", LearnerName
+                .Split(' ', StringSplitOptions.RemoveEmptyEntries)
+                .Select(x => x[0]));
     }
 }

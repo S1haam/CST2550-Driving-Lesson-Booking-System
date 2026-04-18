@@ -93,7 +93,6 @@ else
     string lessonTime = "";
     string instructorNotes = "no instructor notes available yet.";
 
-    // this runs when the page first loads and gets the booking id and lesson type
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
@@ -121,7 +120,6 @@ else
         StateHasChanged();
     }
 
-    // this loads the selected booking from the backend
     async Task LoadLessonDetails()
     {
         try
@@ -144,8 +142,8 @@ else
             Http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await Http.GetAsync("api/booking");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<BookingResponseDto>>>();
+            var response = await Http.GetAsync($"api/booking/{bookingId}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<BookingResponseDto>>();
 
             if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
             {
@@ -154,18 +152,14 @@ else
                 return;
             }
 
-            var booking = result.Data.FirstOrDefault(x => x.BookingId == bookingId);
-
-            if (booking == null)
-            {
-                errorMessage = "lesson not found.";
-                isLoading = false;
-                return;
-            }
+            var booking = result.Data;
 
             instructorName = booking.InstructorName;
             lessonDate = booking.LessonDate.ToString("dd/MM/yyyy");
             lessonTime = booking.LessonTime.ToString(@"hh\:mm");
+            instructorNotes = string.IsNullOrWhiteSpace(booking.InstructorNotes)
+                ? "no instructor notes available yet."
+                : booking.InstructorNotes;
 
             isLoading = false;
         }
@@ -176,7 +170,6 @@ else
         }
     }
 
-    // this sends the user back to the correct schedule tab
     void GoBackToSchedule()
     {
         Nav.NavigateTo($"/schedule?tab={scheduleTab}");
@@ -200,6 +193,7 @@ else
         public TimeSpan LessonTime { get; set; }
         public string LessonType { get; set; } = "";
         public string BookingStatus { get; set; } = "";
+        public string? InstructorNotes { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
     }

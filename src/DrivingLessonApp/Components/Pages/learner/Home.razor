@@ -40,22 +40,22 @@ else
 
             <div class="info-box">
                 <span>ID</span>
-                <strong>12340586</strong>
+                <strong>@nextLessonIdText</strong>
             </div>
 
             <div class="info-box">
                 <span>Driver</span>
-                <strong>@instructorName</strong>
+                <strong>@nextLessonInstructorText</strong>
             </div>
 
             <div class="info-box">
                 <span>Date</span>
-                <strong>15/08/2025</strong>
+                <strong>@nextLessonDateText</strong>
             </div>
 
             <div class="info-box">
                 <span>Time</span>
-                <strong>12:00-14:00</strong>
+                <strong>@nextLessonTimeText</strong>
             </div>
 
             <button class="action-btn"
@@ -76,22 +76,22 @@ else
 
             <div class="info-box">
                 <span>ID</span>
-                <strong>12342386</strong>
+                <strong>@previousLessonIdText</strong>
             </div>
 
             <div class="info-box">
                 <span>Driver</span>
-                <strong>@instructorName</strong>
+                <strong>@previousLessonInstructorText</strong>
             </div>
 
             <div class="info-box">
                 <span>Date</span>
-                <strong>02/08/2025</strong>
+                <strong>@previousLessonDateText</strong>
             </div>
 
             <div class="info-box">
                 <span>Time</span>
-                <strong>13:00-15:00</strong>
+                <strong>@previousLessonTimeText</strong>
             </div>
 
             <button class="action-btn"
@@ -109,22 +109,31 @@ else
     string? errorMessage;
     bool isLoading = true;
 
+    string nextLessonIdText = "-";
+    string nextLessonInstructorText = "-";
+    string nextLessonDateText = "-";
+    string nextLessonTimeText = "-";
+
+    string previousLessonIdText = "-";
+    string previousLessonInstructorText = "-";
+    string previousLessonDateText = "-";
+    string previousLessonTimeText = "-";
+
     // this runs when the page first loads
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
             return;
 
-        await LoadLearnerProfile();
+        await LoadHomeData();
         StateHasChanged();
     }
 
-    // this loads the logged in learner profile from the protected backend endpoint
-    private async Task LoadLearnerProfile()
+    // this loads learner profile and booking summary data for the home page
+    private async Task LoadHomeData()
     {
         try
         {
-            // this gets the saved jwt token from browser session storage
             var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
 
             if (string.IsNullOrWhiteSpace(token))
@@ -135,32 +144,13 @@ else
                 return;
             }
 
-            // this attaches the token to the api request
             Http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            // this calls the protected learner profile endpoint
-            var response = await Http.GetAsync("api/learner/me");
+            await LoadLearnerProfile();
+            await LoadUpcomingBooking();
+            await LoadPastBooking();
 
-            if (!response.IsSuccessStatusCode)
-            {
-                errorMessage = "failed to load learner profile";
-                isLoading = false;
-                return;
-            }
-
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
-
-            if (result == null || !result.Success || result.Data == null)
-            {
-                errorMessage = "could not read learner profile";
-                isLoading = false;
-                return;
-            }
-
-            // this updates the home page with the real learner name and instructor
-            learnerName = result.Data.LearnerName;
-            instructorName = result.Data.InstructorName ?? "not assigned";
             isLoading = false;
         }
         catch
@@ -168,6 +158,81 @@ else
             errorMessage = "something went wrong while loading your profile";
             isLoading = false;
         }
+    }
+
+    // this loads the logged in learner profile
+    private async Task LoadLearnerProfile()
+    {
+        var response = await Http.GetAsync("api/learner/me");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            errorMessage = "failed to load learner profile";
+            return;
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
+
+        if (result == null || !result.Success || result.Data == null)
+        {
+            errorMessage = "could not read learner profile";
+            return;
+        }
+
+        learnerName = result.Data.LearnerName;
+        instructorName = result.Data.InstructorName ?? "not assigned";
+    }
+
+    // this loads the first upcoming booking for the learner
+    private async Task LoadUpcomingBooking()
+    {
+        var response = await Http.GetAsync("api/booking/learner/upcoming");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<BookingResponseDto>>>();
+
+        if (result == null || !result.Success || result.Data == null || result.Data.Count == 0)
+        {
+            nextLessonInstructorText = instructorName;
+            return;
+        }
+
+        var booking = result.Data.First();
+
+        nextLessonIdText = booking.BookingId.ToString();
+        nextLessonInstructorText = string.IsNullOrWhiteSpace(booking.InstructorName) ? instructorName : booking.InstructorName;
+        nextLessonDateText = booking.LessonDate.ToString("dd/MM/yyyy");
+        nextLessonTimeText = booking.LessonTime.ToString(@"hh\:mm");
+    }
+
+    // this loads the most recent past booking for the learner
+    private async Task LoadPastBooking()
+    {
+        var response = await Http.GetAsync("api/booking/learner/past");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return;
+        }
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<BookingResponseDto>>>();
+
+        if (result == null || !result.Success || result.Data == null || result.Data.Count == 0)
+        {
+            previousLessonInstructorText = instructorName;
+            return;
+        }
+
+        var booking = result.Data.First();
+
+        previousLessonIdText = booking.BookingId.ToString();
+        previousLessonInstructorText = string.IsNullOrWhiteSpace(booking.InstructorName) ? instructorName : booking.InstructorName;
+        previousLessonDateText = booking.LessonDate.ToString("dd/MM/yyyy");
+        previousLessonTimeText = booking.LessonTime.ToString(@"hh\:mm");
     }
 
     public class ApiResponse<T>
@@ -190,5 +255,20 @@ else
         public string LearnerLessonType { get; set; } = "";
         public int InstructorId { get; set; }
         public string? InstructorName { get; set; }
+    }
+
+    public class BookingResponseDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

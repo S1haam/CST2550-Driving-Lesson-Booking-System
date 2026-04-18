@@ -28,7 +28,8 @@
     {
         <p style="color:red; margin-bottom:10px;">@errorMessage</p>
     }
-    else if (isLoading)
+
+    @if (isLoading)
     {
         <p>loading available dates...</p>
     }
@@ -55,7 +56,7 @@
 
     <button class="booking-btn"
             @onclick="GoToTimeSelection"
-            disabled="@isLoading || redirectingToSchedule">
+            disabled="@isLoading">
         Next: time selection
     </button>
 
@@ -66,13 +67,11 @@
     string? mode;
     string? errorMessage;
     bool isLoading = true;
-    bool redirectingToSchedule = false;
     int instructorId = 0;
     int bookingId = 0;
 
     List<string> availableDates = new();
 
-    // this runs when the page first loads
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
         if (!firstRender)
@@ -95,7 +94,6 @@
         StateHasChanged();
     }
 
-    // this gets the current learner profile and loads dates for their selected instructor
     async Task LoadLearnerAndAvailability()
     {
         try
@@ -123,6 +121,13 @@
 
             instructorId = learnerResult.Data.InstructorId;
 
+            if (instructorId <= 0)
+            {
+                errorMessage = "no instructor assigned.";
+                isLoading = false;
+                return;
+            }
+
             var availabilityResponse = await Http.GetAsync($"api/availability/instructor/{instructorId}");
             var availabilityResult = await availabilityResponse.Content.ReadFromJsonAsync<ApiResponse<List<AvailabilityResponseDto>>>();
 
@@ -134,15 +139,16 @@
             }
 
             availableDates = availabilityResult.Data
+                .Where(x => !x.IsTaken && x.AvailableDateTime > DateTime.Now)
                 .Select(x => x.AvailableDateTime.ToString("dd/MM/yyyy"))
                 .Distinct()
+                .OrderBy(x => DateTime.ParseExact(x, "dd/MM/yyyy", null))
                 .ToList();
 
             if (mode == "reschedule" && availableDates.Count == 0)
             {
                 errorMessage = "unable to do request as there are no dates available with current instructor.";
                 isLoading = false;
-                redirectingToSchedule = true;
 
                 StateHasChanged();
                 await Task.Delay(2000);
@@ -159,25 +165,27 @@
         }
     }
 
-    // this stores the selected date
     void SelectDate(string date)
     {
         selectedDate = date;
+        errorMessage = null;
     }
 
-    // this moves to the time selection page using the selected date
     void GoToTimeSelection()
     {
-        if (!string.IsNullOrEmpty(selectedDate))
+        if (string.IsNullOrWhiteSpace(selectedDate))
         {
-            if (mode == "reschedule")
-            {
-                Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule&bookingId={bookingId}");
-            }
-            else
-            {
-                Nav.NavigateTo($"/book-time?date={selectedDate}");
-            }
+            errorMessage = "please select a date before continuing.";
+            return;
+        }
+
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule&bookingId={bookingId}");
+        }
+        else
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}");
         }
     }
 

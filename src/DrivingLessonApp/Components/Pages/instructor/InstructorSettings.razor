@@ -22,7 +22,7 @@
 
             <div class="instructor-settings-options">
                 <button class="@(instructorSelectedSection == "schedule" ? "active-option" : "")"
-                        @onclick='() => instructorSelectedSection = "schedule"'>
+                        @onclick='() => Nav.NavigateTo("/instructor-settings-schedule")'>
                     Schedule Information
                 </button>
 
@@ -53,27 +53,12 @@
             @if (instructorSelectedSection == "schedule")
             {
                 <h4>Schedule Information</h4>
-                <p>Pick up to 5 available time slots.</p>
-                <p>Current times: @string.Join(", ", instructorCurrentTimes)</p>
+                <p>Go to the schedule settings page to manage availability.</p>
 
-                <div class="instructor-time-grid">
-                    @foreach (var instructorTime in instructorAvailableTimes)
-                    {
-                        <button class="instructor-time-btn @(instructorSelectedTimes.Contains(instructorTime) ? "selected-time" : "")"
-                                @onclick="() => InstructorSelectTime(instructorTime)">
-                            @instructorTime
-                        </button>
-                    }
-                </div>
-
-                <button class="instructor-settings-save" @onclick="InstructorSaveSchedule">
-                    Save Changes
+                <button class="instructor-settings-save"
+                        @onclick='() => Nav.NavigateTo("/instructor-settings-schedule")'>
+                    Open Schedule Settings
                 </button>
-
-                @if (instructorScheduleSaved)
-                {
-                    <p class="success-text">Schedule updated successfully.</p>
-                }
             }
 
             @if (instructorSelectedSection == "account")
@@ -230,16 +215,6 @@
 @code {
     string instructorSelectedSection = "account";
 
-    List<string> instructorCurrentTimes = new() { "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm" };
-
-    List<string> instructorAvailableTimes = new()
-    {
-        "8:00am", "9:00am", "10:00am", "11:00am",
-        "12:00pm", "1:00pm", "2:00pm", "3:00pm", "4:00pm"
-    };
-
-    List<string> instructorSelectedTimes = new();
-
     string instructorStatus = "Active";
 
     string InstructorName = "David Smith";
@@ -256,24 +231,8 @@
     bool showPasswordForm = false;
     bool passwordChanged = false;
 
-    bool instructorScheduleSaved = false;
     bool instructorAccountSaved = false;
     bool instructorStatusSaved = false;
-
-    void InstructorSelectTime(string instructorTime)
-    {
-        instructorScheduleSaved = false;
-
-        if (instructorSelectedTimes.Contains(instructorTime))
-            instructorSelectedTimes.Remove(instructorTime);
-        else if (instructorSelectedTimes.Count < 5)
-            instructorSelectedTimes.Add(instructorTime);
-    }
-
-    void InstructorSaveSchedule()
-    {
-        instructorScheduleSaved = true;
-    }
 
     void StartEditing(string field)
     {
