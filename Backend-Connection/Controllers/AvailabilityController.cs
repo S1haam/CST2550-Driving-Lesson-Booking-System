@@ -1,41 +1,92 @@
-﻿using Backend_Connection.Data;      // Gives access to the ApplicationDbContext (your database)
-using Backend_Connection.Models;    // Gives access to your ApiResponse and Availability model
-using Microsoft.AspNetCore.Mvc;     // Provides controller and HTTP response functionality
+﻿using Backend_Connection.Data;
+using Backend_Connection.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend_Connection.Controllers
 {
-    
-    // enables automatic model validation and consistent API behaviour
     [ApiController]
-
-    // sets the base route for this controller
-    // URL for all endpoints inside this controller
     [Route("api/[controller]")]
     public class AvailabilityController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
-        // The database context is injected so the controller can access the database
 
+        // this gives the controller access to the database
         public AvailabilityController(ApplicationDbContext context)
         {
             _context = context;
-            // this gives us the database connection automatically
         }
 
-        // Handles GET requests to: GET api/availability
+        // this gets all availability records from the database
         [HttpGet]
-        public IActionResult GetAllAvailability()
+        public async Task<IActionResult> GetAllAvailability()
         {
-            // Retrieves all availability records from the database.
-            var data = _context.Availabilities.ToList();
+            var data = await _context.Availabilities
+                .Include(x => x.Instructor)
+                .Select(x => new AvailabilityResponseDto
+                {
+                    AvailabilityId = x.AvailabilityId,
+                    AvailableDateTime = x.AvailableDateTime,
+                    IsTaken = x.IsTaken,
+                    InstructorId = x.InstructorId,
+                    InstructorName = x.Instructor != null ? x.Instructor.InstructorName : ""
+                })
+                .ToListAsync();
 
-            // Wraps the result in a consistent API response format.
-            return Ok(new ApiResponse<List<Availability>>
+            return Ok(new ApiResponse<List<AvailabilityResponseDto>>
             {
-                Success = true,                           // Indicates the request succeeded
-                Message = "Availabilities retrieved successfully", // output message
-                Data = data                               // The actual list of availability records
+                Success = true,
+                Message = "availabilities retrieved successfully",
+                Data = data
             });
         }
+
+        // this gets available untaken slots for a specific instructor
+        [HttpGet("instructor/{instructorId}")]
+        public async Task<IActionResult> GetAvailabilityByInstructor(int instructorId)
+        {
+            var instructorExists = await _context.Instructors
+                .AnyAsync(x => x.InstructorId == instructorId);
+
+            if (!instructorExists)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "instructor not found",
+                    Data = null
+                });
+            }
+
+            var data = await _context.Availabilities
+                .Include(x => x.Instructor)
+                .Where(x => x.InstructorId == instructorId && !x.IsTaken)
+                .OrderBy(x => x.AvailableDateTime)
+                .Select(x => new AvailabilityResponseDto
+                {
+                    AvailabilityId = x.AvailabilityId,
+                    AvailableDateTime = x.AvailableDateTime,
+                    IsTaken = x.IsTaken,
+                    InstructorId = x.InstructorId,
+                    InstructorName = x.Instructor != null ? x.Instructor.InstructorName : ""
+                })
+                .ToListAsync();
+
+            return Ok(new ApiResponse<List<AvailabilityResponseDto>>
+            {
+                Success = true,
+                Message = "instructor availability retrieved successfully",
+                Data = data
+            });
+        }
+    }
+
+    public class AvailabilityResponseDto
+    {
+        public int AvailabilityId { get; set; }
+        public DateTime AvailableDateTime { get; set; }
+        public bool IsTaken { get; set; }
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
     }
 }

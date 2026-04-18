@@ -1,10 +1,15 @@
 @page "/settings"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <h3>Settings</h3>
 
-<!-- nav bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
@@ -17,12 +22,20 @@
 
     <h1 class="settings-title">Settings</h1>
 
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
+    @if (!string.IsNullOrWhiteSpace(successMessage))
+    {
+        <p style="color:green; margin-bottom:10px;">@successMessage</p>
+    }
+
     <div class="settings-grid">
 
-        <!-- LEFT -->
         <div class="left-column">
 
-            <!-- personal info -->
             <div class="settings-card">
                 <h2>Account Information</h2>
 
@@ -73,10 +86,44 @@
                     }
                     else
                     {
-                        <span>@Address</span>
+                        <span>@(string.IsNullOrWhiteSpace(Address) ? "" : Address)</span>
                     }
                     <button class="edit-btn" @onclick='() => StartEditing("address")'>Edit</button>
                 </div>
+
+                <div class="editable-row">
+                    <strong>Instructor:</strong>
+                    @if (editingField == "instructor")
+                    {
+                        <select class="settings-input-inline" @bind="SelectedInstructorId">
+                            @foreach (var instructor in instructors)
+                            {
+                                <option value="@instructor.InstructorId">@instructor.InstructorName</option>
+                            }
+                        </select>
+                    }
+                    else
+                    {
+                        <span>@InstructorName</span>
+                    }
+                    <button class="edit-btn" @onclick='() => StartEditing("instructor")'>Edit</button>
+                </div>
+
+               <div class="editable-row">
+    <strong>Lesson Type:</strong>
+    @if (editingField == "lessonType")
+    {
+        <select class="settings-input-inline" value="@LessonType" @onchange="HandleLessonTypeChanged">
+            <option value="Manual">Manual</option>
+            <option value="Automatic">Automatic</option>
+        </select>
+    }
+    else
+    {
+        <span>@LessonType</span>
+    }
+    <button class="edit-btn" @onclick='() => StartEditing("lessonType")'>Edit</button>
+</div>
 
                 <button class="small-btn save-info-btn" @onclick="SaveChanges">
                     Save Changes
@@ -88,7 +135,6 @@
                 }
             </div>
 
-            <!-- license -->
             <div class="settings-card blue">
                 <h3>User License Info</h3>
                 <p><strong>Issued:</strong> JUN2027</p>
@@ -98,10 +144,8 @@
 
         </div>
 
-        <!-- RIGHT -->
         <div class="right-column">
 
-            <!-- notifications -->
             <div class="settings-card blue">
                 <h3>Notifications</h3>
 
@@ -110,7 +154,6 @@
                 <label><input type="checkbox" checked /> Booking Confirmations</label>
             </div>
 
-            <!-- account -->
             <div class="settings-card blue">
                 <h3>Account Settings</h3>
 
@@ -119,8 +162,7 @@
                 </button>
             </div>
 
-            <!-- logout -->
-            <button class="logout-btn" @onclick='() => Nav.NavigateTo("/")'>
+            <button class="logout-btn" @onclick="Logout">
                 Logout
             </button>
 
@@ -128,7 +170,6 @@
 
     </div>
 
-    <!-- delete -->
     <div class="delete-container">
         <button class="delete-btn" @onclick='() => Nav.NavigateTo("/delete-account")'>
             DELETE ACCOUNT
@@ -138,23 +179,219 @@
 </div>
 
 @code {
-    string Name = "John";
-    string Email = "john@gmail.com";
-    string PhoneNumber = "07958294911";
-    string Address = "23 Bromley Rd";
+    string Name = "";
+    string Email = "";
+    string PhoneNumber = "";
+    string Address = "";
+    string InstructorName = "";
+    string LessonType = "";
+    int SelectedInstructorId = 0;
 
     string editingField = "";
     bool changesSaved = false;
+    string? errorMessage;
+    string? successMessage;
 
-    void StartEditing(string field)
+    List<InstructorResponseDto> instructors = new();
+
+    // this loads learner settings data when the page first renders
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await LoadLearnerProfile();
+        StateHasChanged();
+    }
+
+    // this gets the logged in learner profile from the protected endpoint
+    async Task LoadLearnerProfile()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync("api/learner/me");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                errorMessage = "failed to load learner settings";
+                return;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
+
+            if (result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = "could not read learner settings";
+                return;
+            }
+
+            Name = result.Data.LearnerName;
+            Email = result.Data.LearnerEmail;
+            PhoneNumber = result.Data.LearnerPhone;
+            InstructorName = result.Data.InstructorName ?? "not assigned";
+            LessonType = result.Data.LearnerLessonType;
+            SelectedInstructorId = result.Data.InstructorId;
+            Address = "";
+
+            await LoadInstructors();
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading settings";
+        }
+    }
+
+    // this loads instructors based on the currently selected lesson type
+    async Task LoadInstructors()
+    {
+        try
+        {
+            var response = await Http.GetAsync($"api/instructor/by-lesson-type/{LessonType}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InstructorResponseDto>>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load instructors";
+                return;
+            }
+
+            instructors = result.Data;
+
+            var selectedInstructor = instructors.FirstOrDefault(x => x.InstructorId == SelectedInstructorId);
+            if (selectedInstructor != null)
+            {
+                InstructorName = selectedInstructor.InstructorName;
+            }
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading instructors";
+        }
+    }
+
+    // this starts editing a single field
+    async Task StartEditing(string field)
     {
         editingField = field;
         changesSaved = false;
+        successMessage = null;
+        errorMessage = null;
+
+        if (field == "instructor" || field == "lessonType")
+        {
+            await LoadInstructors();
+        }
     }
 
-    void SaveChanges()
+    // this reloads the instructor list when lesson type changes
+    async Task HandleLessonTypeChanged(ChangeEventArgs e)
     {
+        LessonType = e.Value?.ToString() ?? "";
+        SelectedInstructorId = 0;
+        InstructorName = "";
+        await LoadInstructors();
+    }
+
+    // this saves the updated learner details to the backend
+    async Task SaveChanges()
+    {
+        errorMessage = null;
+        successMessage = null;
+        changesSaved = false;
+
+        if (string.IsNullOrWhiteSpace(Name) ||
+            string.IsNullOrWhiteSpace(Email) ||
+            string.IsNullOrWhiteSpace(PhoneNumber) ||
+            string.IsNullOrWhiteSpace(LessonType) ||
+            SelectedInstructorId <= 0)
+        {
+            errorMessage = "please complete all required learner fields.";
+            return;
+        }
+
+        var request = new UpdateLearnerRequest
+        {
+            LearnerName = Name.Trim(),
+            LearnerEmail = Email.Trim(),
+            LearnerPhone = PhoneNumber.Trim(),
+            LearnerLessonType = LessonType.Trim(),
+            InstructorId = SelectedInstructorId
+        };
+
+        var response = await Http.PutAsJsonAsync("api/learner/update", request);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+
+        if (!response.IsSuccessStatusCode || result == null || !result.Success)
+        {
+            errorMessage = result?.Message ?? "could not save learner changes.";
+            return;
+        }
+
+        var selectedInstructor = instructors.FirstOrDefault(x => x.InstructorId == SelectedInstructorId);
+        InstructorName = selectedInstructor?.InstructorName ?? InstructorName;
+
         editingField = "";
         changesSaved = true;
+        successMessage = "changes saved successfully.";
+    }
+
+    // this clears the saved login session and returns to the start page
+    async Task Logout()
+    {
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "authToken");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "userRole");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "userId");
+        await JS.InvokeVoidAsync("sessionStorage.removeItem", "userEmail");
+
+        Nav.NavigateTo("/");
+    }
+
+    public class UpdateLearnerRequest
+    {
+        public string LearnerName { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerLessonType { get; set; } = "";
+        public int InstructorId { get; set; }
+    }
+
+    public class InstructorResponseDto
+    {
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public string InstructorCarType { get; set; } = "";
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class LearnerResponseDto
+    {
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerLicenceId { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerStatus { get; set; } = "";
+        public int PastLessonCount { get; set; }
+        public int NextLessonCount { get; set; }
+        public string LearnerLessonType { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string? InstructorName { get; set; }
     }
 }

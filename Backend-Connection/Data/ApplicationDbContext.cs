@@ -1,5 +1,5 @@
-﻿using Backend_Connection.Models;          // Access to your model classes
-using Microsoft.EntityFrameworkCore;      // EF Core DbContext + DbSet
+﻿using Backend_Connection.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace Backend_Connection.Data
 {
@@ -25,7 +25,7 @@ namespace Backend_Connection.Data
         {
             base.OnModelCreating(modelBuilder);
 
-            //Relationships
+            // Relationships
 
             // Instructor → Availability
             // (1-to-many)
@@ -33,6 +33,14 @@ namespace Backend_Connection.Data
                 .HasMany(i => i.DbAvailabilities)
                 .WithOne(a => a.Instructor)
                 .HasForeignKey(a => a.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            // Instructor → Learner
+            // (1-to-many)
+            modelBuilder.Entity<Instructor>()
+                .HasMany(i => i.DbLearners)
+                .WithOne(l => l.Instructor)
+                .HasForeignKey(l => l.InstructorId)
                 .OnDelete(DeleteBehavior.Restrict);
 
             // Learner → Booking
@@ -75,7 +83,7 @@ namespace Backend_Connection.Data
                 .HasForeignKey(sr => sr.AvailabilityId)
                 .OnDelete(DeleteBehavior.NoAction);
 
-            //Samples data
+            // Sample data
 
             // Instructors
             modelBuilder.Entity<Instructor>().HasData(
@@ -112,7 +120,9 @@ namespace Backend_Connection.Data
                     LearnerPhone = "07111111111",
                     LearnerStatus = "Active",
                     PastLessonCount = 0,
-                    NextLessonCount = 1
+                    NextLessonCount = 1,
+                    LearnerLessonType = "Manual",
+                    InstructorId = 1
                 },
                 new Learner
                 {
@@ -123,7 +133,9 @@ namespace Backend_Connection.Data
                     LearnerPhone = "07222222222",
                     LearnerStatus = "Active",
                     PastLessonCount = 2,
-                    NextLessonCount = 0
+                    NextLessonCount = 0,
+                    LearnerLessonType = "Automatic",
+                    InstructorId = 2
                 }
             );
 
@@ -133,21 +145,21 @@ namespace Backend_Connection.Data
                 {
                     AvailabilityId = 1,
                     InstructorId = 1,
-                    AvailableDateTime = new DateTime(2026, 04, 03, 10, 00, 00),
-                    IsTaken = false
+                    AvailableDateTime = new DateTime(2026, 05, 20, 10, 00, 00),
+                    IsTaken = true
                 },
                 new Availability
                 {
                     AvailabilityId = 2,
                     InstructorId = 1,
-                    AvailableDateTime = new DateTime(2026, 04, 04, 14, 00, 00),
+                    AvailableDateTime = new DateTime(2026, 05, 21, 14, 00, 00),
                     IsTaken = false
                 },
                 new Availability
                 {
                     AvailabilityId = 3,
                     InstructorId = 2,
-                    AvailableDateTime = new DateTime(2026, 04, 03, 09, 00, 00),
+                    AvailableDateTime = new DateTime(2026, 05, 22, 09, 00, 00),
                     IsTaken = false
                 }
             );
@@ -159,12 +171,12 @@ namespace Backend_Connection.Data
                     BookingId = 1,
                     LearnerId = 1,
                     InstructorId = 1,
-                    LessonDate = new DateTime(2026, 04, 05),
+                    LessonDate = new DateTime(2026, 05, 20),
                     LessonTime = new TimeSpan(10, 00, 00),
                     LessonType = "Beginners",
                     BookingStatus = "Confirmed",
-                    CreatedAt = new DateTime(2026, 04, 01, 12, 00, 00),
-                    UpdatedAt = new DateTime(2026, 04, 01, 12, 00, 00)
+                    CreatedAt = new DateTime(2026, 05, 01, 12, 00, 00),
+                    UpdatedAt = new DateTime(2026, 05, 01, 12, 00, 00)
                 }
             );
         }

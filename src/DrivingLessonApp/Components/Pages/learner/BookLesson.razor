@@ -1,7 +1,13 @@
 @page "/book"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <h3>Book Lessons</h3>
 
@@ -18,40 +24,38 @@
     <h1>Select a Date</h1>
     <p>Please select the available dates:</p>
 
-    <div class="booking-grid">
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+    else if (isLoading)
+    {
+        <p>loading available dates...</p>
+    }
+    else if (availableDates.Count == 0)
+    {
+        <p>
+            @(mode == "reschedule"
+                ? "unable to do request as there are no dates available with current instructor."
+                : "no available dates found for your instructor.")
+        </p>
+    }
+    else
+    {
+        <div class="booking-grid">
+            @foreach (var date in availableDates)
+            {
+                <label class="booking-box">
+                    <input type="radio" name="date" @onchange='() => SelectDate(date)' />
+                    <span>@date</span>
+                </label>
+            }
+        </div>
+    }
 
-        <label class="booking-box">
-            <input type="radio" name="date" @onchange='() => SelectDate("15/08/2025")' />
-            <span>15/08/2025</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="date" @onchange='() => SelectDate("17/08/2025")' />
-            <span>17/08/2025</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="date" @onchange='() => SelectDate("19/08/2025")' />
-            <span>19/08/2025</span>
-        </label>
-
-        <div class="booking-box booking-unavailable">20/08/2025</div>
-
-        <label class="booking-box">
-            <input type="radio" name="date" @onchange='() => SelectDate("21/08/2025")' />
-            <span>21/08/2025</span>
-        </label>
-
-        <div class="booking-box booking-unavailable">22/08/2025</div>
-
-        <label class="booking-box">
-            <input type="radio" name="date" @onchange='() => SelectDate("27/08/2025")' />
-            <span>27/08/2025</span>
-        </label>
-
-    </div>
-
-    <button class="booking-btn" @onclick="GoToTimeSelection">
+    <button class="booking-btn"
+            @onclick="GoToTimeSelection"
+            disabled="@isLoading || redirectingToSchedule">
         Next: time selection
     </button>
 
@@ -60,9 +64,20 @@
 @code {
     string? selectedDate;
     string? mode;
+    string? errorMessage;
+    bool isLoading = true;
+    bool redirectingToSchedule = false;
+    int instructorId = 0;
+    int bookingId = 0;
 
-    protected override void OnInitialized()
+    List<string> availableDates = new();
+
+    // this runs when the page first loads
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+            return;
+
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
         var query = QueryHelpers.ParseQuery(uri.Query);
 
@@ -70,25 +85,126 @@
         {
             mode = value;
         }
+
+        if (query.TryGetValue("bookingId", out var bookingValue))
+        {
+            int.TryParse(bookingValue, out bookingId);
+        }
+
+        await LoadLearnerAndAvailability();
+        StateHasChanged();
     }
 
+    // this gets the current learner profile and loads dates for their selected instructor
+    async Task LoadLearnerAndAvailability()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var learnerResponse = await Http.GetAsync("api/learner/me");
+            var learnerResult = await learnerResponse.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
+
+            if (!learnerResponse.IsSuccessStatusCode || learnerResult == null || !learnerResult.Success || learnerResult.Data == null)
+            {
+                errorMessage = learnerResult?.Message ?? "could not load learner profile.";
+                isLoading = false;
+                return;
+            }
+
+            instructorId = learnerResult.Data.InstructorId;
+
+            var availabilityResponse = await Http.GetAsync($"api/availability/instructor/{instructorId}");
+            var availabilityResult = await availabilityResponse.Content.ReadFromJsonAsync<ApiResponse<List<AvailabilityResponseDto>>>();
+
+            if (!availabilityResponse.IsSuccessStatusCode || availabilityResult == null || !availabilityResult.Success || availabilityResult.Data == null)
+            {
+                errorMessage = availabilityResult?.Message ?? "could not load availability.";
+                isLoading = false;
+                return;
+            }
+
+            availableDates = availabilityResult.Data
+                .Select(x => x.AvailableDateTime.ToString("dd/MM/yyyy"))
+                .Distinct()
+                .ToList();
+
+            if (mode == "reschedule" && availableDates.Count == 0)
+            {
+                errorMessage = "unable to do request as there are no dates available with current instructor.";
+                isLoading = false;
+                redirectingToSchedule = true;
+
+                StateHasChanged();
+                await Task.Delay(2000);
+                Nav.NavigateTo("/schedule");
+                return;
+            }
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading booking dates.";
+            isLoading = false;
+        }
+    }
+
+    // this stores the selected date
     void SelectDate(string date)
     {
         selectedDate = date;
     }
 
+    // this moves to the time selection page using the selected date
     void GoToTimeSelection()
     {
         if (!string.IsNullOrEmpty(selectedDate))
         {
             if (mode == "reschedule")
             {
-                Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule");
+                Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule&bookingId={bookingId}");
             }
             else
             {
                 Nav.NavigateTo($"/book-time?date={selectedDate}");
             }
         }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class LearnerResponseDto
+    {
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerLessonType { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string? InstructorName { get; set; }
+    }
+
+    public class AvailabilityResponseDto
+    {
+        public int AvailabilityId { get; set; }
+        public DateTime AvailableDateTime { get; set; }
+        public bool IsTaken { get; set; }
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
     }
 }

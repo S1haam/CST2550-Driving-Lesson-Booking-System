@@ -1,7 +1,13 @@
 @page "/reschedule-confirmed"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <h3>Reschedule Confirmed</h3>
 
@@ -14,55 +20,153 @@
 
 <div class="booking-card">
 
-    <h1>Your booking has been rescheduled!</h1>
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+    else if (isLoading)
+    {
+        <p>rescheduling booking...</p>
+    }
+    else
+    {
+        <h1>Your booking has been rescheduled!</h1>
 
-    <div class="summary-box">
+        <div class="summary-box">
 
-        <div class="summary-item">
-            <strong>Booking ID:</strong> 12340586
+            <div class="summary-item">
+                <strong>Booking ID:</strong> @bookingId
+            </div>
+
+            <div class="summary-item">
+                <strong>New Date:</strong> @selectedDate
+            </div>
+
+            <div class="summary-item">
+                <strong>New Time:</strong> @selectedTime
+            </div>
+
+            <div class="summary-item">
+                <strong>Fee:</strong> £0
+            </div>
+
         </div>
 
-        <div class="summary-item">
-            <strong>New Date:</strong> @selectedDate
-        </div>
+        <button class="booking-btn" @onclick='() => Nav.NavigateTo("/home")'>
+            Return to home
+        </button>
 
-        <div class="summary-item">
-            <strong>New Time:</strong> @selectedTime
-        </div>
-
-        <div class="summary-item">
-            <strong>Fee:</strong> £0
-        </div>
-
-    </div>
-
-    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/home")'>
-        Return to home
-    </button>
-
-    <button class="booking-btn" @onclick='() => Nav.NavigateTo("/schedule")'>
-        View booking
-    </button>
+        <button class="booking-btn" @onclick='() => Nav.NavigateTo("/schedule")'>
+            View booking
+        </button>
+    }
 
 </div>
 
 @code {
+    int bookingId = 0;
+    int availabilityId = 0;
     string? selectedDate;
     string? selectedTime;
+    string? errorMessage;
+    bool isLoading = true;
 
-    protected override void OnInitialized()
+    // this runs when the page first loads and performs the reschedule
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+            return;
+
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
         var query = QueryHelpers.ParseQuery(uri.Query);
 
-        if (query.TryGetValue("date", out var dateValue))
+        if (query.TryGetValue("bookingId", out var bookingValue))
         {
-            selectedDate = dateValue;
+            int.TryParse(bookingValue, out bookingId);
         }
 
-        if (query.TryGetValue("time", out var timeValue))
+        if (query.TryGetValue("availabilityId", out var availabilityValue))
         {
-            selectedTime = timeValue;
+            int.TryParse(availabilityValue, out availabilityId);
         }
+
+        await RescheduleSelectedBooking();
+        StateHasChanged();
+    }
+
+    // this sends the reschedule request to the backend
+    async Task RescheduleSelectedBooking()
+    {
+        try
+        {
+            if (bookingId <= 0 || availabilityId <= 0)
+            {
+                errorMessage = "invalid reschedule details.";
+                isLoading = false;
+                return;
+            }
+
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var request = new RescheduleBookingRequest
+            {
+                NewAvailabilityId = availabilityId
+            };
+
+            var response = await Http.PutAsJsonAsync($"api/booking/reschedule/{bookingId}", request);
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<BookingResponseDto>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not reschedule booking.";
+                isLoading = false;
+                return;
+            }
+
+            selectedDate = result.Data.LessonDate.ToString("dd/MM/yyyy");
+            selectedTime = result.Data.LessonTime.ToString(@"hh\:mm");
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while rescheduling booking.";
+            isLoading = false;
+        }
+    }
+
+    public class RescheduleBookingRequest
+    {
+        public int NewAvailabilityId { get; set; }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class BookingResponseDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

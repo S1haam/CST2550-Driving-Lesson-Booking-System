@@ -1,20 +1,36 @@
 ﻿@page "/home"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
 
-<h3>Hello X!</h3>
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading learner profile...</p>
+}
+else
+{
+    <h3>Hello @learnerName!</h3>
+}
 
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
     <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
-        <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
-<button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
 </div>
 
-<!-- next lesson -->
 <div class="outer-card">
 
     <div class="section-label">Next Lesson</div>
@@ -29,7 +45,7 @@
 
             <div class="info-box">
                 <span>Driver</span>
-                <strong>David</strong>
+                <strong>@instructorName</strong>
             </div>
 
             <div class="info-box">
@@ -51,7 +67,6 @@
     </div>
 </div>
 
-<!-- previous lesson -->
 <div class="outer-card secondary">
 
     <div class="section-label">Previous Lesson</div>
@@ -66,7 +81,7 @@
 
             <div class="info-box">
                 <span>Driver</span>
-                <strong>David</strong>
+                <strong>@instructorName</strong>
             </div>
 
             <div class="info-box">
@@ -87,3 +102,93 @@
         </div>
     </div>
 </div>
+
+@code {
+    string learnerName = "Learner";
+    string instructorName = "Instructor";
+    string? errorMessage;
+    bool isLoading = true;
+
+    // this runs when the page first loads
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await LoadLearnerProfile();
+        StateHasChanged();
+    }
+
+    // this loads the logged in learner profile from the protected backend endpoint
+    private async Task LoadLearnerProfile()
+    {
+        try
+        {
+            // this gets the saved jwt token from browser session storage
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            // this attaches the token to the api request
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            // this calls the protected learner profile endpoint
+            var response = await Http.GetAsync("api/learner/me");
+
+            if (!response.IsSuccessStatusCode)
+            {
+                errorMessage = "failed to load learner profile";
+                isLoading = false;
+                return;
+            }
+
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
+
+            if (result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = "could not read learner profile";
+                isLoading = false;
+                return;
+            }
+
+            // this updates the home page with the real learner name and instructor
+            learnerName = result.Data.LearnerName;
+            instructorName = result.Data.InstructorName ?? "not assigned";
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading your profile";
+            isLoading = false;
+        }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class LearnerResponseDto
+    {
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerLicenceId { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerStatus { get; set; } = "";
+        public int PastLessonCount { get; set; }
+        public int NextLessonCount { get; set; }
+        public string LearnerLessonType { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string? InstructorName { get; set; }
+    }
+}

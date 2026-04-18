@@ -1,13 +1,18 @@
 @page "/lesson-details"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
 
 <h3>Lesson Details</h3>
 
-<!-- navigation bar -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
@@ -16,50 +21,58 @@
     <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
 </div>
 
-<!-- lesson info -->
-<div class="outer-card @(isNext ? "" : "secondary")">
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading lesson details...</p>
+}
+else
+{
+    <div class="outer-card @(isNext ? "" : "secondary")">
 
-    <div class="section-label">@lessonTypeText</div>
+        <div class="section-label">@lessonTypeText</div>
 
-    <div class="inner-card">
-        <div class="info-row">
+        <div class="inner-card">
+            <div class="info-row">
 
-            <div class="info-box">
-                <span>ID</span>
-                <strong>12342386</strong>
+                <div class="info-box">
+                    <span>ID</span>
+                    <strong>@bookingId</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Driver</span>
+                    <strong>@instructorName</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Date</span>
+                    <strong>@lessonDate</strong>
+                </div>
+
+                <div class="info-box">
+                    <span>Time</span>
+                    <strong>@lessonTime</strong>
+                </div>
+
             </div>
-
-            <div class="info-box">
-                <span>Driver</span>
-                <strong>David</strong>
-            </div>
-
-            <div class="info-box">
-                <span>Date</span>
-                <strong>02/08/2025</strong>
-            </div>
-
-            <div class="info-box">
-                <span>Time</span>
-                <strong>13:00-15:00</strong>
-            </div>
-
         </div>
     </div>
-</div>
 
-<!-- notes section -->
-<div class="notes-card @(isNext ? "notes-blue" : "")">
+    <div class="notes-card @(isNext ? "notes-blue" : "")">
 
-    <div class="notes-title">Instructor Notes</div>
+        <div class="notes-title">Instructor Notes</div>
 
-    <div class="notes-content">
-        Driver should improve clutch control and mirror checks.
+        <div class="notes-content">
+            @instructorNotes
+        </div>
+
     </div>
+}
 
-</div>
-
-<!-- back to schedule -->
 <div style="text-align:center; margin-top:20px;">
     <button class="booking-back" @onclick="GoBackToSchedule">
         Go Back to My Schedule
@@ -71,11 +84,25 @@
     bool isNext = false;
     string scheduleTab = "previous";
 
-    protected override void OnInitialized()
-    {
-        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+    string? errorMessage;
+    bool isLoading = true;
 
-        if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("type", out var type))
+    int bookingId = 0;
+    string instructorName = "";
+    string lessonDate = "";
+    string lessonTime = "";
+    string instructorNotes = "no instructor notes available yet.";
+
+    // this runs when the page first loads and gets the booking id and lesson type
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("type", out var type))
         {
             if (type == "next")
             {
@@ -84,10 +111,96 @@
                 scheduleTab = "next";
             }
         }
+
+        if (query.TryGetValue("bookingId", out var bookingValue))
+        {
+            int.TryParse(bookingValue, out bookingId);
+        }
+
+        await LoadLessonDetails();
+        StateHasChanged();
     }
 
+    // this loads the selected booking from the backend
+    async Task LoadLessonDetails()
+    {
+        try
+        {
+            if (bookingId <= 0)
+            {
+                errorMessage = "invalid booking id.";
+                isLoading = false;
+                return;
+            }
+
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync("api/booking");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<BookingResponseDto>>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load lesson details.";
+                isLoading = false;
+                return;
+            }
+
+            var booking = result.Data.FirstOrDefault(x => x.BookingId == bookingId);
+
+            if (booking == null)
+            {
+                errorMessage = "lesson not found.";
+                isLoading = false;
+                return;
+            }
+
+            instructorName = booking.InstructorName;
+            lessonDate = booking.LessonDate.ToString("dd/MM/yyyy");
+            lessonTime = booking.LessonTime.ToString(@"hh\:mm");
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading lesson details.";
+            isLoading = false;
+        }
+    }
+
+    // this sends the user back to the correct schedule tab
     void GoBackToSchedule()
     {
         Nav.NavigateTo($"/schedule?tab={scheduleTab}");
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class BookingResponseDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

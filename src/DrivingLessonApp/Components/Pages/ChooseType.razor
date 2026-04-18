@@ -1,13 +1,18 @@
 @page "/choose-type"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject DrivingLessonApp.Services.LearnerSignupState SignupState
 
 <div class="booking-card choose-card">
 
     <h1>WELCOME TO SER DRIVING SCHOOL</h1>
     <h3>Would you like to learn:</h3>
 
-    <!-- options -->
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
     <button class="choose-btn" @onclick='() => SelectType("Automatic")'>
         Automatic
     </button>
@@ -16,26 +21,29 @@
         Manual
     </button>
 
-    <!-- navigation -->
     <div class="choose-nav">
-
         <button class="choose-back" @onclick='() => Nav.NavigateTo("/signup-learner")'>
             Back
         </button>
-
     </div>
 
 </div>
 
 @code {
-    string selectedType;
+    string? errorMessage;
 
-    // stores type and moves forward
     void SelectType(string type)
     {
-        selectedType = type;
+        if (string.IsNullOrWhiteSpace(SignupState.Name) ||
+            string.IsNullOrWhiteSpace(SignupState.Email) ||
+            string.IsNullOrWhiteSpace(SignupState.Password) ||
+            string.IsNullOrWhiteSpace(SignupState.LicenceId))
+        {
+            errorMessage = "Please complete learner sign up details first.";
+            return;
+        }
 
-        // move to instructor page
+        SignupState.LessonType = type;
         Nav.NavigateTo("/choose-instructor");
     }
 }

@@ -10,45 +10,65 @@ namespace Backend_Connection.Models
     /// </summary>
     public class Learner
     {
-        public List<Booking> Bookings;
-
         /// <summary> Unique identifier for the learner </summary>
         [Key]
         public int LearnerId { get; set; }
 
         /// <summary> Full name of the learner </summary>
-        [Required, StringLength(100)]
-        public string LearnerName { get; set; }
-
-        /// <summary> The learners driving licence identification number </summary>
         [Required]
-        public string LearnerLicenceId { get; set; }
+        [StringLength(100)]
+        public string LearnerName { get; set; } = string.Empty;
+
+        /// <summary> The learner's driving licence identification number </summary>
+        [Required]
+        public string LearnerLicenceId { get; set; } = string.Empty;
 
         /// <summary> Contact email for the learner </summary>
-        [Required, EmailAddress]
-        public string LearnerEmail { get; set; }
+        [Required]
+        [EmailAddress]
+        public string LearnerEmail { get; set; } = string.Empty;
 
         /// <summary> Contact phone number for the learner </summary>
-        public string LearnerPhone { get; set; }
+        public string LearnerPhone { get; set; } = string.Empty;
+
         /// <summary> Hashed password for learner portal access </summary>
-        public string? LearnerPasswordHash { get; set; }
-        /// <summary> Current account status (Active or inactive) </summary>
-        public string LearnerStatus { get; set; }
+        [Required]
+        public string LearnerPasswordHash { get; set; } = string.Empty;
+
+        /// <summary> Current account status (Active or Inactive) </summary>
+        [Required]
+        public string LearnerStatus { get; set; } = "Active";
 
         /// <summary> Amount of lessons this learner has completed in the past </summary>
-        public int PastLessonCount { get; set; }
+        public int PastLessonCount { get; set; } = 0;
+
         /// <summary> Amount of upcoming lessons booked by this learner </summary>
-        public int NextLessonCount { get; set; }
+        public int NextLessonCount { get; set; } = 0;
 
-        // EF CORE SECTION 
+        /// <summary> Preferred lesson type chosen during signup (Manual or Automatic) </summary>
+        [Required]
+        public string LearnerLessonType { get; set; } = string.Empty;
+
+        /// <summary> Selected instructor id chosen during signup </summary>
+        [ForeignKey("Instructor")]
+        public int InstructorId { get; set; }
+
+        /// <summary> Navigation property for the selected instructor </summary>
+        public virtual Instructor? Instructor { get; set; }
+
+        // EF CORE SECTION
+
         /// <summary> Collection of bookings associated with this learner </summary>
-        public virtual ICollection<Booking> DbBookings { get; set; }
-        /// <summary> Collection of lesson requests submitted by this learner </summary>
-        public virtual ICollection<StudentRequest> StudentRequests { get; set; }
+        public virtual ICollection<Booking> DbBookings { get; set; } = new List<Booking>();
 
-        // DATA STRUCTURES (Custom Lists) 
+        /// <summary> Collection of lesson requests submitted by this learner </summary>
+        public virtual ICollection<StudentRequest> StudentRequests { get; set; } = new List<StudentRequest>();
+
+        // DATA STRUCTURES (Custom Lists)
+
         [NotMapped]
         public CustomLessonList LearnerPastLessons { get; set; } = new CustomLessonList();
+
         [NotMapped]
         public CustomLessonList LearnerUpcomingLessons { get; set; } = new CustomLessonList();
     }

@@ -1,7 +1,13 @@
 @page "/book-time"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
 @using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <h3>Select Time</h3>
 
@@ -18,45 +24,36 @@
     <h1>Select a Time</h1>
     <p>Please select the available times:</p>
 
-    <div class="booking-grid">
-
-        <label class="booking-box">
-            <input type="radio" name="time" @onchange='() => SelectTime("09:00-11:00")' />
-            <span>9:00–11:00</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="time" @onchange='() => SelectTime("11:00-13:00")' />
-            <span>11:00–13:00</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="time" @onchange='() => SelectTime("12:00-14:00")' />
-            <span>12:00–14:00</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="time" @onchange='() => SelectTime("13:00-15:00")' />
-            <span>13:00–15:00</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="time" @onchange='() => SelectTime("15:00-17:00")' />
-            <span>15:00–17:00</span>
-        </label>
-
-        <label class="booking-box">
-            <input type="radio" name="time" @onchange='() => SelectTime("17:00-19:00")' />
-            <span>17:00–19:00</span>
-        </label>
-
-    </div>
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+    else if (isLoading)
+    {
+        <p>loading available times...</p>
+    }
+    else if (availableSlots.Count == 0)
+    {
+        <p>no available times found for this date.</p>
+    }
+    else
+    {
+        <div class="booking-grid">
+            @foreach (var slot in availableSlots)
+            {
+                <label class="booking-box">
+                    <input type="radio" name="time" @onchange='() => SelectTime(slot)' />
+                    <span>@slot.AvailableDateTime.ToString("HH:mm")</span>
+                </label>
+            }
+        </div>
+    }
 
     <button class="booking-back" @onclick="GoBack">
         Back
     </button>
 
-    <button class="booking-btn" @onclick="GoToSummary">
+    <button class="booking-btn" @onclick="GoToSummary" disabled="@isLoading">
         Next: summary selection
     </button>
 
@@ -66,9 +63,20 @@
     string? selectedTime;
     string? selectedDate;
     string? mode;
+    string? errorMessage;
+    bool isLoading = true;
+    int instructorId = 0;
+    int selectedAvailabilityId = 0;
+    int bookingId = 0;
 
-    protected override void OnInitialized()
+    List<AvailabilityResponseDto> availableSlots = new();
+
+    // this runs when the page first loads
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+            return;
+
         var uri = Nav.ToAbsoluteUri(Nav.Uri);
         var query = QueryHelpers.ParseQuery(uri.Query);
 
@@ -81,18 +89,88 @@
         {
             mode = modeValue;
         }
+
+        if (query.TryGetValue("bookingId", out var bookingValue))
+        {
+            int.TryParse(bookingValue, out bookingId);
+        }
+
+        await LoadLearnerAndTimes();
+        StateHasChanged();
     }
 
-    void SelectTime(string time)
+    // this gets the learner's current instructor and loads times for the selected date
+    async Task LoadLearnerAndTimes()
     {
-        selectedTime = time;
+        try
+        {
+            if (string.IsNullOrWhiteSpace(selectedDate))
+            {
+                errorMessage = "please select a date first.";
+                isLoading = false;
+                return;
+            }
+
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var learnerResponse = await Http.GetAsync("api/learner/me");
+            var learnerResult = await learnerResponse.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
+
+            if (!learnerResponse.IsSuccessStatusCode || learnerResult == null || !learnerResult.Success || learnerResult.Data == null)
+            {
+                errorMessage = learnerResult?.Message ?? "could not load learner profile.";
+                isLoading = false;
+                return;
+            }
+
+            instructorId = learnerResult.Data.InstructorId;
+
+            var availabilityResponse = await Http.GetAsync($"api/availability/instructor/{instructorId}");
+            var availabilityResult = await availabilityResponse.Content.ReadFromJsonAsync<ApiResponse<List<AvailabilityResponseDto>>>();
+
+            if (!availabilityResponse.IsSuccessStatusCode || availabilityResult == null || !availabilityResult.Success || availabilityResult.Data == null)
+            {
+                errorMessage = availabilityResult?.Message ?? "could not load availability.";
+                isLoading = false;
+                return;
+            }
+
+            availableSlots = availabilityResult.Data
+                .Where(x => x.AvailableDateTime.ToString("dd/MM/yyyy") == selectedDate)
+                .OrderBy(x => x.AvailableDateTime)
+                .ToList();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading booking times.";
+            isLoading = false;
+        }
     }
 
+    // this stores the selected time and slot id
+    void SelectTime(AvailabilityResponseDto slot)
+    {
+        selectedAvailabilityId = slot.AvailabilityId;
+        selectedTime = slot.AvailableDateTime.ToString("HH:mm");
+    }
+
+    // this goes back to the date selection page
     void GoBack()
     {
         if (mode == "reschedule")
         {
-            Nav.NavigateTo("/book?mode=reschedule");
+            Nav.NavigateTo($"/book?mode=reschedule&bookingId={bookingId}");
         }
         else
         {
@@ -100,18 +178,46 @@
         }
     }
 
+    // this moves to the booking summary page
     void GoToSummary()
     {
-        if (!string.IsNullOrEmpty(selectedTime))
+        if (!string.IsNullOrEmpty(selectedTime) && selectedAvailabilityId > 0)
         {
             if (mode == "reschedule")
             {
-                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&mode=reschedule");
+                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}&mode=reschedule&bookingId={bookingId}");
             }
             else
             {
-                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}");
+                Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}");
             }
         }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class LearnerResponseDto
+    {
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerLessonType { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string? InstructorName { get; set; }
+    }
+
+    public class AvailabilityResponseDto
+    {
+        public int AvailabilityId { get; set; }
+        public DateTime AvailableDateTime { get; set; }
+        public bool IsTaken { get; set; }
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
     }
 }

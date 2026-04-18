@@ -2,6 +2,11 @@
 {
     public class CreateInstructorDto
     {
-       //add properties for creating an instructor
+        public string InstructorCode { get; set; } = string.Empty;
+        public string InstructorName { get; set; } = string.Empty;
+        public string InstructorEmail { get; set; } = string.Empty;
+        public string InstructorPhone { get; set; } = string.Empty;
+        public string Password { get; set; } = string.Empty;
+        public string InstructorCarType { get; set; } = string.Empty;
     }
 }

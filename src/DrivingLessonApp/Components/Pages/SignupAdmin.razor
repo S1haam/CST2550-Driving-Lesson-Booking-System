@@ -1,34 +1,38 @@
 @page "/signup-admin"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@using System.ComponentModel.DataAnnotations
+@using System.Net.Http.Json
 
 <div class="booking-card">
 
     <h1>WELCOME TO SER DRIVING SCHOOL</h1>
     <h3>Sign Up: Admin</h3>
 
-    <!-- email -->
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
     <input type="email"
            placeholder="Admin Email"
            @bind="email" />
 
-    <!-- password -->
     <input type="password"
            placeholder="Password"
            @bind="password" />
 
-    <!-- confirm password -->
     <input type="password"
            placeholder="Confirm Password"
            @bind="confirmPassword" />
 
-    <!-- sign up -->
     <button class="booking-btn"
-            @onclick="RegisterAdmin">
-        Sign Up
+            @onclick="RegisterAdmin"
+            disabled="@isSubmitting">
+        @(isSubmitting ? "Submitting..." : "Sign Up")
     </button>
 
-    <!-- back -->
     <button class="booking-back"
             @onclick='() => Nav.NavigateTo("/login?role=admin")'>
         Back
@@ -40,13 +44,75 @@
     string? email;
     string? password;
     string? confirmPassword;
+    string? errorMessage;
+    bool isSubmitting;
 
-    // handles admin signup
-    void RegisterAdmin()
+    async Task RegisterAdmin()
     {
-        if (password != confirmPassword)
-            return;
+        errorMessage = null;
 
-        Nav.NavigateTo("/admin");
+        var cleanEmail = email?.Trim() ?? "";
+        var cleanPassword = password?.Trim() ?? "";
+        var cleanConfirmPassword = confirmPassword?.Trim() ?? "";
+
+        if (string.IsNullOrWhiteSpace(cleanEmail) ||
+            string.IsNullOrWhiteSpace(cleanPassword) ||
+            string.IsNullOrWhiteSpace(cleanConfirmPassword))
+        {
+            errorMessage = "Please fill in all fields.";
+            return;
+        }
+
+        if (!new EmailAddressAttribute().IsValid(cleanEmail))
+        {
+            errorMessage = "Please enter a valid email address.";
+            return;
+        }
+
+        if (cleanPassword.Length < 6)
+        {
+            errorMessage = "Password must be at least 6 characters.";
+            return;
+        }
+
+        if (cleanPassword != cleanConfirmPassword)
+        {
+            errorMessage = "Passwords do not match.";
+            return;
+        }
+
+        isSubmitting = true;
+
+        var request = new RegisterAdminRequest
+        {
+            AdminEmail = cleanEmail,
+            Password = cleanPassword
+        };
+
+        var response = await Http.PostAsJsonAsync("api/auth/register/admin", request);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+
+        isSubmitting = false;
+
+        if (!response.IsSuccessStatusCode || result == null || !result.Success)
+        {
+            errorMessage = result?.Message ?? "Could not create admin account.";
+            return;
+        }
+
+        Nav.NavigateTo("/login?role=admin");
+    }
+
+    public class RegisterAdminRequest
+    {
+        public string AdminEmail { get; set; } = "";
+        public string Password { get; set; } = "";
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
     }
 }
