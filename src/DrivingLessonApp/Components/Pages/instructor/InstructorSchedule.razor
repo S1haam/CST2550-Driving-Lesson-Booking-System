@@ -2,6 +2,12 @@
 @using Microsoft.AspNetCore.WebUtilities
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
 
@@ -15,18 +21,27 @@
     <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
 </div>
 
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading schedule...</p>
+}
+
 <div class="card next-card">
 
     <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
 
         <div class="tabs">
             <div class="tab @(instructorShowNext ? "active" : "")"
-                 @onclick='() => { instructorShowNext = true; instructorSearchResult = null; }'>
+                 @onclick='() => { instructorShowNext = true; instructorSearchResult = null; searchMessage = null; }'>
                 Next Lessons
             </div>
 
             <div class="tab @(!instructorShowNext ? "active" : "")"
-                 @onclick='() => { instructorShowNext = false; instructorSearchResult = null; }'>
+                 @onclick='() => { instructorShowNext = false; instructorSearchResult = null; searchMessage = null; }'>
                 Previous Lessons
             </div>
         </div>
@@ -37,6 +52,11 @@
         </div>
 
     </div>
+
+    @if (!string.IsNullOrWhiteSpace(searchMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@searchMessage</p>
+    }
 
     <div class="lesson-list">
 
@@ -49,12 +69,12 @@
                 {
                     <div>
                         <button class="schedule-action-btn"
-                                @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=next")'>
+                                @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorSearchResult.Id}&type=next")'>
                             VIEW
                         </button>
 
                         <button class="schedule-action-btn"
-                                @onclick='() => Nav.NavigateTo("/instructor-cancel-booking")'>
+                                @onclick='() => Nav.NavigateTo($"/instructor-cancel-booking?bookingId={instructorSearchResult.Id}")'>
                             CANCEL
                         </button>
                     </div>
@@ -62,7 +82,7 @@
                 else
                 {
                     <button class="schedule-action-btn"
-                            @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=previous")'>
+                            @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorSearchResult.Id}&type=previous")'>
                         VIEW
                     </button>
                 }
@@ -70,18 +90,23 @@
         }
         else if (instructorShowNext)
         {
+            @if (!instructorNextLessons.Any())
+            {
+                <p>No upcoming lessons.</p>
+            }
+
             @foreach (var instructorLesson in instructorNextLessons)
             {
                 <div class="lesson-item">
                     <span>@instructorLesson.Date @instructorLesson.Time</span>
                     <div>
                         <button class="schedule-action-btn"
-                                @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=next")'>
+                                @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorLesson.Id}&type=next")'>
                             VIEW
                         </button>
 
                         <button class="schedule-action-btn"
-                                @onclick='() => Nav.NavigateTo("/instructor-cancel-booking")'>
+                                @onclick='() => Nav.NavigateTo($"/instructor-cancel-booking?bookingId={instructorLesson.Id}")'>
                             CANCEL
                         </button>
                     </div>
@@ -90,12 +115,17 @@
         }
         else
         {
+            @if (!instructorPreviousLessons.Any())
+            {
+                <p>No previous lessons.</p>
+            }
+
             @foreach (var instructorLesson in instructorPreviousLessons)
             {
                 <div class="lesson-item">
                     <span>@instructorLesson.Date @instructorLesson.Time</span>
                     <button class="schedule-action-btn"
-                            @onclick='() => Nav.NavigateTo("/instructor-lesson-details?type=previous")'>
+                            @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorLesson.Id}&type=previous")'>
                         VIEW
                     </button>
                 </div>
@@ -108,39 +138,115 @@
 
 @code {
     bool instructorShowNext = true;
+    bool isLoading = true;
 
     string? instructorSearchId;
+    string? errorMessage;
+    string? searchMessage;
 
     InstructorLesson? instructorSearchResult;
 
-    protected override void OnInitialized()
+    List<InstructorLesson> instructorNextLessons = new();
+    List<InstructorLesson> instructorPreviousLessons = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
     {
+        if (!firstRender)
+            return;
+
         var instructorUri = Nav.ToAbsoluteUri(Nav.Uri);
 
         if (QueryHelpers.ParseQuery(instructorUri.Query).TryGetValue("tab", out var instructorTab))
         {
             instructorShowNext = instructorTab == "next";
         }
+
+        await LoadSchedule();
+        StateHasChanged();
     }
 
-    List<InstructorLesson> instructorNextLessons = new()
+    // this loads upcoming and previous lessons for the logged in instructor
+    private async Task LoadSchedule()
     {
-        new InstructorLesson { Id = 12340586, Date = "15/08/2025", Time = "12:00-14:00", IsNextLesson = true },
-        new InstructorLesson { Id = 12340587, Date = "17/08/2025", Time = "15:00-18:00", IsNextLesson = true }
-    };
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
 
-    List<InstructorLesson> instructorPreviousLessons = new()
-    {
-        new InstructorLesson { Id = 12342386, Date = "02/08/2025", Time = "13:00-15:00", IsNextLesson = false }
-    };
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
 
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var upcomingResponse = await Http.GetAsync("api/instructor/schedule/upcoming");
+            var upcomingResult = await upcomingResponse.Content.ReadFromJsonAsync<ApiResponse<List<InstructorScheduleLessonDto>>>();
+
+            if (!upcomingResponse.IsSuccessStatusCode || upcomingResult == null || !upcomingResult.Success || upcomingResult.Data == null)
+            {
+                errorMessage = upcomingResult?.Message ?? "could not load upcoming lessons.";
+                isLoading = false;
+                return;
+            }
+
+            var pastResponse = await Http.GetAsync("api/instructor/schedule/past");
+            var pastResult = await pastResponse.Content.ReadFromJsonAsync<ApiResponse<List<InstructorScheduleLessonDto>>>();
+
+            if (!pastResponse.IsSuccessStatusCode || pastResult == null || !pastResult.Success || pastResult.Data == null)
+            {
+                errorMessage = pastResult?.Message ?? "could not load previous lessons.";
+                isLoading = false;
+                return;
+            }
+
+            instructorNextLessons = upcomingResult.Data
+                .Select(x => new InstructorLesson
+                {
+                    Id = x.BookingId,
+                    Date = x.LessonDate.ToString("dd/MM/yyyy"),
+                    Time = x.LessonTime.ToString(@"hh\:mm"),
+                    IsNextLesson = true
+                })
+                .ToList();
+
+            instructorPreviousLessons = pastResult.Data
+                .Select(x => new InstructorLesson
+                {
+                    Id = x.BookingId,
+                    Date = x.LessonDate.ToString("dd/MM/yyyy"),
+                    Time = x.LessonTime.ToString(@"hh\:mm"),
+                    IsNextLesson = false
+                })
+                .ToList();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading schedule.";
+            isLoading = false;
+        }
+    }
+
+    // this searches lessons by booking id
     void InstructorSearchBooking()
     {
         instructorSearchResult = null;
+        searchMessage = null;
+
+        if (string.IsNullOrWhiteSpace(instructorSearchId))
+        {
+            searchMessage = "please enter a booking id.";
+            return;
+        }
+
+        var cleanSearchId = instructorSearchId.Trim();
 
         foreach (var instructorLesson in instructorNextLessons)
         {
-            if (instructorLesson.Id.ToString() == instructorSearchId)
+            if (instructorLesson.Id.ToString() == cleanSearchId)
             {
                 instructorSearchResult = instructorLesson;
                 return;
@@ -149,12 +255,14 @@
 
         foreach (var instructorLesson in instructorPreviousLessons)
         {
-            if (instructorLesson.Id.ToString() == instructorSearchId)
+            if (instructorLesson.Id.ToString() == cleanSearchId)
             {
                 instructorSearchResult = instructorLesson;
                 return;
             }
         }
+
+        searchMessage = "no booking found with that id.";
     }
 
     class InstructorLesson
@@ -163,5 +271,28 @@
         public string Date { get; set; } = "";
         public string Time { get; set; } = "";
         public bool IsNextLesson { get; set; }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class InstructorScheduleLessonDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public string? InstructorNotes { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 }

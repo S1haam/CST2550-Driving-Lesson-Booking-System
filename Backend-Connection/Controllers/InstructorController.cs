@@ -357,6 +357,238 @@ namespace Backend_Connection.Controllers
             });
         }
 
+        // this gets upcoming lessons for the logged in instructor schedule page
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("schedule/upcoming")]
+        public async Task<IActionResult> GetUpcomingScheduleLessons()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var now = DateTime.Now;
+
+            var data = await _context.Bookings
+                .Include(x => x.Learner)
+                .Include(x => x.Instructor)
+                .Where(x => x.InstructorId == instructorId &&
+                            x.BookingStatus == "Confirmed" &&
+                            x.LessonDate.Add(x.LessonTime) >= now)
+                .OrderBy(x => x.LessonDate)
+                .ThenBy(x => x.LessonTime)
+                .Select(x => new InstructorScheduleLessonDto
+                {
+                    BookingId = x.BookingId,
+                    LearnerId = x.LearnerId,
+                    LearnerName = x.Learner != null ? x.Learner.LearnerName : "",
+                    InstructorId = x.InstructorId,
+                    InstructorName = x.Instructor != null ? x.Instructor.InstructorName : "",
+                    LessonDate = x.LessonDate,
+                    LessonTime = x.LessonTime,
+                    LessonType = x.LessonType,
+                    BookingStatus = x.BookingStatus,
+                    InstructorNotes = x.InstructorNotes,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt
+                })
+                .ToListAsync();
+
+            return Ok(new ApiResponse<List<InstructorScheduleLessonDto>>
+            {
+                Success = true,
+                Message = "upcoming schedule lessons retrieved successfully",
+                Data = data
+            });
+        }
+
+        // this gets past lessons for the logged in instructor schedule page
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("schedule/past")]
+        public async Task<IActionResult> GetPastScheduleLessons()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var now = DateTime.Now;
+
+            var data = await _context.Bookings
+                .Include(x => x.Learner)
+                .Include(x => x.Instructor)
+                .Where(x => x.InstructorId == instructorId &&
+                            x.BookingStatus == "Confirmed" &&
+                            x.LessonDate.Add(x.LessonTime) < now)
+                .OrderByDescending(x => x.LessonDate)
+                .ThenByDescending(x => x.LessonTime)
+                .Select(x => new InstructorScheduleLessonDto
+                {
+                    BookingId = x.BookingId,
+                    LearnerId = x.LearnerId,
+                    LearnerName = x.Learner != null ? x.Learner.LearnerName : "",
+                    InstructorId = x.InstructorId,
+                    InstructorName = x.Instructor != null ? x.Instructor.InstructorName : "",
+                    LessonDate = x.LessonDate,
+                    LessonTime = x.LessonTime,
+                    LessonType = x.LessonType,
+                    BookingStatus = x.BookingStatus,
+                    InstructorNotes = x.InstructorNotes,
+                    CreatedAt = x.CreatedAt,
+                    UpdatedAt = x.UpdatedAt
+                })
+                .ToListAsync();
+
+            return Ok(new ApiResponse<List<InstructorScheduleLessonDto>>
+            {
+                Success = true,
+                Message = "past schedule lessons retrieved successfully",
+                Data = data
+            });
+        }
+
+        // this gets one booking by id for the logged in instructor schedule pages
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("schedule/booking/{bookingId:int}")]
+        public async Task<IActionResult> GetScheduleBookingById(int bookingId)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var booking = await _context.Bookings
+                .Include(x => x.Learner)
+                .Include(x => x.Instructor)
+                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
+
+            if (booking == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "booking not found",
+                    Data = null
+                });
+            }
+
+            var data = new InstructorScheduleLessonDto
+            {
+                BookingId = booking.BookingId,
+                LearnerId = booking.LearnerId,
+                LearnerName = booking.Learner != null ? booking.Learner.LearnerName : "",
+                InstructorId = booking.InstructorId,
+                InstructorName = booking.Instructor != null ? booking.Instructor.InstructorName : "",
+                LessonDate = booking.LessonDate,
+                LessonTime = booking.LessonTime,
+                LessonType = booking.LessonType,
+                BookingStatus = booking.BookingStatus,
+                InstructorNotes = booking.InstructorNotes,
+                CreatedAt = booking.CreatedAt,
+                UpdatedAt = booking.UpdatedAt
+            };
+
+            return Ok(new ApiResponse<InstructorScheduleLessonDto>
+            {
+                Success = true,
+                Message = "schedule booking retrieved successfully",
+                Data = data
+            });
+        }
+
+        // this cancels a booking for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("schedule/cancel/{bookingId:int}")]
+        public async Task<IActionResult> CancelScheduleBooking(int bookingId)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var booking = await _context.Bookings
+                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
+
+            if (booking == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "booking not found",
+                    Data = null
+                });
+            }
+
+            if (booking.BookingStatus == "Cancelled")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "booking is already cancelled",
+                    Data = null
+                });
+            }
+
+            booking.BookingStatus = "Cancelled";
+            booking.UpdatedAt = DateTime.Now;
+
+            var matchingAvailability = await _context.Availabilities
+                .FirstOrDefaultAsync(x =>
+                    x.InstructorId == booking.InstructorId &&
+                    x.AvailableDateTime.Date == booking.LessonDate.Date &&
+                    x.AvailableDateTime.TimeOfDay == booking.LessonTime);
+
+            if (matchingAvailability != null)
+            {
+                matchingAvailability.IsTaken = false;
+            }
+
+            var learner = await _context.Learners
+                .FirstOrDefaultAsync(x => x.LearnerId == booking.LearnerId);
+
+            if (learner != null && learner.NextLessonCount > 0)
+            {
+                learner.NextLessonCount -= 1;
+            }
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "booking cancelled successfully",
+                Data = null
+            });
+        }
+
         // this gets one lesson detail record for the logged in instructor
         [Authorize(Roles = "Instructor")]
         [HttpGet("lesson-details/{bookingId:int}")]
@@ -504,6 +736,22 @@ namespace Backend_Connection.Controllers
         public string LearnerStatus { get; set; } = "";
         public int PastLessonCount { get; set; }
         public int NextLessonCount { get; set; }
+    }
+
+    public class InstructorScheduleLessonDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public string? InstructorNotes { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
     }
 
     public class InstructorLessonDetailsDto
