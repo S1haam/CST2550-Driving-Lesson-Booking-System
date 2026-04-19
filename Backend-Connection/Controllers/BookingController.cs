@@ -155,6 +155,17 @@ namespace Backend_Connection.Controllers
                 });
             }
 
+            // this blocks learners who have been removed by their instructor
+            if (learner.LearnerStatus == "Removed")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "you have been removed by your instructor. please choose a new instructor.",
+                    Data = null
+                });
+            }
+
             var availability = await _context.Availabilities
                 .Include(x => x.Instructor)
                 .FirstOrDefaultAsync(x => x.AvailabilityId == request.AvailabilityId);
@@ -334,6 +345,30 @@ namespace Backend_Connection.Controllers
                 {
                     Success = false,
                     Message = "new availability id is required",
+                    Data = null
+                });
+            }
+
+            var learner = await _context.Learners
+                .FirstOrDefaultAsync(x => x.LearnerId == learnerId);
+
+            if (learner == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "learner not found",
+                    Data = null
+                });
+            }
+
+            // this blocks learners who have been removed by their instructor
+            if (learner.LearnerStatus == "Removed")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "you have been removed by your instructor. please choose a new instructor.",
                     Data = null
                 });
             }

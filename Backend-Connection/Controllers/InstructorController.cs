@@ -204,7 +204,7 @@ namespace Backend_Connection.Controllers
             }
 
             var data = await _context.Learners
-                .Where(x => x.InstructorId == instructorId)
+                .Where(x => x.InstructorId == instructorId && x.LearnerStatus != "Removed")
                 .OrderBy(x => x.LearnerName)
                 .Select(x => new InstructorHomeStudentDto
                 {
@@ -218,6 +218,98 @@ namespace Backend_Connection.Controllers
                 Success = true,
                 Message = "students retrieved successfully",
                 Data = data
+            });
+        }
+
+        // this gets one learner linked to the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("learner/{id:int}")]
+        public async Task<IActionResult> GetInstructorLearnerById(int id)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var learner = await _context.Learners
+                .Where(x => x.LearnerId == id && x.InstructorId == instructorId)
+                .Select(x => new InstructorLearnerDetailsDto
+                {
+                    LearnerId = x.LearnerId,
+                    LearnerName = x.LearnerName,
+                    LearnerLicenceId = x.LearnerLicenceId,
+                    LearnerEmail = x.LearnerEmail,
+                    LearnerPhone = x.LearnerPhone,
+                    LearnerStatus = x.LearnerStatus,
+                    PastLessonCount = x.PastLessonCount,
+                    NextLessonCount = x.NextLessonCount
+                })
+                .FirstOrDefaultAsync();
+
+            if (learner == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "learner not found",
+                    Data = null
+                });
+            }
+
+            return Ok(new ApiResponse<InstructorLearnerDetailsDto>
+            {
+                Success = true,
+                Message = "learner retrieved successfully",
+                Data = learner
+            });
+        }
+
+        // this marks a learner as removed from the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("learner/{id:int}/remove")]
+        public async Task<IActionResult> RemoveLearner(int id)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var learner = await _context.Learners
+                .FirstOrDefaultAsync(x => x.LearnerId == id && x.InstructorId == instructorId);
+
+            if (learner == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "learner not found",
+                    Data = null
+                });
+            }
+
+            learner.LearnerStatus = "Removed";
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "learner removed successfully",
+                Data = null
             });
         }
 
@@ -369,6 +461,13 @@ namespace Backend_Connection.Controllers
         }
     }
 
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
     public class InstructorResponseDto
     {
         public int InstructorId { get; set; }
@@ -393,6 +492,18 @@ namespace Backend_Connection.Controllers
     {
         public int LearnerId { get; set; }
         public string LearnerName { get; set; } = "";
+    }
+
+    public class InstructorLearnerDetailsDto
+    {
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerLicenceId { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerStatus { get; set; } = "";
+        public int PastLessonCount { get; set; }
+        public int NextLessonCount { get; set; }
     }
 
     public class InstructorLessonDetailsDto
