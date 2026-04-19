@@ -1,12 +1,17 @@
 @page "/instructor-inbox"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
 
 <h3>Instructor Inbox</h3>
 
-<!-- NAV -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
@@ -15,9 +20,17 @@
     <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
 </div>
 
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading inbox...</p>
+}
+
 <div class="inbox-container">
 
-    <!-- HEADER -->
     <div class="inbox-header-row">
         <h3>Inbox</h3>
 
@@ -28,38 +41,41 @@
         </div>
     </div>
 
-    <!-- LIST -->
     <div class="inbox-list">
 
-        @foreach (var item in FilteredNotifications)
+        @if (!isLoading && !FilteredNotifications.Any())
         {
-            <div class="inbox-row">
+            <p style="padding:10px;">no inbox items found.</p>
+        }
+        else
+        {
+            @foreach (var item in FilteredNotifications)
+            {
+                <div class="inbox-row">
 
-                <!-- time -->
-                <div class="inbox-time">@item.Time</div>
+                    <div class="inbox-time">@item.CreatedAt.ToString("HH:mm")</div>
 
-                <!-- message -->
-                <div class="inbox-message"
-                     @onclick='() => OpenMessage(item)'>
-                    @item.Title
+                    <div class="inbox-message"
+                         @onclick='() => OpenMessage(item)'>
+                        @item.Title
+                    </div>
+
+                    <div class="inbox-date">@item.CreatedAt.ToString("dd MMM yyyy")</div>
+
+                    <button class="icon-btn"
+                            type="button"
+                            @onclick="() => TogglePin(item)">
+                        @(item.IsPinned ? "📌" : "📍")
+                    </button>
+
+                    <button class="icon-btn"
+                            type="button"
+                            @onclick="() => ToggleDelete(item)">
+                        🗑
+                    </button>
+
                 </div>
-
-                <!-- date -->
-                <div class="inbox-date">@item.Date</div>
-
-                <!-- pin -->
-                <button class="icon-btn"
-                        @onclick="() => TogglePin(item)">
-                    @(item.IsPinned ? "📌" : "📍")
-                </button>
-
-                <!-- delete -->
-                <button class="icon-btn"
-                        @onclick="() => ToggleDelete(item)">
-                    🗑
-                </button>
-
-            </div>
+            }
         }
 
     </div>
@@ -68,26 +84,73 @@
 
 @code {
     string currentTab = "all";
+    string? errorMessage;
+    bool isLoading = true;
 
-class NotificationItem
-{
-    public string Title { get; set; }
-    public string Time { get; set; }
-    public string Date { get; set; }
-    public string Type { get; set; } 
-    public bool IsPinned { get; set; }
-    public bool IsDeleted { get; set; }
-}
+    List<InboxItem> notifications = new();
 
-List<NotificationItem> notifications = new()
-{
-    new() { Title = "New student assignment request", Time = "10:15", Date = "10 Jan 2026", Type = "request" },
-    new() { Title = "Rescheduled Booking", Time = "11:11", Date = "6 Jan 2026", Type = "reschedule" },
-    new() { Title = "Cancelled Booking", Time = "9:15", Date = "8 Jan 2026", Type = "cancel" },
-    new() { Title = "Removed Student", Time = "13:15", Date = "3 Jan 2026", Type = "removed" }
-};
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
 
-    IEnumerable<NotificationItem> FilteredNotifications =>
+        await LoadInbox();
+        StateHasChanged();
+    }
+
+    // this loads inbox items for the logged in instructor
+    private async Task LoadInbox()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync("api/instructor/inbox");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InboxItemDto>>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load inbox items";
+                isLoading = false;
+                return;
+            }
+
+            notifications = result.Data
+                .Select(x => new InboxItem
+                {
+                    Id = x.Id,
+                    Title = x.Title,
+                    Type = x.Type,
+                    CreatedAt = x.CreatedAt,
+                    BookingId = x.BookingId,
+                    LearnerId = x.LearnerId,
+                    IsPinned = false,
+                    IsDeleted = false
+                })
+                .ToList();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading inbox";
+            isLoading = false;
+        }
+    }
+
+    // this filters inbox items based on the selected tab
+    IEnumerable<InboxItem> FilteredNotifications =>
         currentTab switch
         {
             "pinned" => notifications.Where(x => x.IsPinned && !x.IsDeleted),
@@ -95,38 +158,73 @@ List<NotificationItem> notifications = new()
             _ => notifications.Where(x => !x.IsDeleted)
         };
 
+    // this switches between inbox tabs
     void SetTab(string tab)
     {
         currentTab = tab;
     }
 
+    // this styles the active tab
     string GetTabClass(string tab)
     {
         return currentTab == tab ? "tab active" : "tab";
     }
 
-    void TogglePin(NotificationItem item)
+    // this pins or unpins an inbox item on the frontend
+    void TogglePin(InboxItem item)
     {
         item.IsPinned = !item.IsPinned;
     }
 
-    void ToggleDelete(NotificationItem item)
+    // this moves an inbox item in or out of deleted on the frontend
+    void ToggleDelete(InboxItem item)
     {
         item.IsDeleted = !item.IsDeleted;
     }
 
-   void OpenMessage(NotificationItem item)
-{
-    if (item.Type == "request")
-        Nav.NavigateTo("/instructor-request");
+    // this opens the correct notification page
+    void OpenMessage(InboxItem item)
+    {
+        if (item.Type == "cancel")
+        {
+            Nav.NavigateTo($"/instructor-cancelled-notification/{item.Id}");
+        }
+        else if (item.Type == "reschedule")
+        {
+            Nav.NavigateTo($"/instructor-rescheduled-notification/{item.Id}");
+        }
+        else if (item.Type == "removed")
+        {
+            Nav.NavigateTo($"/instructor-removed-notification/{item.Id}");
+        }
+    }
 
-    else if (item.Type == "reschedule")
-        Nav.NavigateTo("/instructor-rescheduled-notification");
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
 
-    else if (item.Type == "cancel")
-        Nav.NavigateTo("/instructor-cancelled-notification");
+    public class InboxItemDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public int? BookingId { get; set; }
+        public int? LearnerId { get; set; }
+    }
 
-    else if (item.Type == "removed")
-        Nav.NavigateTo("/instructor-removed-notification");
-}
+    public class InboxItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public int? BookingId { get; set; }
+        public int? LearnerId { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
+    }
 }

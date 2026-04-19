@@ -2,8 +2,10 @@
 using System.Security.Claims;
 using Backend_Connection.Data;
 using Backend_Connection.Models;
+using Backend_Connection.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System.ComponentModel.DataAnnotations;
 
 namespace Backend_Connection.Controllers
 {
@@ -12,11 +14,13 @@ namespace Backend_Connection.Controllers
     public class InstructorController : ControllerBase
     {
         private readonly ApplicationDbContext _context;
+        private readonly PasswordService _passwordService;
 
-        // this gives the controller access to the database
-        public InstructorController(ApplicationDbContext context)
+        // this gives the controller access to the database and password service
+        public InstructorController(ApplicationDbContext context, PasswordService passwordService)
         {
             _context = context;
+            _passwordService = passwordService;
         }
 
         // this gets all instructors from the database
@@ -183,6 +187,263 @@ namespace Backend_Connection.Controllers
                 Success = true,
                 Message = "instructor profile retrieved successfully",
                 Data = instructor
+            });
+        }
+
+        // this updates the logged in instructor account details
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("update")]
+        public async Task<IActionResult> UpdateInstructor([FromBody] UpdateInstructorRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "request is required",
+                    Data = null
+                });
+            }
+
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId);
+
+            if (instructor == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "instructor not found",
+                    Data = null
+                });
+            }
+
+            var instructorName = request.InstructorName?.Trim() ?? "";
+            var instructorEmail = request.InstructorEmail?.Trim() ?? "";
+            var instructorPhone = request.InstructorPhone?.Trim() ?? "";
+
+            if (string.IsNullOrWhiteSpace(instructorName) ||
+                string.IsNullOrWhiteSpace(instructorEmail) ||
+                string.IsNullOrWhiteSpace(instructorPhone))
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "all instructor fields are required",
+                    Data = null
+                });
+            }
+
+            if (!new EmailAddressAttribute().IsValid(instructorEmail))
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid email format",
+                    Data = null
+                });
+            }
+
+            var emailExists = await _context.Instructors
+                .AnyAsync(x => x.InstructorEmail.ToLower() == instructorEmail.ToLower() && x.InstructorId != instructorId);
+
+            if (emailExists)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "email already exists",
+                    Data = null
+                });
+            }
+
+            instructor.InstructorName = instructorName;
+            instructor.InstructorEmail = instructorEmail;
+            instructor.InstructorPhone = instructorPhone;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "instructor updated successfully",
+                Data = null
+            });
+        }
+
+        // this changes the logged in instructor password after checking the current password
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("change-password")]
+        public async Task<IActionResult> ChangePassword([FromBody] ChangeInstructorPasswordRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "request is required",
+                    Data = null
+                });
+            }
+
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId);
+
+            if (instructor == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "instructor not found",
+                    Data = null
+                });
+            }
+
+            var currentPassword = request.CurrentPassword?.Trim() ?? "";
+            var newPassword = request.NewPassword?.Trim() ?? "";
+            var confirmPassword = request.ConfirmPassword?.Trim() ?? "";
+
+            if (string.IsNullOrWhiteSpace(currentPassword) ||
+                string.IsNullOrWhiteSpace(newPassword) ||
+                string.IsNullOrWhiteSpace(confirmPassword))
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "all password fields are required",
+                    Data = null
+                });
+            }
+
+            if (newPassword.Length < 6)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "new password must be at least 6 characters",
+                    Data = null
+                });
+            }
+
+            if (newPassword != confirmPassword)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "new passwords do not match",
+                    Data = null
+                });
+            }
+
+            var validCurrentPassword = _passwordService.VerifyPassword(
+                instructor.InstructorPasswordHash,
+                currentPassword
+            );
+
+            if (!validCurrentPassword)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "current password is incorrect",
+                    Data = null
+                });
+            }
+
+            instructor.InstructorPasswordHash = _passwordService.HashPassword(newPassword);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "password changed successfully",
+                Data = null
+            });
+        }
+
+        // this updates the logged in instructor status
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("status")]
+        public async Task<IActionResult> UpdateStatus([FromBody] UpdateInstructorStatusRequest request)
+        {
+            if (request == null)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "request is required",
+                    Data = null
+                });
+            }
+
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId);
+
+            if (instructor == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "instructor not found",
+                    Data = null
+                });
+            }
+
+            var instructorStatus = request.InstructorStatus?.Trim() ?? "";
+
+            if (instructorStatus != "Active" && instructorStatus != "Inactive")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "status must be Active or Inactive",
+                    Data = null
+                });
+            }
+
+            instructor.InstructorStatus = instructorStatus;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "status updated successfully",
+                Data = null
             });
         }
 
@@ -708,6 +969,25 @@ namespace Backend_Connection.Controllers
         public string InstructorEmail { get; set; } = "";
         public string InstructorPhone { get; set; } = "";
         public string InstructorCarType { get; set; } = "";
+        public string InstructorStatus { get; set; } = "";
+    }
+
+    public class UpdateInstructorRequest
+    {
+        public string InstructorName { get; set; } = "";
+        public string InstructorEmail { get; set; } = "";
+        public string InstructorPhone { get; set; } = "";
+    }
+
+    public class ChangeInstructorPasswordRequest
+    {
+        public string CurrentPassword { get; set; } = "";
+        public string NewPassword { get; set; } = "";
+        public string ConfirmPassword { get; set; } = "";
+    }
+
+    public class UpdateInstructorStatusRequest
+    {
         public string InstructorStatus { get; set; } = "";
     }
 

@@ -1,18 +1,132 @@
-@page "/instructor-rescheduled-notification"
+@page "/instructor-rescheduled-notification/{id:int}"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="brand-title">SER Driving School</div>
 
 <h3>Rescheduled Booking</h3>
 
-<div class="instructor-message-card">
-
-    <p>Student has rescheduled their lesson.</p>
-
-    <button class="booking-btn"
-            @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
-        Back
-    </button>
-
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
 </div>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading notification...</p>
+}
+else
+{
+    <div class="instructor-message-card">
+        <p>@notificationTitle</p>
+        <p>@notificationDateText</p>
+
+        <button class="booking-btn"
+                @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
+            Back
+        </button>
+    </div>
+}
+
+@code {
+    [Parameter] public int id { get; set; }
+
+    string? errorMessage;
+    bool isLoading = true;
+
+    string notificationTitle = "";
+    string notificationDateText = "";
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await LoadNotification();
+        StateHasChanged();
+    }
+
+    // this loads the selected rescheduled inbox item for the logged in instructor
+    private async Task LoadNotification()
+    {
+        try
+        {
+            if (id <= 0)
+            {
+                errorMessage = "invalid notification id.";
+                isLoading = false;
+                return;
+            }
+
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync($"api/instructor/inbox/{id}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<InboxItemDto>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load notification";
+                isLoading = false;
+                return;
+            }
+
+            if (result.Data.Type != "reschedule")
+            {
+                errorMessage = "this is not a rescheduled booking notification";
+                isLoading = false;
+                return;
+            }
+
+            notificationTitle = result.Data.Title;
+            notificationDateText = result.Data.CreatedAt.ToString("dd/MM/yyyy HH:mm");
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading notification";
+            isLoading = false;
+        }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class InboxItemDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public int? BookingId { get; set; }
+        public int? LearnerId { get; set; }
+    }
+}

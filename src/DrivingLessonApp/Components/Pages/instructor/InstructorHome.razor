@@ -21,7 +21,6 @@ else if (isLoading)
 
 <h3>Instructor Home</h3>
 
-<!-- NAV BAR -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
@@ -30,13 +29,12 @@ else if (isLoading)
     <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
 </div>
 
-<!-- MAIN PANEL -->
 <div class="instructor-home-panel">
 
     <p class="welcome-text">Welcome Instructor, @instructorName</p>
 
     <div class="notif-bar">
-        <span>You have 0 new notifications</span>
+        <span>You have @inboxCount notification@(inboxCount == 1 ? "" : "s")</span>
         <button class="notif-btn"
                 @onclick='() => Nav.NavigateTo("/instructor-inbox")'>
             Check Inbox
@@ -50,7 +48,6 @@ else if (isLoading)
 
     <div class="home-grid">
 
-        <!-- UPCOMING LESSONS -->
         <div class="home-card">
             <div class="card-title">Upcoming lessons</div>
 
@@ -71,7 +68,6 @@ else if (isLoading)
             }
         </div>
 
-        <!-- STUDENTS -->
         <div class="home-card">
             <div class="student-header-row">
                 <div class="card-title student-card-title">Students</div>
@@ -120,6 +116,7 @@ else if (isLoading)
     string instructorName = "Instructor";
     string instructorStatus = "Active";
     string instructorStudentSearch = "";
+    int inboxCount = 0;
 
     List<InstructorHomeLesson> instructorLessons = new();
     List<InstructorHomeStudent> instructorStudents = new();
@@ -133,6 +130,7 @@ else if (isLoading)
         StateHasChanged();
     }
 
+    // this loads all instructor home data for the logged in instructor
     private async Task LoadInstructorHomeData()
     {
         try
@@ -153,6 +151,7 @@ else if (isLoading)
             await LoadInstructorProfile();
             await LoadUpcomingLessons();
             await LoadStudents();
+            await LoadInboxCount();
 
             isLoading = false;
         }
@@ -163,6 +162,7 @@ else if (isLoading)
         }
     }
 
+    // this loads the logged in instructor profile
     private async Task LoadInstructorProfile()
     {
         var response = await Http.GetAsync("api/instructor/me");
@@ -185,6 +185,7 @@ else if (isLoading)
         instructorStatus = result.Data.InstructorStatus;
     }
 
+    // this loads upcoming lessons for the instructor home page
     private async Task LoadUpcomingLessons()
     {
         var response = await Http.GetAsync("api/instructor/home/upcoming-lessons");
@@ -200,6 +201,7 @@ else if (isLoading)
         instructorLessons = result.Data;
     }
 
+    // this loads students linked to the instructor
     private async Task LoadStudents()
     {
         var response = await Http.GetAsync("api/instructor/home/students");
@@ -215,6 +217,23 @@ else if (isLoading)
         instructorStudents = result.Data;
     }
 
+    // this loads the current inbox count for the instructor
+    private async Task LoadInboxCount()
+    {
+        var response = await Http.GetAsync("api/instructor/inbox");
+
+        if (!response.IsSuccessStatusCode)
+            return;
+
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InstructorInboxItemDto>>>();
+
+        if (result == null || !result.Success || result.Data == null)
+            return;
+
+        inboxCount = result.Data.Count;
+    }
+
+    // this filters the visible students by learner name or learner id
     List<InstructorHomeStudent> FilteredInstructorStudents()
     {
         if (string.IsNullOrWhiteSpace(instructorStudentSearch))
@@ -263,5 +282,15 @@ else if (isLoading)
             string.Join("", LearnerName
                 .Split(' ', StringSplitOptions.RemoveEmptyEntries)
                 .Select(x => x[0]));
+    }
+
+    public class InstructorInboxItemDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public int? BookingId { get; set; }
+        public int? LearnerId { get; set; }
     }
 }
