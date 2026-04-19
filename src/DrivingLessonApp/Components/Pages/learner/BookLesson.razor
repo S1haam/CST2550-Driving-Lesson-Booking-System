@@ -94,6 +94,7 @@
         StateHasChanged();
     }
 
+    // this loads the learner profile and available dates for booking
     async Task LoadLearnerAndAvailability()
     {
         try
@@ -119,11 +120,35 @@
                 return;
             }
 
+            if (learnerResult.Data.LearnerStatus == "Removed")
+            {
+                errorMessage = "you have been removed by your instructor. please choose a new instructor.";
+                isLoading = false;
+                return;
+            }
+
             instructorId = learnerResult.Data.InstructorId;
 
             if (instructorId <= 0)
             {
-                errorMessage = "no instructor assigned.";
+                errorMessage = "you do not currently have an instructor assigned.";
+                isLoading = false;
+                return;
+            }
+
+            var instructorResponse = await Http.GetAsync($"api/instructor/{instructorId}");
+            var instructorResult = await instructorResponse.Content.ReadFromJsonAsync<ApiResponse<InstructorResponseDto>>();
+
+            if (!instructorResponse.IsSuccessStatusCode || instructorResult == null || !instructorResult.Success || instructorResult.Data == null)
+            {
+                errorMessage = "your selected instructor could not be found.";
+                isLoading = false;
+                return;
+            }
+
+            if (instructorResult.Data.InstructorStatus != "Active")
+            {
+                errorMessage = "your instructor is currently inactive so you cannot make a booking.";
                 isLoading = false;
                 return;
             }
@@ -165,12 +190,14 @@
         }
     }
 
+    // this stores the selected booking date
     void SelectDate(string date)
     {
         selectedDate = date;
         errorMessage = null;
     }
 
+    // this sends the learner to the time selection page
     void GoToTimeSelection()
     {
         if (string.IsNullOrWhiteSpace(selectedDate))
@@ -205,6 +232,18 @@
         public string LearnerLessonType { get; set; } = "";
         public int InstructorId { get; set; }
         public string? InstructorName { get; set; }
+        public string LearnerStatus { get; set; } = "";
+    }
+
+    public class InstructorResponseDto
+    {
+        public int InstructorId { get; set; }
+        public string InstructorCode { get; set; } = "";
+        public string InstructorName { get; set; } = "";
+        public string InstructorEmail { get; set; } = "";
+        public string InstructorPhone { get; set; } = "";
+        public string InstructorCarType { get; set; } = "";
+        public string InstructorStatus { get; set; } = "";
     }
 
     public class AvailabilityResponseDto

@@ -166,6 +166,42 @@ namespace Backend_Connection.Controllers
                 });
             }
 
+            // this blocks learners who do not currently have an instructor assigned
+            if (learner.InstructorId <= 0)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "you do not currently have an instructor assigned.",
+                    Data = null
+                });
+            }
+
+            var instructor = await _context.Instructors
+                .FirstOrDefaultAsync(x => x.InstructorId == learner.InstructorId);
+
+            // this blocks learners if their assigned instructor no longer exists
+            if (instructor == null)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "your selected instructor could not be found.",
+                    Data = null
+                });
+            }
+
+            // this blocks learners if their assigned instructor is inactive
+            if (instructor.InstructorStatus != "Active")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "your instructor is currently inactive so you cannot make a booking.",
+                    Data = null
+                });
+            }
+
             var availability = await _context.Availabilities
                 .Include(x => x.Instructor)
                 .FirstOrDefaultAsync(x => x.AvailabilityId == request.AvailabilityId);
@@ -176,6 +212,28 @@ namespace Backend_Connection.Controllers
                 {
                     Success = false,
                     Message = "availability slot not found",
+                    Data = null
+                });
+            }
+
+            // this blocks booking if the chosen availability does not belong to the learner's assigned instructor
+            if (availability.InstructorId != learner.InstructorId)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "you can only book with your assigned instructor.",
+                    Data = null
+                });
+            }
+
+            // this blocks booking if the selected availability belongs to an inactive instructor
+            if (availability.Instructor == null || availability.Instructor.InstructorStatus != "Active")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "this instructor is currently inactive so you cannot make a booking.",
                     Data = null
                 });
             }
@@ -373,6 +431,42 @@ namespace Backend_Connection.Controllers
                 });
             }
 
+            // this blocks learners who do not currently have an instructor assigned
+            if (learner.InstructorId <= 0)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "you do not currently have an instructor assigned.",
+                    Data = null
+                });
+            }
+
+            var instructor = await _context.Instructors
+                .FirstOrDefaultAsync(x => x.InstructorId == learner.InstructorId);
+
+            // this blocks learners if their assigned instructor no longer exists
+            if (instructor == null)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "your selected instructor could not be found.",
+                    Data = null
+                });
+            }
+
+            // this blocks learners if their assigned instructor is inactive
+            if (instructor.InstructorStatus != "Active")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "your instructor is currently inactive so you cannot reschedule a booking.",
+                    Data = null
+                });
+            }
+
             var booking = await _context.Bookings
                 .FirstOrDefaultAsync(x => x.BookingId == id && x.LearnerId == learnerId);
 
@@ -406,6 +500,28 @@ namespace Backend_Connection.Controllers
                 {
                     Success = false,
                     Message = "new availability slot not found",
+                    Data = null
+                });
+            }
+
+            // this blocks rescheduling if the chosen availability does not belong to the learner's assigned instructor
+            if (newAvailability.InstructorId != learner.InstructorId)
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "you can only reschedule with your assigned instructor.",
+                    Data = null
+                });
+            }
+
+            // this blocks rescheduling if the selected availability belongs to an inactive instructor
+            if (newAvailability.Instructor == null || newAvailability.Instructor.InstructorStatus != "Active")
+            {
+                return BadRequest(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "this instructor is currently inactive so you cannot reschedule a booking.",
                     Data = null
                 });
             }
@@ -448,7 +564,7 @@ namespace Backend_Connection.Controllers
                 {
                     BookingId = booking.BookingId,
                     LearnerId = booking.LearnerId,
-                    LearnerName = "",
+                    LearnerName = learner.LearnerName,
                     InstructorId = booking.InstructorId,
                     InstructorName = newAvailability.Instructor != null ? newAvailability.Instructor.InstructorName : "",
                     LessonDate = booking.LessonDate,

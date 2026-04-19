@@ -447,6 +447,66 @@ namespace Backend_Connection.Controllers
             });
         }
 
+        // this gets inbox items for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("inbox")]
+        public async Task<IActionResult> GetInbox()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var cancelledItems = await _context.Bookings
+                .Where(x => x.InstructorId == instructorId && x.BookingStatus == "Cancelled")
+                .GroupBy(x => x.LearnerId)
+                .Select(x => x
+                    .OrderByDescending(b => b.UpdatedAt)
+                    .FirstOrDefault()!)
+                .Select(x => new InstructorInboxItemDto
+                {
+                    Id = x.BookingId,
+                    Title = "cancelled booking",
+                    Type = "cancel",
+                    CreatedAt = x.UpdatedAt,
+                    BookingId = x.BookingId,
+                    LearnerId = x.LearnerId
+                })
+                .ToListAsync();
+
+            var removedItems = await _context.Learners
+                .Where(x => x.InstructorId == instructorId && x.LearnerStatus == "Removed")
+                .Select(x => new InstructorInboxItemDto
+                {
+                    Id = x.LearnerId,
+                    Title = "removed student",
+                    Type = "removed",
+                    CreatedAt = DateTime.MinValue,
+                    BookingId = null,
+                    LearnerId = x.LearnerId
+                })
+                .ToListAsync();
+
+            var data = cancelledItems
+                .Concat(removedItems)
+                .OrderByDescending(x => x.CreatedAt)
+                .ToList();
+
+            return Ok(new ApiResponse<List<InstructorInboxItemDto>>
+            {
+                Success = true,
+                Message = "inbox items retrieved successfully",
+                Data = data
+            });
+        }
+
         // this gets the learners linked to the logged in instructor for instructor home
         [Authorize(Roles = "Instructor")]
         [HttpGet("home/students")]
@@ -989,6 +1049,16 @@ namespace Backend_Connection.Controllers
     public class UpdateInstructorStatusRequest
     {
         public string InstructorStatus { get; set; } = "";
+    }
+
+    public class InstructorInboxItemDto
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public int? BookingId { get; set; }
+        public int? LearnerId { get; set; }
     }
 
     public class InstructorHomeLessonDto
