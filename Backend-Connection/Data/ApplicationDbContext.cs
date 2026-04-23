@@ -91,7 +91,7 @@ namespace Backend_Connection.Data
                  .WithOne(a => a.Instructor)
                  .HasForeignKey(a => a.InstructorId)
                  .OnDelete(DeleteBehavior.Restrict);
-            }
+            
 
             // Sample data
 
