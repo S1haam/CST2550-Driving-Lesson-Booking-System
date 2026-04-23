@@ -5,6 +5,9 @@
         //Notification specific Identifier
         public int NotificationId { get; set; }
 
+        //Navigation property for EF
+        public Instructor Instructor { get; set; }
+
         //Specific Instructor Identifier
         public int InstructorId { get; set; }
 
