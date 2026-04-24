@@ -6,7 +6,6 @@
 
 <h3>Pinned Notifications</h3>
 
-<!-- NAV -->
 <div class="nav-bar">
     <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
     <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
@@ -38,9 +37,9 @@
 @code {
     class NotificationItem
     {
-        public string Title { get; set; }
-        public string Time { get; set; }
-        public string Date { get; set; }
+        public string Title { get; set; } = "";
+        public string Time { get; set; } = "";
+        public string Date { get; set; } = "";
     }
 
     List<NotificationItem> pinnedNotifications = new()

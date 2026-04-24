@@ -507,6 +507,97 @@ namespace Backend_Connection.Controllers
             });
         }
 
+        // this gets notifications for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("notifications")]
+        public async Task<IActionResult> GetNotifications()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var data = await _context.Notifications
+                .Where(x => x.InstructorId == instructorId)
+                .OrderByDescending(x => x.CreatedAt)
+                .Select(x => new NotificationDto
+                {
+                    NotificationId = x.NotificationId,
+                    InstructorId = x.InstructorId,
+                    Message = x.Message,
+                    NotificationType = x.NotificationType,
+                    CreatedAt = x.CreatedAt,
+                    IsRead = x.IsRead,
+                    IsPinned = x.IsPinned,
+                    IsDeleted = x.IsDeleted
+                })
+                .ToListAsync();
+
+            return Ok(new ApiResponse<List<NotificationDto>>
+            {
+                Success = true,
+                Message = "notifications retrieved successfully",
+                Data = data
+            });
+        }
+
+        // this gets one notification by id for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpGet("notification/{id:int}")]
+        public async Task<IActionResult> GetNotificationById(int id)
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var notification = await _context.Notifications
+                .Where(x => x.NotificationId == id && x.InstructorId == instructorId)
+                .Select(x => new NotificationDto
+                {
+                    NotificationId = x.NotificationId,
+                    InstructorId = x.InstructorId,
+                    Message = x.Message,
+                    NotificationType = x.NotificationType,
+                    CreatedAt = x.CreatedAt,
+                    IsRead = x.IsRead,
+                    IsPinned = x.IsPinned,
+                    IsDeleted = x.IsDeleted
+                })
+                .FirstOrDefaultAsync();
+
+            if (notification == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "notification not found",
+                    Data = null
+                });
+            }
+
+            return Ok(new ApiResponse<NotificationDto>
+            {
+                Success = true,
+                Message = "notification retrieved successfully",
+                Data = notification
+            });
+        }
+
         // this gets the learners linked to the logged in instructor for instructor home
         [Authorize(Roles = "Instructor")]
         [HttpGet("home/students")]
@@ -623,6 +714,17 @@ namespace Backend_Connection.Controllers
             }
 
             learner.LearnerStatus = "Removed";
+
+            _context.Notifications.Add(new Notification
+            {
+                InstructorId = instructorId,
+                Message = $"Student {learner.LearnerName} has been removed.",
+                NotificationType = "RemovedStudent",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false,
+                IsPinned = false,
+                IsDeleted = false
+            });
 
             await _context.SaveChangesAsync();
 
@@ -856,6 +958,7 @@ namespace Backend_Connection.Controllers
             }
 
             var booking = await _context.Bookings
+                .Include(x => x.Learner)
                 .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
 
             if (booking == null)
@@ -899,6 +1002,19 @@ namespace Backend_Connection.Controllers
             {
                 learner.NextLessonCount -= 1;
             }
+
+            _context.Notifications.Add(new Notification
+            {
+                InstructorId = instructorId,
+                Message = booking.Learner != null
+                    ? $"Booking with {booking.Learner.LearnerName} has been cancelled."
+                    : "A booking has been cancelled.",
+                NotificationType = "CancelledBooking",
+                CreatedAt = DateTime.UtcNow,
+                IsRead = false,
+                IsPinned = false,
+                IsDeleted = false
+            });
 
             await _context.SaveChangesAsync();
 
@@ -1059,6 +1175,18 @@ namespace Backend_Connection.Controllers
         public DateTime CreatedAt { get; set; }
         public int? BookingId { get; set; }
         public int? LearnerId { get; set; }
+    }
+
+    public class NotificationDto
+    {
+        public int NotificationId { get; set; }
+        public int InstructorId { get; set; }
+        public string Message { get; set; } = "";
+        public string NotificationType { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public bool IsRead { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
     }
 
     public class InstructorHomeLessonDto

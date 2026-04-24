@@ -59,6 +59,9 @@ namespace Backend_Connection.Models
         /// <summary> Collection of recorded outcomes for lessons. </summary>
         public virtual ICollection<LessonOutcome> InstructorOutcomes { get; set; } = new List<LessonOutcome>();
 
+        /// <summary> Collection of notifications linked to this instructor. </summary>
+        public virtual ICollection<Notification> Notifications { get; set; } = new List<Notification>();
+
         // CUSTOM DATA STRUCTURES (NOT MAPPED TO DATABASE)
 
         [NotMapped]

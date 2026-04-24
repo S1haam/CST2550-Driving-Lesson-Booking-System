@@ -19,6 +19,7 @@ namespace Backend_Connection.Data
         public DbSet<Admin> Admins { get; set; }
         public DbSet<StudentRequest> StudentRequests { get; set; }
         public DbSet<LessonOutcome> LessonOutcomes { get; set; }
+        public DbSet<Notification> Notifications { get; set; }
 
         // Configure relationships + seed sample data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
@@ -82,6 +83,14 @@ namespace Backend_Connection.Data
                 .WithMany()
                 .HasForeignKey(sr => sr.AvailabilityId)
                 .OnDelete(DeleteBehavior.NoAction);
+
+            // Instructor → Notification
+            // (1-to-many)
+            modelBuilder.Entity<Instructor>()
+                .HasMany(i => i.Notifications)
+                .WithOne(n => n.Instructor)
+                .HasForeignKey(n => n.InstructorId)
+                .OnDelete(DeleteBehavior.Restrict);
 
             // Sample data
 

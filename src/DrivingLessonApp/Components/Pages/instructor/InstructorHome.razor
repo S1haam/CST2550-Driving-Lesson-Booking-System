@@ -130,7 +130,6 @@ else if (isLoading)
         StateHasChanged();
     }
 
-    // this loads all instructor home data for the logged in instructor
     private async Task LoadInstructorHomeData()
     {
         try
@@ -162,7 +161,6 @@ else if (isLoading)
         }
     }
 
-    // this loads the logged in instructor profile
     private async Task LoadInstructorProfile()
     {
         var response = await Http.GetAsync("api/instructor/me");
@@ -185,7 +183,6 @@ else if (isLoading)
         instructorStatus = result.Data.InstructorStatus;
     }
 
-    // this loads upcoming lessons for the instructor home page
     private async Task LoadUpcomingLessons()
     {
         var response = await Http.GetAsync("api/instructor/home/upcoming-lessons");
@@ -201,7 +198,6 @@ else if (isLoading)
         instructorLessons = result.Data;
     }
 
-    // this loads students linked to the instructor
     private async Task LoadStudents()
     {
         var response = await Http.GetAsync("api/instructor/home/students");
@@ -217,23 +213,21 @@ else if (isLoading)
         instructorStudents = result.Data;
     }
 
-    // this loads the current inbox count for the instructor
     private async Task LoadInboxCount()
     {
-        var response = await Http.GetAsync("api/instructor/inbox");
+        var response = await Http.GetAsync("api/instructor/notifications");
 
         if (!response.IsSuccessStatusCode)
             return;
 
-        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InstructorInboxItemDto>>>();
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<NotificationDto>>>();
 
         if (result == null || !result.Success || result.Data == null)
             return;
 
-        inboxCount = result.Data.Count;
+        inboxCount = result.Data.Count(x => !x.IsDeleted);
     }
 
-    // this filters the visible students by learner name or learner id
     List<InstructorHomeStudent> FilteredInstructorStudents()
     {
         if (string.IsNullOrWhiteSpace(instructorStudentSearch))
@@ -284,13 +278,15 @@ else if (isLoading)
                 .Select(x => x[0]));
     }
 
-    public class InstructorInboxItemDto
+    public class NotificationDto
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = "";
-        public string Type { get; set; } = "";
+        public int NotificationId { get; set; }
+        public int InstructorId { get; set; }
+        public string Message { get; set; } = "";
+        public string NotificationType { get; set; } = "";
         public DateTime CreatedAt { get; set; }
-        public int? BookingId { get; set; }
-        public int? LearnerId { get; set; }
+        public bool IsRead { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

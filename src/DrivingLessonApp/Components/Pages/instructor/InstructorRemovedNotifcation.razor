@@ -59,7 +59,6 @@ else
         StateHasChanged();
     }
 
-    // this loads the selected removed learner inbox item for the logged in instructor
     private async Task LoadNotification()
     {
         try
@@ -84,8 +83,8 @@ else
             Http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
-            var response = await Http.GetAsync($"api/instructor/inbox/{id}");
-            var result = await response.Content.ReadFromJsonAsync<ApiResponse<InboxItemDto>>();
+            var response = await Http.GetAsync($"api/instructor/notification/{id}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<NotificationDto>>();
 
             if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
             {
@@ -94,15 +93,15 @@ else
                 return;
             }
 
-            if (result.Data.Type != "removed")
+            if (result.Data.NotificationType != "RemovedStudent")
             {
                 errorMessage = "this is not a removed student notification";
                 isLoading = false;
                 return;
             }
 
-            notificationTitle = result.Data.Title;
-            notificationDateText = result.Data.CreatedAt.ToString("dd/MM/yyyy HH:mm");
+            notificationTitle = result.Data.Message;
+            notificationDateText = result.Data.CreatedAt.ToLocalTime().ToString("dd/MM/yyyy HH:mm");
 
             isLoading = false;
         }
@@ -120,13 +119,15 @@ else
         public T? Data { get; set; }
     }
 
-    public class InboxItemDto
+    public class NotificationDto
     {
-        public int Id { get; set; }
-        public string Title { get; set; } = "";
-        public string Type { get; set; } = "";
+        public int NotificationId { get; set; }
+        public int InstructorId { get; set; }
+        public string Message { get; set; } = "";
+        public string NotificationType { get; set; } = "";
         public DateTime CreatedAt { get; set; }
-        public int? BookingId { get; set; }
-        public int? LearnerId { get; set; }
+        public bool IsRead { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
     }
 }

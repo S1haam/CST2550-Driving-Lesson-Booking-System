@@ -66,7 +66,6 @@ else
         StateHasChanged();
     }
 
-    // this loads the selected learner before confirming removal
     private async Task LoadStudentDetails()
     {
         try
@@ -111,7 +110,6 @@ else
         }
     }
 
-    // this sends the remove request to the backend
     private async Task RemoveStudent()
     {
         if (isSubmitting)
@@ -143,7 +141,7 @@ else
                 return;
             }
 
-            Nav.NavigateTo($"/instructor-removed/{id}");
+            Nav.NavigateTo("/instructor-inbox");
         }
         catch
         {
