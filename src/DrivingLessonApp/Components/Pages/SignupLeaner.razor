@@ -3,6 +3,9 @@
 @inject NavigationManager Nav
 @inject DrivingLessonApp.Services.LearnerSignupState SignupState
 
+@using System.ComponentModel.DataAnnotations
+@using System.Text.RegularExpressions
+
 <div class="booking-card signup-card">
 
     <h1>WELCOME TO SER DRIVING SCHOOL</h1>
@@ -44,10 +47,15 @@
     {
         errorMessage = null;
 
-        if (string.IsNullOrWhiteSpace(licenceId) ||
-            string.IsNullOrWhiteSpace(name) ||
-            string.IsNullOrWhiteSpace(email) ||
-            string.IsNullOrWhiteSpace(phone) ||
+        var cleanLicenceId = licenceId.Trim();
+        var cleanName = name.Trim();
+        var cleanEmail = email.Trim();
+        var cleanPhone = phone.Trim();
+
+        if (string.IsNullOrWhiteSpace(cleanLicenceId) ||
+            string.IsNullOrWhiteSpace(cleanName) ||
+            string.IsNullOrWhiteSpace(cleanEmail) ||
+            string.IsNullOrWhiteSpace(cleanPhone) ||
             string.IsNullOrWhiteSpace(password) ||
             string.IsNullOrWhiteSpace(confirmPassword))
         {
@@ -55,15 +63,21 @@
             return;
         }
 
-        if (!new System.ComponentModel.DataAnnotations.EmailAddressAttribute().IsValid(email.Trim()))
+        if (!IsValidEmail(cleanEmail))
         {
             errorMessage = "Please enter a valid email address.";
             return;
         }
 
-        if (password.Length < 6)
+        if (!IsValidPhone(cleanPhone))
         {
-            errorMessage = "Password must be at least 6 characters.";
+            errorMessage = "Phone number must be exactly 11 numbers.";
+            return;
+        }
+
+        if (!IsValidPassword(password))
+        {
+            errorMessage = "Password must be at least 6 characters and include one uppercase letter and one number.";
             return;
         }
 
@@ -73,14 +87,37 @@
             return;
         }
 
-        SignupState.LicenceId = licenceId.Trim();
-        SignupState.Name = name.Trim();
-        SignupState.Email = email.Trim();
-        SignupState.Phone = phone.Trim();
+        SignupState.LicenceId = cleanLicenceId;
+        SignupState.Name = cleanName;
+        SignupState.Email = cleanEmail;
+        SignupState.Phone = cleanPhone;
         SignupState.Password = password;
         SignupState.LessonType = "";
         SignupState.SelectedInstructorId = 0;
 
         Nav.NavigateTo("/choose-type");
+    }
+
+    // this validates email format
+    bool IsValidEmail(string value)
+    {
+        return new EmailAddressAttribute().IsValid(value) &&
+               value.Contains("@") &&
+               value.Contains(".") &&
+               Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
+
+    // this validates password strength
+    bool IsValidPassword(string value)
+    {
+        return value.Length >= 6 &&
+               value.Any(char.IsUpper) &&
+               value.Any(char.IsDigit);
+    }
+
+    // this validates phone number
+    bool IsValidPhone(string value)
+    {
+        return Regex.IsMatch(value, @"^\d{11}$");
     }
 }

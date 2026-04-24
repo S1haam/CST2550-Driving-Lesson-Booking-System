@@ -1,91 +1,101 @@
 @page "/admin/remove-students"
-@rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
 
-<div class="admin-main-content admin-remove-students-page admin-detail-page">
-    <div class="admin-brand-title">SER Driving School</div>
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
-    <h3 class="admin-page-title">Managing Inactive Students</h3>
-
-    <div class="admin-home-nav-wrap">
-        <div class="admin-home-nav">
-            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
-            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/students")'>Students</button>
-            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/instructors")'>Instructors</button>
-            <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin/logout")'>Log out</button>
-        </div>
-    </div>
-
-    <div class="admin-outer-card">
-        <div class="admin-inner-card">
-            <div class="admin-detail-panel">
-                <div class="admin-detail-grid">
-
-                    <div class="admin-detail-box admin-detail-box-wide">
-                        <div class="admin-section-label">Inactive Student Review</div>
-                        <p class="admin-info-text">
-                            The students listed below have been inactive for over 100 days.
-                            Review their activity before removing them from the system.
-                        </p>
-                    </div>
-
-                    <div class="admin-detail-box admin-detail-box-wide">
-                        <div class="admin-section-label">Inactive Students</div>
-
-                        <div class="admin-activity-table-wrap">
-                            <table class="admin-activity-table">
-                                <thead>
-                                    <tr>
-                                        <th>Student ID</th>
-                                        <th>Name</th>
-                                        <th>Email</th>
-                                        <th>Last Active</th>
-                                        <th>Activity</th>
-                                        <th>Remove</th>
-                                    </tr>
-                                </thead>
-
-                                <tbody>
-                                    @foreach (var s in InactiveStudents)
-                                    {
-                                        <tr>
-                                            <td>@s.StudentId</td>
-                                            <td>@s.Name</td>
-                                            <td>@s.Email</td>
-                                            <td>@s.LastActive</td>
-                                            <td>
-                                                <button class="admin-view-btn"
-                                                        @onclick='() => Nav.NavigateTo($"/admin/student-activity/{s.StudentId}")'>
-                                                    View Activity
-                                                </button>
-                                            </td>
-                                            <td>
-                                                <button class="admin-view-btn admin-remove-btn"
-                                                        @onclick='() => RemoveStudent(s.StudentId)'>
-                                                    Remove
-                                                </button>
-                                            </td>
-                                        </tr>
-                                    }
-                                </tbody>
-                            </table>
-                        </div>
-
-                    </div>
-
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <div class="admin-back-container">
-        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin/system-activity")'>
-            Back to System Activity
-        </button>
-    </div>
-</div>
+@if (isLoading)
+{
+    <p>loading...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red">@errorMessage</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Last Active</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in InactiveStudents)
+            {
+                <tr>
+                    <td>@s.StudentId</td>
+                    <td>@s.Name</td>
+                    <td>@s.Email</td>
+                    <td>@s.LastActive</td>
+                    <td>
+                        <button @onclick='() => RemoveStudent(s.StudentId)'>Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
 
 @code {
+    string? errorMessage;
+    bool isLoading = true;
+
+    public List<InactiveStudent> InactiveStudents { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        await Load();
+        StateHasChanged();
+    }
+
+    async Task Load()
+    {
+        var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        var result = await Http.GetFromJsonAsync<ApiResponse<List<InactiveStudent>>>("api/admin/students/inactive");
+
+        if (result == null || !result.Success || result.Data == null)
+        {
+            errorMessage = "failed";
+            return;
+        }
+
+        InactiveStudents = result.Data;
+        isLoading = false;
+    }
+
+    async Task RemoveStudent(string id)
+    {
+        if (!int.TryParse(id, out var studentId))
+        {
+            errorMessage = "invalid id";
+            return;
+        }
+
+        var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        await Http.DeleteAsync($"api/admin/student/{studentId}");
+
+        var student = InactiveStudents.FirstOrDefault(x => x.StudentId == id);
+        if (student != null)
+            InactiveStudents.Remove(student);
+    }
+
     public class InactiveStudent
     {
         public string StudentId { get; set; } = "";
@@ -94,18 +104,10 @@
         public string LastActive { get; set; } = "";
     }
 
-    public List<InactiveStudent> InactiveStudents { get; set; } = new()
+    public class ApiResponse<T>
     {
-        new InactiveStudent { StudentId = "010", Name = "Phil", Email = "p@gmail.com", LastActive = "25/04/2024" },
-        new InactiveStudent { StudentId = "011", Name = "Sam", Email = "s@gmail.com", LastActive = "09/07/2024" }
-    };
-
-    void RemoveStudent(string id)
-    {
-        var student = InactiveStudents.FirstOrDefault(s => s.StudentId == id);
-        if (student != null)
-        {
-            InactiveStudents.Remove(student);
-        }
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
     }
 }

@@ -1,6 +1,12 @@
 @page "/admin/instructor/{id}"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="admin-main-content admin-instructor-profile-page admin-detail-page">
     <div class="admin-brand-title">SER Driving School</div>
@@ -16,50 +22,58 @@
         </div>
     </div>
 
-    <div class="admin-outer-card">
-        <div class="admin-inner-card">
-            <div class="admin-detail-panel">
-                <div class="admin-detail-grid">
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red;">@errorMessage</p>
+    }
+    else if (isLoading)
+    {
+        <p>loading instructor profile...</p>
+    }
+    else
+    {
+        <div class="admin-outer-card">
+            <div class="admin-inner-card">
+                <div class="admin-detail-panel">
+                    <div class="admin-detail-grid">
 
-                    <div class="admin-detail-box">
-                        <div class="admin-section-label">Instructor Information</div>
-                        <p><strong>Name:</strong> @Instructor.Name</p>
-                        <p><strong>Email:</strong> @Instructor.Email</p>
-                        <p><strong>Phone Number:</strong> @Instructor.Phone</p>
-                        <p>
-                            <strong>Account Status:</strong>
-                            <span class="admin-status-pill">@Instructor.Status</span>
-                        </p>
+                        <div class="admin-detail-box">
+                            <div class="admin-section-label">Instructor Information</div>
+                            <p><strong>Name:</strong> @Instructor.Name</p>
+                            <p><strong>Email:</strong> @Instructor.Email</p>
+                            <p><strong>Phone Number:</strong> @Instructor.Phone</p>
+                            <p><strong>Status:</strong> @Instructor.Status</p>
+                        </div>
+
+                        <div class="admin-detail-box">
+                            <div class="admin-section-label">Teaching Details</div>
+                            <p><strong>Lessons Taught:</strong> @Instructor.LessonsTaught</p>
+                            <p><strong>Current Students:</strong> @Instructor.CurrentStudents</p>
+                            <p><strong>Next Lesson:</strong> @Instructor.NextLesson</p>
+                            <p><strong>Next Student:</strong> @Instructor.NextStudent</p>
+                        </div>
+
+                        <div class="admin-detail-box admin-detail-box-wide">
+                            <div class="admin-section-label">Additional Details</div>
+
+                            <div class="admin-meta-row">
+                                <div class="admin-mini-card">
+                                    <span>Joined on</span>
+                                    <strong>@Instructor.JoinedOn</strong>
+                                </div>
+
+                                <div class="admin-mini-card">
+                                    <span>Last login</span>
+                                    <strong>@Instructor.LastLogin</strong>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <div class="admin-detail-box">
-                        <div class="admin-section-label">Teaching Details</div>
-                        <p><strong>Lessons Taught:</strong> @Instructor.LessonsTaught</p>
-                        <p><strong>Current number of students:</strong> @Instructor.CurrentStudents</p>
-                        <p><strong>Date of next lesson:</strong> @Instructor.NextLesson</p>
-                        <p><strong>Student Name:</strong> @Instructor.NextStudent</p>
-                    </div>
-
-                    <div class="admin-detail-box admin-detail-box-wide">
-                        <div class="admin-section-label">Additional Details</div>
-                       
-                        <div class="admin-meta-row">
-    <div class="admin-mini-card">
-        <span>Joined on</span>
-        <strong>@Instructor.JoinedOn</strong>
-    </div>
-
-    <div class="admin-mini-card">
-        <span>Last login</span>
-        <strong>@Instructor.LastLogin</strong>
-    </div>
-</div>
-                    </div>
-
                 </div>
             </div>
         </div>
-    </div>
+    }
 
     <div class="admin-back-container">
         <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin/instructors")'>
@@ -71,6 +85,58 @@
 @code {
     [Parameter]
     public string id { get; set; } = "";
+
+    string? errorMessage;
+    bool isLoading = true;
+
+    public InstructorProfile Instructor { get; set; } = new();
+
+    // load instructor profile using id
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await LoadInstructor();
+        StateHasChanged();
+    }
+
+    private async Task LoadInstructor()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=admin");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync($"api/admin/instructor/{id}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<InstructorProfile>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "failed to load instructor";
+                isLoading = false;
+                return;
+            }
+
+            Instructor = result.Data;
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "error loading instructor";
+            isLoading = false;
+        }
+    }
 
     public class InstructorProfile
     {
@@ -86,17 +152,10 @@
         public string LastLogin { get; set; } = "";
     }
 
-    public InstructorProfile Instructor { get; set; } = new InstructorProfile
+    public class ApiResponse<T>
     {
-        Name = "Kat Valentine",
-        Email = "kg@gmail.com",
-        Phone = "07987654321",
-        Status = "Active",
-        LessonsTaught = 37,
-        CurrentStudents = 5,
-        NextLesson = "07/01/2026",
-        NextStudent = "Olive Smith",
-        JoinedOn = "02/08/2024",
-        LastLogin = "05/01/2026"
-    };
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
 }

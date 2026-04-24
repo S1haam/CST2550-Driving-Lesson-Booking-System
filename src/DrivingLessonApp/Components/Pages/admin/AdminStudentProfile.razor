@@ -1,6 +1,12 @@
 @page "/admin/student/{id}"
 @rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
 
 <div class="admin-main-content admin-student-profile-page admin-detail-page">
     <div class="admin-brand-title">SER Driving School</div>
@@ -16,50 +22,61 @@
         </div>
     </div>
 
-    <div class="admin-outer-card">
-        <div class="admin-inner-card">
-            <div class="admin-detail-panel">
-                <div class="admin-detail-grid">
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+    else if (isLoading)
+    {
+        <p>loading student profile...</p>
+    }
+    else
+    {
+        <div class="admin-outer-card">
+            <div class="admin-inner-card">
+                <div class="admin-detail-panel">
+                    <div class="admin-detail-grid">
 
-                    <div class="admin-detail-box">
-                        <div class="admin-section-label">Student Information</div>
-                        <p><strong>Name:</strong> @Student.Name</p>
-                        <p><strong>Email:</strong> @Student.Email</p>
-                        <p><strong>Phone Number:</strong> @Student.Phone</p>
-                        <p>
-                            <strong>Account Status:</strong>
-                            <span class="admin-status-pill">@Student.Status</span>
-                        </p>
+                        <div class="admin-detail-box">
+                            <div class="admin-section-label">Student Information</div>
+                            <p><strong>Name:</strong> @Student.Name</p>
+                            <p><strong>Email:</strong> @Student.Email</p>
+                            <p><strong>Phone Number:</strong> @Student.Phone</p>
+                            <p>
+                                <strong>Account Status:</strong>
+                                <span class="admin-status-pill">@Student.Status</span>
+                            </p>
+                        </div>
+
+                        <div class="admin-detail-box">
+                            <div class="admin-section-label">Lesson Details</div>
+                            <p><strong>Lessons Booked:</strong> @Student.LessonsBooked</p>
+                            <p><strong>Date of last lesson:</strong> @Student.LastLesson</p>
+                            <p><strong>Date of next lesson:</strong> @Student.NextLesson</p>
+                            <p><strong>Lesson Instructor:</strong> @Student.InstructorName</p>
+                        </div>
+
+                        <div class="admin-detail-box admin-detail-box-wide">
+                            <div class="admin-section-label">Additional Details</div>
+
+                            <div class="admin-meta-row">
+                                <div class="admin-mini-card">
+                                    <span>Joined on</span>
+                                    <strong>@Student.JoinedOn</strong>
+                                </div>
+
+                                <div class="admin-mini-card">
+                                    <span>Last login</span>
+                                    <strong>@Student.LastLogin</strong>
+                                </div>
+                            </div>
+                        </div>
+
                     </div>
-
-                    <div class="admin-detail-box">
-                        <div class="admin-section-label">Lesson Details</div>
-                        <p><strong>Lessons Booked:</strong> @Student.LessonsBooked</p>
-                        <p><strong>Date of last lesson:</strong> @Student.LastLesson</p>
-                        <p><strong>Date of next lesson:</strong> @Student.NextLesson</p>
-                        <p><strong>Lesson Instructor:</strong> @Student.InstructorName</p>
-                    </div>
-
-                    <div class="admin-detail-box admin-detail-box-wide">
-                        <div class="admin-section-label">Additional Details</div>
-                        
-                        <div class="admin-meta-row">
-    <div class="admin-mini-card">
-        <span>Joined on</span>
-        <strong>@Student.JoinedOn</strong>
-    </div>
-
-    <div class="admin-mini-card">
-        <span>Last login</span>
-        <strong>@Student.LastLogin</strong>
-    </div>
-</div>
-                    </div>
-
                 </div>
             </div>
         </div>
-    </div>
+    }
 
     <div class="admin-back-container">
         <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin/students")'>
@@ -72,6 +89,67 @@
     [Parameter]
     public string id { get; set; } = "";
 
+    string? errorMessage;
+    bool isLoading = true;
+
+    public StudentProfile Student { get; set; } = new();
+
+    // this runs after the page first renders so we can access session storage
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await LoadStudentProfile();
+        StateHasChanged();
+    }
+
+    // this loads one student profile from the backend using the id in the url
+    private async Task LoadStudentProfile()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(id))
+            {
+                errorMessage = "invalid student id";
+                isLoading = false;
+                return;
+            }
+
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=admin");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync($"api/admin/student/{id}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<StudentProfile>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load student profile";
+                isLoading = false;
+                return;
+            }
+
+            Student = result.Data;
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading student profile";
+            isLoading = false;
+        }
+    }
+
+    // this matches the student profile data returned by api/admin/student/{id}
     public class StudentProfile
     {
         public string Name { get; set; } = "";
@@ -86,17 +164,11 @@
         public string LastLogin { get; set; } = "";
     }
 
-    public StudentProfile Student { get; set; } = new StudentProfile
+    // this matches the standard api response format
+    public class ApiResponse<T>
     {
-        Name = "Olive Smith",
-        Email = "o@gmail.com",
-        Phone = "07123456789",
-        Status = "Active",
-        LessonsBooked = 3,
-        LastLesson = "01/01/2026",
-        NextLesson = "07/01/2026",
-        InstructorName = "Kat Valentine",
-        JoinedOn = "13/11/2025",
-        LastLogin = "30/12/2025"
-    };
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
 }

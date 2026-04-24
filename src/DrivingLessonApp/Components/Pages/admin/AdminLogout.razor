@@ -1,21 +1,16 @@
 @page "/admin/logout"
-@rendermode InteractiveServer
 @inject NavigationManager Nav
+@inject IJSRuntime JS
 
-<div class="admin-main-content">
-    <div class="admin-brand-title">SER Driving School</div>
+<h3>Logging out...</h3>
 
-    <h3 class="admin-page-title">Logout</h3>
+@code {
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
 
-    <div class="admin-outer-card">
-        <div class="admin-inner-card">
-            <p>You have successfully logged out.</p>
-        </div>
-    </div>
+        await JS.InvokeVoidAsync("sessionStorage.clear");
 
-    <div class="admin-back-container">
-        <button class="admin-tab" @onclick='() => Nav.NavigateTo("/")'>
-            Return to start page
-        </button>
-    </div>
-</div>
+        Nav.NavigateTo("/");
+    }
+}

@@ -4,6 +4,7 @@ using Backend_Connection.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System.ComponentModel.DataAnnotations;
+using System.Text.RegularExpressions;
 
 namespace Backend_Connection.Controllers
 {
@@ -15,7 +16,7 @@ namespace Backend_Connection.Controllers
         private readonly JwtService _jwtService;
         private readonly PasswordService _passwordService;
 
-        // this injects the database context and auth services into the controller
+        // this gives the controller access to the database, jwt service and password service
         public AuthController(
             ApplicationDbContext context,
             JwtService jwtService,
@@ -26,19 +27,12 @@ namespace Backend_Connection.Controllers
             _passwordService = passwordService;
         }
 
-        // this logs a user in by checking their email password and role
+        // this logs in a learner, instructor or admin based on the role sent from the frontend
         [HttpPost("login")]
         public async Task<IActionResult> Login([FromBody] LoginRequest request)
         {
             if (request == null)
-            {
-                return BadRequest(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "request is required",
-                    Data = null
-                });
-            }
+                return BadRequest(ResponseError("request is required"));
 
             var email = request.Email?.Trim() ?? "";
             var password = request.Password?.Trim() ?? "";
@@ -48,163 +42,119 @@ namespace Backend_Connection.Controllers
                 string.IsNullOrWhiteSpace(password) ||
                 string.IsNullOrWhiteSpace(role))
             {
-                return BadRequest(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "email, password and role are required",
-                    Data = null
-                });
+                return BadRequest(ResponseError("email, password and role are required"));
             }
 
-            if (!new EmailAddressAttribute().IsValid(email))
-            {
-                return BadRequest(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "invalid email format",
-                    Data = null
-                });
-            }
+            if (!IsValidEmail(email))
+                return BadRequest(ResponseError("invalid email format"));
 
             if (role != "learner" && role != "instructor" && role != "admin")
-            {
-                return BadRequest(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "invalid role",
-                    Data = null
-                });
-            }
+                return BadRequest(ResponseError("invalid role"));
 
             if (role == "learner")
-            {
-                var learner = await _context.Learners
-                    .FirstOrDefaultAsync(x => x.LearnerEmail.ToLower() == email.ToLower());
-
-                if (learner == null || string.IsNullOrWhiteSpace(learner.LearnerPasswordHash))
-                {
-                    return Unauthorized(new ApiResponse<object>
-                    {
-                        Success = false,
-                        Message = "invalid learner login",
-                        Data = null
-                    });
-                }
-
-                var valid = _passwordService.VerifyPassword(
-                    learner.LearnerPasswordHash,
-                    password
-                );
-
-                if (!valid)
-                {
-                    return Unauthorized(new ApiResponse<object>
-                    {
-                        Success = false,
-                        Message = "invalid learner login",
-                        Data = null
-                    });
-                }
-
-                var token = _jwtService.GenerateToken(
-                    learner.LearnerId,
-                    learner.LearnerEmail,
-                    "Learner"
-                );
-
-                return Ok(new ApiResponse<AuthResponse>
-                {
-                    Success = true,
-                    Message = "learner login successful",
-                    Data = new AuthResponse
-                    {
-                        Token = token,
-                        Role = "Learner",
-                        UserId = learner.LearnerId,
-                        Email = learner.LearnerEmail
-                    }
-                });
-            }
+                return await LoginLearner(email, password);
 
             if (role == "instructor")
-            {
-                var instructor = await _context.Instructors
-                    .FirstOrDefaultAsync(x => x.InstructorEmail.ToLower() == email.ToLower());
+                return await LoginInstructor(email, password);
 
-                if (instructor == null || string.IsNullOrWhiteSpace(instructor.InstructorPasswordHash))
-                {
-                    return Unauthorized(new ApiResponse<object>
-                    {
-                        Success = false,
-                        Message = "invalid instructor login",
-                        Data = null
-                    });
-                }
+            return await LoginAdmin(email, password);
+        }
 
-                var valid = _passwordService.VerifyPassword(
-                    instructor.InstructorPasswordHash,
-                    password
-                );
+        // this checks learner login details and saves last login time
+        private async Task<IActionResult> LoginLearner(string email, string password)
+        {
+            var cleanEmail = email.Trim().ToLower();
 
-                if (!valid)
-                {
-                    return Unauthorized(new ApiResponse<object>
-                    {
-                        Success = false,
-                        Message = "invalid instructor login",
-                        Data = null
-                    });
-                }
+            var learner = await _context.Learners
+                .FirstOrDefaultAsync(x => x.LearnerEmail.ToLower() == cleanEmail);
 
-                var token = _jwtService.GenerateToken(
-                    instructor.InstructorId,
-                    instructor.InstructorEmail,
-                    "Instructor"
-                );
+            if (learner == null || string.IsNullOrWhiteSpace(learner.LearnerPasswordHash))
+                return Unauthorized(ResponseError("invalid learner login"));
 
-                return Ok(new ApiResponse<AuthResponse>
-                {
-                    Success = true,
-                    Message = "instructor login successful",
-                    Data = new AuthResponse
-                    {
-                        Token = token,
-                        Role = "Instructor",
-                        UserId = instructor.InstructorId,
-                        Email = instructor.InstructorEmail
-                    }
-                });
-            }
+            var valid = _passwordService.VerifyPassword(learner.LearnerPasswordHash, password);
 
-            var admin = await _context.Admins
-                .FirstOrDefaultAsync(x => x.AdminEmail.ToLower() == email.ToLower());
+            if (!valid)
+                return Unauthorized(ResponseError("invalid learner login"));
 
-            if (admin == null || string.IsNullOrWhiteSpace(admin.AdminPasswordHash))
-            {
-                return Unauthorized(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "invalid admin login",
-                    Data = null
-                });
-            }
+            learner.LastLogin = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
 
-            var adminValid = _passwordService.VerifyPassword(
-                admin.AdminPasswordHash,
-                password
+            var token = _jwtService.GenerateToken(
+                learner.LearnerId,
+                learner.LearnerEmail,
+                "Learner"
             );
 
-            if (!adminValid)
+            return Ok(new ApiResponse<AuthResponse>
             {
-                return Unauthorized(new ApiResponse<object>
+                Success = true,
+                Message = "learner login successful",
+                Data = new AuthResponse
                 {
-                    Success = false,
-                    Message = "invalid admin login",
-                    Data = null
-                });
-            }
+                    Token = token,
+                    Role = "Learner",
+                    UserId = learner.LearnerId,
+                    Email = learner.LearnerEmail
+                }
+            });
+        }
 
-            var adminToken = _jwtService.GenerateToken(
+        // this checks instructor login details and saves last login time
+        private async Task<IActionResult> LoginInstructor(string email, string password)
+        {
+            var cleanEmail = email.Trim().ToLower();
+
+            var instructor = await _context.Instructors
+                .FirstOrDefaultAsync(x => x.InstructorEmail.ToLower() == cleanEmail);
+
+            if (instructor == null || string.IsNullOrWhiteSpace(instructor.InstructorPasswordHash))
+                return Unauthorized(ResponseError("invalid instructor login"));
+
+            var valid = _passwordService.VerifyPassword(instructor.InstructorPasswordHash, password);
+
+            if (!valid)
+                return Unauthorized(ResponseError("invalid instructor login"));
+
+            instructor.LastLogin = DateTime.UtcNow;
+            await _context.SaveChangesAsync();
+
+            var token = _jwtService.GenerateToken(
+                instructor.InstructorId,
+                instructor.InstructorEmail,
+                "Instructor"
+            );
+
+            return Ok(new ApiResponse<AuthResponse>
+            {
+                Success = true,
+                Message = "instructor login successful",
+                Data = new AuthResponse
+                {
+                    Token = token,
+                    Role = "Instructor",
+                    UserId = instructor.InstructorId,
+                    Email = instructor.InstructorEmail
+                }
+            });
+        }
+
+        // this checks admin login details and returns an admin token if they are valid
+        private async Task<IActionResult> LoginAdmin(string email, string password)
+        {
+            var cleanEmail = email.Trim().ToLower();
+
+            var admin = await _context.Admins
+                .FirstOrDefaultAsync(x => x.AdminEmail.ToLower() == cleanEmail);
+
+            if (admin == null || string.IsNullOrWhiteSpace(admin.AdminPasswordHash))
+                return Unauthorized(ResponseError("invalid admin login"));
+
+            var valid = _passwordService.VerifyPassword(admin.AdminPasswordHash, password);
+
+            if (!valid)
+                return Unauthorized(ResponseError("invalid admin login"));
+
+            var token = _jwtService.GenerateToken(
                 admin.AdminId,
                 admin.AdminEmail,
                 "Admin"
@@ -216,7 +166,7 @@ namespace Backend_Connection.Controllers
                 Message = "admin login successful",
                 Data = new AuthResponse
                 {
-                    Token = adminToken,
+                    Token = token,
                     Role = "Admin",
                     UserId = admin.AdminId,
                     Email = admin.AdminEmail
@@ -229,9 +179,7 @@ namespace Backend_Connection.Controllers
         public async Task<IActionResult> RegisterLearner([FromBody] RegisterLearnerRequest request)
         {
             if (request == null)
-            {
                 return BadRequest(ResponseError("request is required"));
-            }
 
             var learnerName = request.LearnerName?.Trim() ?? "";
             var learnerLicenceId = request.LearnerLicenceId?.Trim() ?? "";
@@ -251,33 +199,26 @@ namespace Backend_Connection.Controllers
                 return BadRequest(ResponseError("all learner fields are required"));
             }
 
-            if (!new EmailAddressAttribute().IsValid(learnerEmail))
-            {
+            if (!IsValidEmail(learnerEmail))
                 return BadRequest(ResponseError("invalid email format"));
-            }
 
-            if (password.Length < 6)
-            {
-                return BadRequest(ResponseError("password must be at least 6 characters"));
-            }
+            if (!IsValidPassword(password))
+                return BadRequest(ResponseError("password must be at least 6 characters and include one uppercase letter and one number"));
+
+            if (!IsValidPhone(learnerPhone))
+                return BadRequest(ResponseError("phone number must be exactly 11 numbers"));
 
             if (learnerLessonType != "Manual" && learnerLessonType != "Automatic")
-            {
                 return BadRequest(ResponseError("lesson type must be Manual or Automatic"));
-            }
 
-            if (await _context.Learners.AnyAsync(x => x.LearnerEmail.ToLower() == learnerEmail.ToLower()))
-            {
+            if (await EmailExistsAcrossAllUsers(learnerEmail))
                 return BadRequest(ResponseError("email already exists"));
-            }
 
             var instructorExists = await _context.Instructors
                 .AnyAsync(x => x.InstructorId == request.SelectedInstructorId);
 
             if (!instructorExists)
-            {
                 return BadRequest(ResponseError("selected instructor does not exist"));
-            }
 
             var learner = new Learner
             {
@@ -290,7 +231,9 @@ namespace Backend_Connection.Controllers
                 PastLessonCount = 0,
                 NextLessonCount = 0,
                 LearnerLessonType = learnerLessonType,
-                InstructorId = request.SelectedInstructorId
+                InstructorId = request.SelectedInstructorId,
+                CreatedAt = DateTime.UtcNow,
+                LastLogin = null
             };
 
             _context.Learners.Add(learner);
@@ -309,9 +252,7 @@ namespace Backend_Connection.Controllers
         public async Task<IActionResult> RegisterInstructor([FromBody] RegisterInstructorRequest request)
         {
             if (request == null)
-            {
                 return BadRequest(ResponseError("request is required"));
-            }
 
             var instructorCode = request.InstructorCode?.Trim() ?? "";
             var instructorName = request.InstructorName?.Trim() ?? "";
@@ -323,31 +264,27 @@ namespace Backend_Connection.Controllers
             if (string.IsNullOrWhiteSpace(instructorCode) ||
                 string.IsNullOrWhiteSpace(instructorName) ||
                 string.IsNullOrWhiteSpace(instructorEmail) ||
+                string.IsNullOrWhiteSpace(instructorPhone) ||
                 string.IsNullOrWhiteSpace(password) ||
                 string.IsNullOrWhiteSpace(instructorCarType))
             {
                 return BadRequest(ResponseError("all instructor fields are required"));
             }
 
-            if (!new EmailAddressAttribute().IsValid(instructorEmail))
-            {
+            if (!IsValidEmail(instructorEmail))
                 return BadRequest(ResponseError("invalid email format"));
-            }
 
-            if (password.Length < 6)
-            {
-                return BadRequest(ResponseError("password must be at least 6 characters"));
-            }
+            if (!IsValidPassword(password))
+                return BadRequest(ResponseError("password must be at least 6 characters and include one uppercase letter and one number"));
+
+            if (!IsValidPhone(instructorPhone))
+                return BadRequest(ResponseError("phone number must be exactly 11 numbers"));
 
             if (instructorCarType != "Manual" && instructorCarType != "Automatic")
-            {
                 return BadRequest(ResponseError("car type must be Manual or Automatic"));
-            }
 
-            if (await _context.Instructors.AnyAsync(x => x.InstructorEmail.ToLower() == instructorEmail.ToLower()))
-            {
+            if (await EmailExistsAcrossAllUsers(instructorEmail))
                 return BadRequest(ResponseError("email already exists"));
-            }
 
             var instructor = new Instructor
             {
@@ -357,7 +294,9 @@ namespace Backend_Connection.Controllers
                 InstructorPhone = instructorPhone,
                 InstructorCarType = instructorCarType,
                 InstructorPasswordHash = _passwordService.HashPassword(password),
-                InstructorStatus = "Active"
+                InstructorStatus = "Active",
+                CreatedAt = DateTime.UtcNow,
+                LastLogin = null
             };
 
             _context.Instructors.Add(instructor);
@@ -371,14 +310,12 @@ namespace Backend_Connection.Controllers
             });
         }
 
-        // this registers an admin account after validating admin signup fields
+        // this registers an admin account and adds default admin profile values for admin settings later
         [HttpPost("register/admin")]
         public async Task<IActionResult> RegisterAdmin([FromBody] RegisterAdminRequest request)
         {
             if (request == null)
-            {
                 return BadRequest(ResponseError("request is required"));
-            }
 
             var adminEmail = request.AdminEmail?.Trim() ?? "";
             var password = request.Password?.Trim() ?? "";
@@ -389,26 +326,24 @@ namespace Backend_Connection.Controllers
                 return BadRequest(ResponseError("admin email and password are required"));
             }
 
-            if (!new EmailAddressAttribute().IsValid(adminEmail))
-            {
+            if (!IsValidEmail(adminEmail))
                 return BadRequest(ResponseError("invalid email format"));
-            }
 
-            if (password.Length < 6)
-            {
-                return BadRequest(ResponseError("password must be at least 6 characters"));
-            }
+            if (!IsValidPassword(password))
+                return BadRequest(ResponseError("password must be at least 6 characters and include one uppercase letter and one number"));
 
-            if (await _context.Admins.AnyAsync(x => x.AdminEmail.ToLower() == adminEmail.ToLower()))
-            {
+            if (await EmailExistsAcrossAllUsers(adminEmail))
                 return BadRequest(ResponseError("email already exists"));
-            }
 
             var admin = new Admin
             {
                 AdminEmail = adminEmail,
                 AdminPasswordHash = _passwordService.HashPassword(password),
-                AdminRole = "Admin"
+                AdminRole = "Admin",
+                AdminName = "Admin User",
+                AdminPhone = "",
+                Status = "Active",
+                LastPasswordChange = DateTime.UtcNow
             };
 
             _context.Admins.Add(admin);
@@ -422,7 +357,56 @@ namespace Backend_Connection.Controllers
             });
         }
 
-        // this builds a standard error response object
+        // this checks if an email is already used by learner, instructor or admin
+        private async Task<bool> EmailExistsAcrossAllUsers(string email)
+        {
+            var cleanEmail = email.Trim().ToLower();
+
+            var learnerExists = await _context.Learners
+                .AnyAsync(x => x.LearnerEmail.ToLower() == cleanEmail);
+
+            var instructorExists = await _context.Instructors
+                .AnyAsync(x => x.InstructorEmail.ToLower() == cleanEmail);
+
+            var adminExists = await _context.Admins
+                .AnyAsync(x => x.AdminEmail.ToLower() == cleanEmail);
+
+            return learnerExists || instructorExists || adminExists;
+        }
+
+        // this validates email format more strictly
+        private bool IsValidEmail(string email)
+        {
+            if (string.IsNullOrWhiteSpace(email))
+                return false;
+
+            return new EmailAddressAttribute().IsValid(email) &&
+                   email.Contains("@") &&
+                   email.Contains(".") &&
+                   Regex.IsMatch(email, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+        }
+
+        // this validates password strength
+        private bool IsValidPassword(string password)
+        {
+            if (string.IsNullOrWhiteSpace(password))
+                return false;
+
+            return password.Length >= 6 &&
+                   password.Any(char.IsUpper) &&
+                   password.Any(char.IsDigit);
+        }
+
+        // this validates 11 digit phone numbers
+        private bool IsValidPhone(string phone)
+        {
+            if (string.IsNullOrWhiteSpace(phone))
+                return false;
+
+            return Regex.IsMatch(phone, @"^\d{11}$");
+        }
+
+        // this creates the standard error response used by this controller
         private ApiResponse<object> ResponseError(string message)
         {
             return new ApiResponse<object>
@@ -434,7 +418,7 @@ namespace Backend_Connection.Controllers
         }
     }
 
-    // this stores login request data sent from the frontend
+    // this stores login details sent from the frontend
     public class LoginRequest
     {
         public string Email { get; set; } = "";
@@ -442,7 +426,7 @@ namespace Backend_Connection.Controllers
         public string Role { get; set; } = "";
     }
 
-    // this stores learner registration data sent from the frontend
+    // this stores learner signup details sent from the frontend
     public class RegisterLearnerRequest
     {
         public string LearnerName { get; set; } = "";
@@ -454,18 +438,18 @@ namespace Backend_Connection.Controllers
         public int SelectedInstructorId { get; set; }
     }
 
-    // this stores instructor registration data sent from the frontend
+    // this stores instructor signup details sent from the frontend
     public class RegisterInstructorRequest
     {
         public string InstructorCode { get; set; } = "";
         public string InstructorName { get; set; } = "";
         public string InstructorEmail { get; set; } = "";
-        public string? InstructorPhone { get; set; }
+        public string InstructorPhone { get; set; } = "";
         public string InstructorCarType { get; set; } = "";
         public string Password { get; set; } = "";
     }
 
-    // this stores admin registration data sent from the frontend
+    // this stores admin signup details sent from the frontend
     public class RegisterAdminRequest
     {
         public string AdminEmail { get; set; } = "";

@@ -64,13 +64,13 @@ else if (isLoading)
 
                     <button class="icon-btn"
                             type="button"
-                            @onclick="() => TogglePin(item)">
+                            @onclick="async () => await TogglePin(item)">
                         @(item.IsPinned ? "📌" : "📍")
                     </button>
 
                     <button class="icon-btn"
                             type="button"
-                            @onclick="() => ToggleDelete(item)">
+                            @onclick="async () => await ToggleDelete(item)">
                         🗑
                     </button>
 
@@ -164,14 +164,32 @@ else if (isLoading)
         return currentTab == tab ? "tab active" : "tab";
     }
 
-    void TogglePin(InboxItem item)
+    async Task TogglePin(InboxItem item)
     {
-        item.IsPinned = !item.IsPinned;
+        var endpoint = item.IsPinned
+            ? $"api/instructor/notification/{item.Id}/unpin"
+            : $"api/instructor/notification/{item.Id}/pin";
+
+        var response = await Http.PutAsync(endpoint, null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            item.IsPinned = !item.IsPinned;
+        }
     }
 
-    void ToggleDelete(InboxItem item)
+    async Task ToggleDelete(InboxItem item)
     {
-        item.IsDeleted = !item.IsDeleted;
+        var endpoint = item.IsDeleted
+            ? $"api/instructor/notification/{item.Id}/restore"
+            : $"api/instructor/notification/{item.Id}/delete";
+
+        var response = await Http.PutAsync(endpoint, null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            item.IsDeleted = !item.IsDeleted;
+        }
     }
 
     void OpenMessage(InboxItem item)

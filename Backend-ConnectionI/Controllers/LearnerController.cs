@@ -54,7 +54,7 @@ namespace Backend_Connection.Controllers
         }
 
         // this gets one learner by id
-        [HttpGet("{id}")]
+        [HttpGet("{id:int}")]
         public async Task<IActionResult> GetLearnerById(int id)
         {
             var learner = await _context.Learners
@@ -99,9 +99,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetMyProfile()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var learnerId = GetLoggedInLearnerId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim))
+            if (learnerId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -111,19 +111,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            if (!int.TryParse(userIdClaim, out int learnerId))
-            {
-                return Unauthorized(new ApiResponse<object>
-                {
-                    Success = false,
-                    Message = "invalid user id in token",
-                    Data = null
-                });
-            }
-
             var learner = await _context.Learners
                 .Include(x => x.Instructor)
-                .Where(x => x.LearnerId == learnerId)
+                .Where(x => x.LearnerId == learnerId.Value)
                 .Select(x => new LearnerResponseDto
                 {
                     LearnerId = x.LearnerId,
@@ -173,9 +163,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var learnerId = GetLoggedInLearnerId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int learnerId))
+            if (learnerId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -185,7 +175,7 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var learner = await _context.Learners.FirstOrDefaultAsync(x => x.LearnerId == learnerId);
+            var learner = await _context.Learners.FirstOrDefaultAsync(x => x.LearnerId == learnerId.Value);
 
             if (learner == null)
             {
@@ -237,7 +227,7 @@ namespace Backend_Connection.Controllers
             }
 
             var emailExists = await _context.Learners
-                .AnyAsync(x => x.LearnerEmail.ToLower() == learnerEmail.ToLower() && x.LearnerId != learnerId);
+                .AnyAsync(x => x.LearnerEmail.ToLower() == learnerEmail.ToLower() && x.LearnerId != learnerId.Value);
 
             if (emailExists)
             {
@@ -303,9 +293,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var learnerId = GetLoggedInLearnerId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int learnerId))
+            if (learnerId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -315,7 +305,7 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var learner = await _context.Learners.FirstOrDefaultAsync(x => x.LearnerId == learnerId);
+            var learner = await _context.Learners.FirstOrDefaultAsync(x => x.LearnerId == learnerId.Value);
 
             if (learner == null)
             {
@@ -343,12 +333,12 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            if (newPassword.Length < 6)
+            if (!IsValidPassword(newPassword))
             {
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "new password must be at least 6 characters",
+                    Message = "new password must be at least 6 characters and include one uppercase letter and one number",
                     Data = null
                 });
             }
@@ -405,9 +395,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var learnerId = GetLoggedInLearnerId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int learnerId))
+            if (learnerId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -420,7 +410,7 @@ namespace Backend_Connection.Controllers
             var learner = await _context.Learners
                 .Include(x => x.DbBookings)
                 .Include(x => x.StudentRequests)
-                .FirstOrDefaultAsync(x => x.LearnerId == learnerId);
+                .FirstOrDefaultAsync(x => x.LearnerId == learnerId.Value);
 
             if (learner == null)
             {
@@ -490,6 +480,28 @@ namespace Backend_Connection.Controllers
                 Message = "account deleted successfully",
                 Data = null
             });
+        }
+
+        // this reads the learner id from the jwt token
+        private int? GetLoggedInLearnerId()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int learnerId))
+            {
+                return null;
+            }
+
+            return learnerId;
+        }
+
+        // this validates password strength
+        private bool IsValidPassword(string password)
+        {
+            return !string.IsNullOrWhiteSpace(password) &&
+                   password.Length >= 6 &&
+                   password.Any(char.IsUpper) &&
+                   password.Any(char.IsDigit);
         }
     }
 

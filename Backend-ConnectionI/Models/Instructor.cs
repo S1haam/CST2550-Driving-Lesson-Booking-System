@@ -1,4 +1,5 @@
 ﻿using Backend_Connection.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -41,6 +42,12 @@ namespace Backend_Connection.Models
         /// <summary> Current employment status (Active or Inactive). </summary>
         [Required]
         public string InstructorStatus { get; set; } = "Active";
+
+        /// <summary> Date and time when the instructor account was created </summary>
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary> Date and time when the instructor last logged in </summary>
+        public DateTime? LastLogin { get; set; }
 
         // EF CORE NAVIGATION PROPERTIES
 

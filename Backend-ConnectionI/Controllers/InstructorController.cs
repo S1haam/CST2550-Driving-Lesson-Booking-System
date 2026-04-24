@@ -146,9 +146,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("me")]
         public async Task<IActionResult> GetCurrentInstructor()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -159,7 +159,7 @@ namespace Backend_Connection.Controllers
             }
 
             var instructor = await _context.Instructors
-                .Where(x => x.InstructorId == instructorId)
+                .Where(x => x.InstructorId == instructorId.Value)
                 .Select(x => new InstructorResponseDto
                 {
                     InstructorId = x.InstructorId,
@@ -205,9 +205,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -217,7 +217,7 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId);
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId.Value);
 
             if (instructor == null)
             {
@@ -256,7 +256,8 @@ namespace Backend_Connection.Controllers
             }
 
             var emailExists = await _context.Instructors
-                .AnyAsync(x => x.InstructorEmail.ToLower() == instructorEmail.ToLower() && x.InstructorId != instructorId);
+                .AnyAsync(x => x.InstructorEmail.ToLower() == instructorEmail.ToLower() &&
+                               x.InstructorId != instructorId.Value);
 
             if (emailExists)
             {
@@ -297,9 +298,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -309,7 +310,7 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId);
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId.Value);
 
             if (instructor == null)
             {
@@ -337,12 +338,12 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            if (newPassword.Length < 6)
+            if (!IsValidPassword(newPassword))
             {
                 return BadRequest(new ApiResponse<object>
                 {
                     Success = false,
-                    Message = "new password must be at least 6 characters",
+                    Message = "new password must be at least 6 characters and include one uppercase letter and one number",
                     Data = null
                 });
             }
@@ -358,7 +359,7 @@ namespace Backend_Connection.Controllers
             }
 
             var validCurrentPassword = _passwordService.VerifyPassword(
-                instructor.InstructorPasswordHash,
+                instructor.InstructorPasswordHash ?? "",
                 currentPassword
             );
 
@@ -399,9 +400,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -411,7 +412,7 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId);
+            var instructor = await _context.Instructors.FirstOrDefaultAsync(x => x.InstructorId == instructorId.Value);
 
             if (instructor == null)
             {
@@ -452,9 +453,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("inbox")]
         public async Task<IActionResult> GetInbox()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -465,7 +466,7 @@ namespace Backend_Connection.Controllers
             }
 
             var cancelledItems = await _context.Bookings
-                .Where(x => x.InstructorId == instructorId && x.BookingStatus == "Cancelled")
+                .Where(x => x.InstructorId == instructorId.Value && x.BookingStatus == "Cancelled")
                 .GroupBy(x => x.LearnerId)
                 .Select(x => x
                     .OrderByDescending(b => b.UpdatedAt)
@@ -482,7 +483,7 @@ namespace Backend_Connection.Controllers
                 .ToListAsync();
 
             var removedItems = await _context.Learners
-                .Where(x => x.InstructorId == instructorId && x.LearnerStatus == "Removed")
+                .Where(x => x.InstructorId == instructorId.Value && x.LearnerStatus == "Removed")
                 .Select(x => new InstructorInboxItemDto
                 {
                     Id = x.LearnerId,
@@ -512,9 +513,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("notifications")]
         public async Task<IActionResult> GetNotifications()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -525,7 +526,7 @@ namespace Backend_Connection.Controllers
             }
 
             var data = await _context.Notifications
-                .Where(x => x.InstructorId == instructorId)
+                .Where(x => x.InstructorId == instructorId.Value)
                 .OrderByDescending(x => x.CreatedAt)
                 .Select(x => new NotificationDto
                 {
@@ -553,9 +554,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("notification/{id:int}")]
         public async Task<IActionResult> GetNotificationById(int id)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -566,7 +567,7 @@ namespace Backend_Connection.Controllers
             }
 
             var notification = await _context.Notifications
-                .Where(x => x.NotificationId == id && x.InstructorId == instructorId)
+                .Where(x => x.NotificationId == id && x.InstructorId == instructorId.Value)
                 .Select(x => new NotificationDto
                 {
                     NotificationId = x.NotificationId,
@@ -598,14 +599,182 @@ namespace Backend_Connection.Controllers
             });
         }
 
+        // this pins a notification for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("notification/{id:int}/pin")]
+        public async Task<IActionResult> PinNotification(int id)
+        {
+            var instructorId = GetLoggedInInstructorId();
+
+            if (instructorId == null)
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(x => x.NotificationId == id && x.InstructorId == instructorId.Value);
+
+            if (notification == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "notification not found",
+                    Data = null
+                });
+            }
+
+            notification.IsPinned = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "notification pinned successfully",
+                Data = null
+            });
+        }
+
+        // this unpins a notification for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("notification/{id:int}/unpin")]
+        public async Task<IActionResult> UnpinNotification(int id)
+        {
+            var instructorId = GetLoggedInInstructorId();
+
+            if (instructorId == null)
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(x => x.NotificationId == id && x.InstructorId == instructorId.Value);
+
+            if (notification == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "notification not found",
+                    Data = null
+                });
+            }
+
+            notification.IsPinned = false;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "notification unpinned successfully",
+                Data = null
+            });
+        }
+
+        // this soft deletes a notification for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("notification/{id:int}/delete")]
+        public async Task<IActionResult> DeleteNotification(int id)
+        {
+            var instructorId = GetLoggedInInstructorId();
+
+            if (instructorId == null)
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(x => x.NotificationId == id && x.InstructorId == instructorId.Value);
+
+            if (notification == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "notification not found",
+                    Data = null
+                });
+            }
+
+            notification.IsDeleted = true;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "notification deleted successfully",
+                Data = null
+            });
+        }
+
+        // this restores a deleted notification for the logged in instructor
+        [Authorize(Roles = "Instructor")]
+        [HttpPut("notification/{id:int}/restore")]
+        public async Task<IActionResult> RestoreNotification(int id)
+        {
+            var instructorId = GetLoggedInInstructorId();
+
+            if (instructorId == null)
+            {
+                return Unauthorized(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "invalid token",
+                    Data = null
+                });
+            }
+
+            var notification = await _context.Notifications
+                .FirstOrDefaultAsync(x => x.NotificationId == id && x.InstructorId == instructorId.Value);
+
+            if (notification == null)
+            {
+                return NotFound(new ApiResponse<object>
+                {
+                    Success = false,
+                    Message = "notification not found",
+                    Data = null
+                });
+            }
+
+            notification.IsDeleted = false;
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new ApiResponse<object>
+            {
+                Success = true,
+                Message = "notification restored successfully",
+                Data = null
+            });
+        }
+
         // this gets the learners linked to the logged in instructor for instructor home
         [Authorize(Roles = "Instructor")]
         [HttpGet("home/students")]
         public async Task<IActionResult> GetHomeStudents()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -616,7 +785,7 @@ namespace Backend_Connection.Controllers
             }
 
             var data = await _context.Learners
-                .Where(x => x.InstructorId == instructorId && x.LearnerStatus != "Removed")
+                .Where(x => x.InstructorId == instructorId.Value && x.LearnerStatus != "Removed")
                 .OrderBy(x => x.LearnerName)
                 .Select(x => new InstructorHomeStudentDto
                 {
@@ -638,9 +807,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("learner/{id:int}")]
         public async Task<IActionResult> GetInstructorLearnerById(int id)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -651,7 +820,7 @@ namespace Backend_Connection.Controllers
             }
 
             var learner = await _context.Learners
-                .Where(x => x.LearnerId == id && x.InstructorId == instructorId)
+                .Where(x => x.LearnerId == id && x.InstructorId == instructorId.Value)
                 .Select(x => new InstructorLearnerDetailsDto
                 {
                     LearnerId = x.LearnerId,
@@ -688,9 +857,9 @@ namespace Backend_Connection.Controllers
         [HttpPut("learner/{id:int}/remove")]
         public async Task<IActionResult> RemoveLearner(int id)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -701,7 +870,7 @@ namespace Backend_Connection.Controllers
             }
 
             var learner = await _context.Learners
-                .FirstOrDefaultAsync(x => x.LearnerId == id && x.InstructorId == instructorId);
+                .FirstOrDefaultAsync(x => x.LearnerId == id && x.InstructorId == instructorId.Value);
 
             if (learner == null)
             {
@@ -717,7 +886,7 @@ namespace Backend_Connection.Controllers
 
             _context.Notifications.Add(new Notification
             {
-                InstructorId = instructorId,
+                InstructorId = instructorId.Value,
                 Message = $"Student {learner.LearnerName} has been removed.",
                 NotificationType = "RemovedStudent",
                 CreatedAt = DateTime.UtcNow,
@@ -741,9 +910,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("home/upcoming-lessons")]
         public async Task<IActionResult> GetUpcomingLessonsForInstructor()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -757,7 +926,7 @@ namespace Backend_Connection.Controllers
 
             var data = await _context.Bookings
                 .Include(x => x.Learner)
-                .Where(x => x.InstructorId == instructorId &&
+                .Where(x => x.InstructorId == instructorId.Value &&
                             x.BookingStatus == "Confirmed" &&
                             x.LessonDate.Add(x.LessonTime) >= now)
                 .OrderBy(x => x.LessonDate)
@@ -785,9 +954,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("schedule/upcoming")]
         public async Task<IActionResult> GetUpcomingScheduleLessons()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -802,7 +971,7 @@ namespace Backend_Connection.Controllers
             var data = await _context.Bookings
                 .Include(x => x.Learner)
                 .Include(x => x.Instructor)
-                .Where(x => x.InstructorId == instructorId &&
+                .Where(x => x.InstructorId == instructorId.Value &&
                             x.BookingStatus == "Confirmed" &&
                             x.LessonDate.Add(x.LessonTime) >= now)
                 .OrderBy(x => x.LessonDate)
@@ -837,9 +1006,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("schedule/past")]
         public async Task<IActionResult> GetPastScheduleLessons()
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -854,7 +1023,7 @@ namespace Backend_Connection.Controllers
             var data = await _context.Bookings
                 .Include(x => x.Learner)
                 .Include(x => x.Instructor)
-                .Where(x => x.InstructorId == instructorId &&
+                .Where(x => x.InstructorId == instructorId.Value &&
                             x.BookingStatus == "Confirmed" &&
                             x.LessonDate.Add(x.LessonTime) < now)
                 .OrderByDescending(x => x.LessonDate)
@@ -889,9 +1058,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("schedule/booking/{bookingId:int}")]
         public async Task<IActionResult> GetScheduleBookingById(int bookingId)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -904,7 +1073,7 @@ namespace Backend_Connection.Controllers
             var booking = await _context.Bookings
                 .Include(x => x.Learner)
                 .Include(x => x.Instructor)
-                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
+                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId.Value);
 
             if (booking == null)
             {
@@ -945,9 +1114,9 @@ namespace Backend_Connection.Controllers
         [HttpPut("schedule/cancel/{bookingId:int}")]
         public async Task<IActionResult> CancelScheduleBooking(int bookingId)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -959,7 +1128,7 @@ namespace Backend_Connection.Controllers
 
             var booking = await _context.Bookings
                 .Include(x => x.Learner)
-                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
+                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId.Value);
 
             if (booking == null)
             {
@@ -1005,7 +1174,7 @@ namespace Backend_Connection.Controllers
 
             _context.Notifications.Add(new Notification
             {
-                InstructorId = instructorId,
+                InstructorId = instructorId.Value,
                 Message = booking.Learner != null
                     ? $"Booking with {booking.Learner.LearnerName} has been cancelled."
                     : "A booking has been cancelled.",
@@ -1031,9 +1200,9 @@ namespace Backend_Connection.Controllers
         [HttpGet("lesson-details/{bookingId:int}")]
         public async Task<IActionResult> GetInstructorLessonDetails(int bookingId)
         {
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -1045,7 +1214,7 @@ namespace Backend_Connection.Controllers
 
             var booking = await _context.Bookings
                 .Include(x => x.Learner)
-                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
+                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId.Value);
 
             if (booking == null)
             {
@@ -1091,9 +1260,9 @@ namespace Backend_Connection.Controllers
                 });
             }
 
-            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+            var instructorId = GetLoggedInInstructorId();
 
-            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            if (instructorId == null)
             {
                 return Unauthorized(new ApiResponse<object>
                 {
@@ -1104,7 +1273,7 @@ namespace Backend_Connection.Controllers
             }
 
             var booking = await _context.Bookings
-                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId);
+                .FirstOrDefaultAsync(x => x.BookingId == bookingId && x.InstructorId == instructorId.Value);
 
             if (booking == null)
             {
@@ -1128,13 +1297,28 @@ namespace Backend_Connection.Controllers
                 Data = null
             });
         }
-    }
 
-    public class ApiResponse<T>
-    {
-        public bool Success { get; set; }
-        public string Message { get; set; } = "";
-        public T? Data { get; set; }
+        // this reads the instructor id from the jwt token
+        private int? GetLoggedInInstructorId()
+        {
+            var userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier);
+
+            if (string.IsNullOrWhiteSpace(userIdClaim) || !int.TryParse(userIdClaim, out int instructorId))
+            {
+                return null;
+            }
+
+            return instructorId;
+        }
+
+        // this validates password strength
+        private bool IsValidPassword(string password)
+        {
+            return !string.IsNullOrWhiteSpace(password) &&
+                   password.Length >= 6 &&
+                   password.Any(char.IsUpper) &&
+                   password.Any(char.IsDigit);
+        }
     }
 
     public class InstructorResponseDto

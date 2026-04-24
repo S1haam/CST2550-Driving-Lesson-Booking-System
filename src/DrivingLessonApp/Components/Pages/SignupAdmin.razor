@@ -2,8 +2,10 @@
 @rendermode InteractiveServer
 @inject NavigationManager Nav
 @inject HttpClient Http
+
 @using System.ComponentModel.DataAnnotations
 @using System.Net.Http.Json
+@using System.Text.RegularExpressions
 
 <div class="booking-card">
 
@@ -47,6 +49,7 @@
     string? errorMessage;
     bool isSubmitting;
 
+    // this validates admin signup input and calls the backend
     async Task RegisterAdmin()
     {
         errorMessage = null;
@@ -63,15 +66,15 @@
             return;
         }
 
-        if (!new EmailAddressAttribute().IsValid(cleanEmail))
+        if (!IsValidEmail(cleanEmail))
         {
             errorMessage = "Please enter a valid email address.";
             return;
         }
 
-        if (cleanPassword.Length < 6)
+        if (!IsValidPassword(cleanPassword))
         {
-            errorMessage = "Password must be at least 6 characters.";
+            errorMessage = "Password must be at least 6 characters and include one uppercase letter and one number.";
             return;
         }
 
@@ -101,6 +104,23 @@
         }
 
         Nav.NavigateTo("/login?role=admin");
+    }
+
+    // this validates email format
+    bool IsValidEmail(string value)
+    {
+        return new EmailAddressAttribute().IsValid(value) &&
+               value.Contains("@") &&
+               value.Contains(".") &&
+               Regex.IsMatch(value, @"^[^@\s]+@[^@\s]+\.[^@\s]+$");
+    }
+
+    // this validates password strength
+    bool IsValidPassword(string value)
+    {
+        return value.Length >= 6 &&
+               value.Any(char.IsUpper) &&
+               value.Any(char.IsDigit);
     }
 
     public class RegisterAdminRequest

@@ -1,4 +1,5 @@
 ﻿using Backend_Connection.DataStructures;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
@@ -52,6 +53,12 @@ namespace Backend_Connection.Models
         /// <summary> Selected instructor id chosen during signup </summary>
         [ForeignKey("Instructor")]
         public int InstructorId { get; set; }
+
+        /// <summary> Date and time when the learner account was created </summary>
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+
+        /// <summary> Date and time when the learner last logged in </summary>
+        public DateTime? LastLogin { get; set; }
 
         /// <summary> Navigation property for the selected instructor </summary>
         public virtual Instructor? Instructor { get; set; }
