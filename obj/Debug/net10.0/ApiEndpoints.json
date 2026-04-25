@@ -1,38 +1,6 @@
 [
   {
-    "ContainingType": "Backend_admin.Controllers.AdminAuthController",
-    "Method": "Login",
-    "RelativePath": "api/admin/auth/login",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Backend_admin.Controllers.AdminLoginRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Backend_admin.Controllers.AdminAuthController",
-    "Method": "Register",
-    "RelativePath": "api/admin/auth/register",
-    "HttpMethod": "POST",
-    "IsController": true,
-    "Order": 0,
-    "Parameters": [
-      {
-        "Name": "request",
-        "Type": "Backend_admin.Controllers.AdminRegisterRequest",
-        "IsRequired": true
-      }
-    ],
-    "ReturnTypes": []
-  },
-  {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "GetInstructorById",
     "RelativePath": "api/admin/instructor/{id}",
     "HttpMethod": "GET",
@@ -48,7 +16,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "DeleteInstructor",
     "RelativePath": "api/admin/instructor/{id}",
     "HttpMethod": "DELETE",
@@ -64,7 +32,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "GetAllInstructors",
     "RelativePath": "api/admin/instructors",
     "HttpMethod": "GET",
@@ -74,7 +42,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "GetAdminSettings",
     "RelativePath": "api/admin/settings",
     "HttpMethod": "GET",
@@ -84,7 +52,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "ChangePassword",
     "RelativePath": "api/admin/settings/change-password",
     "HttpMethod": "PUT",
@@ -93,14 +61,14 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Backend_admin.Controllers.ChangePasswordRequest",
+        "Type": "Backend_Connection.Controllers.AdminChangePasswordRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "UpdateAdminSettings",
     "RelativePath": "api/admin/settings/update",
     "HttpMethod": "PUT",
@@ -109,14 +77,14 @@
     "Parameters": [
       {
         "Name": "request",
-        "Type": "Backend_admin.Models.Admin",
+        "Type": "Backend_Connection.Controllers.UpdateAdminSettingsRequest",
         "IsRequired": true
       }
     ],
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "GetStudentById",
     "RelativePath": "api/admin/student/{id}",
     "HttpMethod": "GET",
@@ -132,7 +100,7 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
     "Method": "DeleteStudent",
     "RelativePath": "api/admin/student/{id}",
     "HttpMethod": "DELETE",
@@ -148,9 +116,187 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
-    "Method": "GetStudentActivity",
-    "RelativePath": "api/admin/student/{id}/activity",
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
+    "Method": "GetAllStudents",
+    "RelativePath": "api/admin/students",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
+    "Method": "GetInactiveStudents",
+    "RelativePath": "api/admin/students/inactive",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AdminController",
+    "Method": "GetSystemActivity",
+    "RelativePath": "api/admin/system-activity",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AuthController",
+    "Method": "Login",
+    "RelativePath": "api/Auth/login",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.LoginRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AuthController",
+    "Method": "RegisterAdmin",
+    "RelativePath": "api/Auth/register/admin",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.RegisterAdminRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AuthController",
+    "Method": "RegisterInstructor",
+    "RelativePath": "api/Auth/register/instructor",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.RegisterInstructorRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AuthController",
+    "Method": "RegisterLearner",
+    "RelativePath": "api/Auth/register/learner",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.RegisterLearnerRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AvailabilityController",
+    "Method": "GetAvailabilityForInstructor",
+    "RelativePath": "api/Availability/instructor/{instructorId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "instructorId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AvailabilityController",
+    "Method": "GetMyAvailabilitySlots",
+    "RelativePath": "api/Availability/instructor/my-slots",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AvailabilityController",
+    "Method": "CreateMyAvailabilitySlot",
+    "RelativePath": "api/Availability/instructor/my-slots",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.CreateAvailabilitySlotRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.AvailabilityController",
+    "Method": "DeleteMyAvailabilitySlot",
+    "RelativePath": "api/Availability/instructor/my-slots/{availabilityId}",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "availabilityId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "GetAllBookings",
+    "RelativePath": "api/Booking",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "CreateBooking",
+    "RelativePath": "api/Booking",
+    "HttpMethod": "POST",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.CreateBookingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "GetBookingById",
+    "RelativePath": "api/Booking/{id}",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -164,9 +310,25 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
-    "Method": "GetAllStudents",
-    "RelativePath": "api/admin/students",
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "CancelBooking",
+    "RelativePath": "api/Booking/cancel/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "GetPastBookings",
+    "RelativePath": "api/Booking/learner/past",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -174,9 +336,9 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
-    "Method": "GetInactiveStudents",
-    "RelativePath": "api/admin/students/inactive",
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "GetUpcomingBookings",
+    "RelativePath": "api/Booking/learner/upcoming",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
@@ -184,13 +346,449 @@
     "ReturnTypes": []
   },
   {
-    "ContainingType": "Backend_admin.Controllers.AdminController",
-    "Method": "GetSystemActivity",
-    "RelativePath": "api/admin/system-activity",
+    "ContainingType": "Backend_Connection.Controllers.BookingController",
+    "Method": "RescheduleBooking",
+    "RelativePath": "api/Booking/reschedule/{id}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.RescheduleBookingRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetAllInstructors",
+    "RelativePath": "api/Instructor",
     "HttpMethod": "GET",
     "IsController": true,
     "Order": 0,
     "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetInstructorById",
+    "RelativePath": "api/Instructor/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetInstructorsByLessonType",
+    "RelativePath": "api/Instructor/by-lesson-type/{lessonType}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "lessonType",
+        "Type": "System.String",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/Instructor/change-password",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.ChangeInstructorPasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetHomeStudents",
+    "RelativePath": "api/Instructor/home/students",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetUpcomingLessonsForInstructor",
+    "RelativePath": "api/Instructor/home/upcoming-lessons",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetInbox",
+    "RelativePath": "api/Instructor/inbox",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetInstructorLearnerById",
+    "RelativePath": "api/Instructor/learner/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "RemoveLearner",
+    "RelativePath": "api/Instructor/learner/{id}/remove",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetInstructorLessonDetails",
+    "RelativePath": "api/Instructor/lesson-details/{bookingId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "SaveInstructorNotes",
+    "RelativePath": "api/Instructor/lesson-details/{bookingId}/notes",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      },
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.UpdateInstructorNotesDto",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetCurrentInstructor",
+    "RelativePath": "api/Instructor/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetNotificationById",
+    "RelativePath": "api/Instructor/notification/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "DeleteNotification",
+    "RelativePath": "api/Instructor/notification/{id}/delete",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "PinNotification",
+    "RelativePath": "api/Instructor/notification/{id}/pin",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "RestoreNotification",
+    "RelativePath": "api/Instructor/notification/{id}/restore",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "UnpinNotification",
+    "RelativePath": "api/Instructor/notification/{id}/unpin",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetNotifications",
+    "RelativePath": "api/Instructor/notifications",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetScheduleBookingById",
+    "RelativePath": "api/Instructor/schedule/booking/{bookingId}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "CancelScheduleBooking",
+    "RelativePath": "api/Instructor/schedule/cancel/{bookingId}",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "bookingId",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetPastScheduleLessons",
+    "RelativePath": "api/Instructor/schedule/past",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "GetUpcomingScheduleLessons",
+    "RelativePath": "api/Instructor/schedule/upcoming",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "UpdateStatus",
+    "RelativePath": "api/Instructor/status",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.UpdateInstructorStatusRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.InstructorController",
+    "Method": "UpdateInstructor",
+    "RelativePath": "api/Instructor/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.UpdateInstructorRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.LearnerController",
+    "Method": "GetAllLearners",
+    "RelativePath": "api/Learner",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.LearnerController",
+    "Method": "GetLearnerById",
+    "RelativePath": "api/Learner/{id}",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "id",
+        "Type": "System.Int32",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.LearnerController",
+    "Method": "ChangePassword",
+    "RelativePath": "api/Learner/change-password",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.ChangePasswordRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.LearnerController",
+    "Method": "DeleteAccount",
+    "RelativePath": "api/Learner/delete",
+    "HttpMethod": "DELETE",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.DeleteLearnerRequest",
+        "IsRequired": true
+      }
+    ],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.LearnerController",
+    "Method": "GetMyProfile",
+    "RelativePath": "api/Learner/me",
+    "HttpMethod": "GET",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [],
+    "ReturnTypes": []
+  },
+  {
+    "ContainingType": "Backend_Connection.Controllers.LearnerController",
+    "Method": "UpdateLearner",
+    "RelativePath": "api/Learner/update",
+    "HttpMethod": "PUT",
+    "IsController": true,
+    "Order": 0,
+    "Parameters": [
+      {
+        "Name": "request",
+        "Type": "Backend_Connection.Controllers.UpdateLearnerRequest",
+        "IsRequired": true
+      }
+    ],
     "ReturnTypes": []
   }
 ]

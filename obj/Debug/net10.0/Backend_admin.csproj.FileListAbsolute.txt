@@ -161,3 +161,12 @@ C:\Users\rahma\source\repos\Backend-admin\Backend-admin\bin\Debug\net10.0\Micros
 C:\Users\rahma\source\repos\Backend-admin\Backend-admin\bin\Debug\net10.0\Swashbuckle.AspNetCore.Swagger.dll
 C:\Users\rahma\source\repos\Backend-admin\Backend-admin\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerGen.dll
 C:\Users\rahma\source\repos\Backend-admin\Backend-admin\bin\Debug\net10.0\Swashbuckle.AspNetCore.SwaggerUI.dll
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.csproj.AssemblyReference.cache
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\rpswa.dswa.cache.json
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.GeneratedMSBuildEditorConfig.editorconfig
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.AssemblyInfoInputs.cache
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.AssemblyInfo.cs
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.csproj.CoreCompileInputs.cache
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.MvcApplicationPartsAssemblyInfo.cs
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.MvcApplicationPartsAssemblyInfo.cache
+C:\Users\Ridaa Mohamed\Downloads\CST2550-backend-sql\CST2550-Driving-Lesson-Booking-System\obj\Debug\net10.0\Backend_admin.sourcelink.json
