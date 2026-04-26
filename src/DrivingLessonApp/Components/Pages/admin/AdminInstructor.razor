@@ -8,11 +8,15 @@
 @using System.Net.Http.Headers
 @using System.Net.Http.Json
 
+<!--Container-->
 <div class="admin-main-content admin-instructors-page admin-database-page">
+
+<!--Title-->
     <div class="admin-brand-title">SER Driving School</div>
 
     <h3 class="admin-page-title">Instructor Database</h3>
 
+<!--Navigation-->
     <div class="admin-home-nav-wrap">
         <div class="admin-home-nav">
             <button class="admin-home-nav-btn" @onclick='() => Nav.NavigateTo("/admin")'>Home</button>
@@ -22,6 +26,7 @@
         </div>
     </div>
 
+<!--error or loading message-->
     @if (!string.IsNullOrWhiteSpace(errorMessage))
     {
         <p style="color:red;">@errorMessage</p>
@@ -31,6 +36,7 @@
         <p>loading instructors...</p>
     }
 
+<!--Instructor table container-->
     <div class="admin-outer-card">
         <div class="admin-inner-card">
             <div class="admin-table-shell admin-database-shell">
@@ -55,6 +61,7 @@
                                 <td><span class="admin-table-pill">@i.Email</span></td>
                                 <td><span class="admin-table-pill">@i.Phone</span></td>
                                 <td><span class="admin-table-pill">@i.Availability</span></td>
+                              <!--View instructor profile button-->
                                 <td>
                                     <button class="admin-view-btn admin-database-view-btn" @onclick='() => ViewProfile(i.InstructorId)'>
                                         View
@@ -65,6 +72,7 @@
                     </tbody>
                 </table>
 
+<!--No Instructors found-->
                 @if (!isLoading && !Instructors.Any())
                 {
                     <p>no instructors found</p>
@@ -73,6 +81,7 @@
         </div>
     </div>
 
+<!--Back Button-->
     <div class="admin-back-container">
         <button class="admin-tab" @onclick='() => Nav.NavigateTo("/admin")'>
             Back to Home
@@ -81,9 +90,11 @@
 </div>
 
 @code {
+//UI state
     string? errorMessage;
     bool isLoading = true;
 
+//List of instructors loaded from backend
     public List<Instructor> Instructors { get; set; } = new();
 
     // this runs after render so we can access session storage token
@@ -101,22 +112,27 @@
     {
         try
         {
+//Retrieve admin token from session storage
             var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
 
             if (string.IsNullOrWhiteSpace(token))
             {
+//Redirect if not logged in
                 errorMessage = "not logged in";
                 isLoading = false;
                 Nav.NavigateTo("/login?role=admin");
                 return;
             }
 
+//Attach token to request
             Http.DefaultRequestHeaders.Authorization =
                 new AuthenticationHeaderValue("Bearer", token);
 
+//Call backend API
             var response = await Http.GetAsync("api/admin/instructors");
             var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<Instructor>>>();
 
+//Handle Failure
             if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
             {
                 errorMessage = result?.Message ?? "failed to load instructors";
@@ -124,6 +140,7 @@
                 return;
             }
 
+//Success
             Instructors = result.Data;
             isLoading = false;
         }
@@ -133,7 +150,7 @@
             isLoading = false;
         }
     }
-
+//Navigate to instructor profile page
     void ViewProfile(string id)
     {
         Nav.NavigateTo($"/admin/instructor/{id}");
@@ -149,6 +166,7 @@
         public string Availability { get; set; } = "";
     }
 
+//API response wrapper
     public class ApiResponse<T>
     {
         public bool Success { get; set; }
