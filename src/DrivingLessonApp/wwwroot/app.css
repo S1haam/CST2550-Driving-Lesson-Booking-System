@@ -1,0 +1,2571 @@
+/* base */
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    background: #eef2f7;
+}
+
+/* container */
+.main-content {
+    margin: auto;
+    padding: 20px;
+}
+
+/* branding */
+.brand-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 700;
+    color: #2d4ea2;
+}
+
+/* headings */
+h3 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/*                   */
+/*    LEARNER        */
+/*                   */
+/* nav bar */
+.nav-bar {
+    background: linear-gradient(135deg, #4a7bd0, #2d4ea2);
+    padding: 14px;
+    border-radius: 12px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.15);
+    margin-bottom: 25px;
+}
+
+    .nav-bar button {
+        background: #6fa3ff;
+        color: white;
+        border: none;
+        padding: 8px 14px;
+        border-radius: 6px;
+        cursor: pointer;
+    }
+
+        .nav-bar button:hover {
+            background: #1f3f91;
+        }
+
+/* schedule page  */
+.lesson-item {
+    background: rgba(255,255,255,0.95);
+    padding: 12px 14px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+
+/* outer card */
+.outer-card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+
+    /* previous */
+    .outer-card.secondary {
+        background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    }
+
+/* section title */
+.section-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+/* inner container */
+.inner-card {
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.info-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+
+.info-box {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+    .info-box span {
+        display: inline-block;
+        background: #d9d9d9;
+        color: black;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+    }
+
+    /* value */
+    .info-box strong {
+        display: block;
+        font-size: 14px;
+    }
+
+
+.action-btn {
+    flex-shrink: 0;
+    background: #d9d9d9;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* notes */
+.notes-card {
+    background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.notes-title {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.notes-content {
+    background: #e6e6e6;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+/* make notes blue for next lesson */
+.notes-blue {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+}
+
+/* schedule page styling */
+/* main schedule card */
+.card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+    /* top row spacing */
+    .card > div:first-child {
+        margin-bottom: 10px;
+    }
+
+/* tabs */
+.tabs {
+    display: flex;
+    gap: 10px;
+}
+
+/* tab button */
+.tab {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #dcdcdc;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+    /* active tab */
+    .tab.active {
+        background: #2d4ea2;
+        color: white;
+    }
+
+/* search bar */
+.search-container {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+}
+
+    /* smaller input */
+    .search-container input {
+        padding: 6px 10px;
+        border-radius: 14px;
+        border: none;
+        outline: none;
+        width: 140px; 
+        background: white;
+        font-size: 13px;
+    }
+
+    /* smaller button */
+    .search-container button {
+        padding: 6px 12px;
+        border-radius: 14px;
+        border: none;
+        background: #2d4ea2;
+        color: white;
+        cursor: pointer;
+        font-size: 13px;
+    }
+
+        .search-container button:hover {
+            background: #1f3f91;
+        }
+
+/* lesson list container */
+.lesson-list {
+    margin-top: 10px;
+}
+
+/* improve spacing inside lesson rows */
+.lesson-item div {
+    display: flex;
+    gap: 8px;
+}
+
+/* booking flow styling */
+
+/* main card */
+.booking-card {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #f7f7f7;
+    padding: 30px;
+    border-radius: 16px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.1);
+    text-align: center;
+}
+
+    /* headings */
+    .booking-card h1 {
+        font-size: 22px;
+        margin-bottom: 10px;
+    }
+
+    .booking-card p {
+        font-size: 14px;
+        color: #555;
+        margin-bottom: 20px;
+    }
+
+/* grid layout */
+.booking-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+}
+
+/* boxes */
+.booking-box {
+    padding: 14px;
+    border-radius: 10px;
+    background: #dfe6f3;
+    border: 1px solid #b8cfff;
+    cursor: pointer;
+    transition: 0.2s;
+    text-align: center;
+}
+
+    /* hover */
+    .booking-box:hover {
+        background: #cddcff;
+    }
+
+    /* hide radio */
+    .booking-box input {
+        display: none;
+    }
+
+        /* selected */
+        .booking-box input:checked + span {
+            display: inline-block;
+            background: #4a7dff;
+            color: white;
+            padding: 6px 10px;
+            border-radius: 6px;
+        }
+
+/* unavailable */
+.booking-unavailable {
+    background: #e5e5e5;
+    color: #999;
+    cursor: not-allowed;
+}
+
+/* main button */
+.booking-btn {
+    width: 100%;
+    margin-top: 20px;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+    /* button hover */
+    .booking-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* back button */
+.booking-back {
+    margin-top: 15px;
+    padding: 10px 18px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+    /* spacing */
+    .booking-back + .booking-btn {
+        margin-top: 10px;
+    }
+
+/* summary box */
+.summary-box {
+    margin-top: 20px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    text-align: left;
+}
+
+/* each row */
+.summary-item {
+    margin-bottom: 10px;
+    font-size: 14px;
+}
+
+/* start page styling */
+
+/* center card vertically */
+.start-card {
+    margin-top: 80px;
+}
+
+/* title */
+.start-title {
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+/* subtitle */
+.start-sub {
+    font-size: 14px;
+    margin-bottom: 25px;
+    color: #555;
+}
+
+
+
+ 
+
+/* login inputs */
+.booking-card input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* login link container */
+.link-text {
+    margin-top: 14px;
+    font-size: 14px;
+    color: #555;
+}
+
+/* clickable part */
+.link-action {
+    color: #1f6ed4;
+    font-weight: 600;
+    cursor: pointer;
+    margin-left: 4px;
+}
+
+    /* hover effect */
+    .link-action:hover {
+        text-decoration: underline;
+        color: #174ea6;
+    }
+
+/* login back button */
+.login-back {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+    .login-back:hover {
+        background: #333;
+    }
+
+/* signup card spacing */
+.signup-card {
+    padding: 35px;
+}
+
+/* signup inputs */
+.signup-input {
+    width: 100%;
+    padding: 12px;
+    margin-bottom: 14px;
+    border-radius: 8px;
+    border: 1px solid #d0d5dd;
+    font-size: 14px;
+    background: #f9fafb;
+    outline: none;
+}
+
+    /* focus */
+    .signup-input:focus {
+        border: 1px solid #4a7bd0;
+        background: white;
+    }
+
+/* signup button */
+.signup-btn {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 15px;
+    cursor: pointer;
+}
+
+    /* hover */
+    .signup-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* back button */
+.signup-back {
+    display: block;
+    margin: 12px auto 0;
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* choose type card */
+.choose-card {
+    padding: 35px;
+}
+
+/* buttons */
+.choose-btn {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    /* hover */
+    .choose-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* nav container */
+.choose-nav {
+    margin-top: 10px;
+}
+
+/* back */
+.choose-back {
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+
+.confirm-message {
+    text-align: center;
+    color: white;
+    font-size: 18px;
+    margin-bottom: 18px;
+    margin-top: 8px;
+}
+
+.single-summary {
+    max-width: 520px;
+    margin: 0 auto 24px;
+}
+
+.centered-summary {
+    text-align: center;
+    font-weight: 500;
+}
+
+.confirm-actions {
+    display: flex;
+    justify-content: center;
+    gap: 40px;
+    margin-top: 20px;
+}
+
+.confirm-btn {
+    background: #d4d0c8;
+    color: black;
+    border: none;
+    padding: 10px 34px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+    .confirm-btn:hover {
+        background: #c7c2b9;
+    }
+
+
+/*editable setting*/
+
+.editable-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.settings-input-inline {
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    min-width: 220px;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #5b8df7, #3f6fd1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .edit-btn:hover {
+        background: linear-gradient(135deg, #4f7fe6, #355fc0);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .edit-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+.save-info-btn {
+    margin-top: 10px;
+}
+
+
+
+
+
+
+/*Instructor*/
+
+
+
+/* instructor card */
+.instructor-card {
+    padding: 35px;
+}
+
+/* instructor buttons */
+.instructor-btn {
+    width: 100%;
+    margin-bottom: 12px;
+    padding: 12px;
+    border-radius: 10px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    /* hover */
+    .instructor-btn:hover {
+        background: linear-gradient(135deg, #174ea6, #0f3c82);
+    }
+
+/* nav row */
+.instructor-nav {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 15px;
+}
+
+/* back button */
+.instructor-back {
+    padding: 8px 16px;
+    background: #444;
+    color: white;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+/* next button */
+.instructor-next {
+    padding: 10px 20px;
+    border-radius: 8px;
+    border: none;
+    background: linear-gradient(135deg, #1f6ed4, #174ea6);
+    color: white;
+    cursor: pointer;
+}
+/* selected instructor */
+.instructor-btn.selected {
+    background: linear-gradient(135deg, #174ea6, #0f3c82);
+}
+
+/* disabled next button */
+.instructor-next:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+}
+
+/* settings layout */
+.settings-wrapper {
+    max-width: 900px;
+    margin: auto;
+}
+
+/* title */
+.settings-title {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+/* grid */
+.settings-grid {
+    display: flex;
+    gap: 20px;
+}
+
+/* columns */
+.left-column,
+.right-column {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* cards */
+.settings-card {
+    background: #f2f2f2;
+    padding: 20px;
+    border-radius: 12px;
+}
+
+    /* blue cards */
+    .settings-card.blue {
+        background: linear-gradient(135deg, #5b9df0, #4a7bd0);
+        color: white;
+    }
+
+/* small button */
+.small-btn {
+    margin-top: 10px;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 6px;
+    background: white;
+    cursor: pointer;
+}
+
+/* delete section */
+.delete-container {
+    text-align: center;
+    margin-top: 25px;
+}
+
+/* delete button */
+.delete-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 8px;
+    background: #c0392b;
+    color: white;
+    cursor: pointer;
+}
+
+    /* hover */
+    .delete-btn:hover {
+        background: #a93226;
+    }
+
+    /* inactive state */
+    .delete-btn.inactive {
+        opacity: 0.6;
+    }
+
+/* warning text */
+.delete-warning {
+    color: #444;
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+/* full width */
+.delete-btn.full {
+    width: 100%;
+    margin-top: 15px;
+}
+
+/* success card */
+.success-card {
+    text-align: center;
+}
+
+/* success message */
+.success-text {
+    color: #444;
+    font-size: 15px;
+    margin-bottom: 25px;
+}
+/*account info*/
+
+.instructor-account-info-card {
+    background: #f3f3f3;
+    border-radius: 12px;
+    padding: 18px 20px;
+    margin-top: 12px;
+}
+
+    .instructor-account-info-card p {
+        margin: 0 0 18px;
+        font-size: 17px;
+        line-height: 1.5;
+        color: #111;
+    }
+
+        .instructor-account-info-card p:last-child {
+            margin-bottom: 0;
+        }
+
+    .instructor-account-info-card strong {
+        font-weight: 700;
+        color: #111;
+    }
+
+/* dropdown styling */
+.booking-select {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+
+
+/* main faq card */
+.faq-card {
+    text-align: left;
+}
+
+/* container */
+.faq-box {
+    margin-top: 15px;
+}
+
+/* each faq item */
+.faq-item {
+    background: #eef3fb;
+    border-radius: 12px;
+    margin-bottom: 12px;
+    padding: 14px;
+    cursor: pointer;
+    transition: 0.2s;
+    border: 1px solid #d6e0f5;
+}
+
+ /* hover effect */
+    .faq-item:hover {
+        background: #e0eaff;
+        transform: translateY(-1px);
+    }
+
+/* header row (question + icon) */
+.faq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2d4ea2;
+}
+
+    /* plus/minus icon */
+    .faq-header span:last-child {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+/* answer text */
+
+.faq-answer {
+    margin-top: 10px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+}
+
+/* smooth spacing */
+.faq-item + .faq-item {
+    margin-top: 10px;
+}
+
+.logout-btn {
+    width: 100%;
+    padding: 12px;
+    border: none;
+    border-radius: 10px;
+    background: #e74c3c;
+    color: white;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+    .logout-btn:hover {
+        background: #c0392b;
+    }
+
+/* ============================= */
+/* INSTRUCTOR HOME  */
+/* ============================= */
+
+.instructor-home-panel {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #e9edf5;
+    padding: 20px;
+    border-radius: 10px;
+}
+
+/* welcome */
+.welcome-text {
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+
+/* notification bar */
+.notif-bar {
+    background: #5b8df5;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 20px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.notif-btn {
+    background: #bfbfbf;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+/* status */
+.status-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-bottom: 15px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    background: #2ecc71;
+    border-radius: 50%;
+}
+
+/* grid */
+.home-grid {
+    display: flex;
+    gap: 20px;
+}
+
+/* cards */
+.home-card {
+    flex: 1;
+    background: #4a7bd0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* title */
+.card-title {
+    background: #bfbfbf;
+    padding: 5px;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: 600;
+}
+
+/* rows */
+.pill-row {
+    background: #d9d9d9;
+    border-radius: 20px;
+    padding: 6px 10px;
+    margin-bottom: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+/* button */
+.pill-btn {
+    background: #a4a4a6;
+    border: none;
+    padding: 4px 10px;
+    border-radius: 10px;
+    cursor: pointer;
+}
+
+/* student layout */
+.student-left {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* avatar */
+.avatar-circle {
+    width: 28px;
+    height: 28px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* student search bar */
+
+.student-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+}
+
+.student-card-title {
+    margin: 0;
+    margin-bottom: 0;
+    padding: 5px 10px;
+    text-align: left;
+    flex-shrink: 0;
+}
+
+.student-search-container {
+    margin-left: auto;
+    flex-shrink: 0;
+}
+
+    .student-search-container input {
+        width: 140px;
+    }
+
+    .student-search-container button {
+        padding: 6px 12px;
+    }
+/* ============================= */
+/* INSTRUCTOR SCHEDULE + LESSON DETAILS */
+/* ============================= */
+
+/* make notes blue for next lesson */
+.notes-blue {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+}
+
+/* ============================= */
+/* MAIN SCHEDULE CARD */
+/* ============================= */
+
+.card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 18px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+    box-shadow: 0 6px 15px rgba(0,0,0,0.12);
+}
+
+    /* spacing for top row */
+    .card > div:first-child {
+        margin-bottom: 10px;
+    }
+
+/* ============================= */
+/* TABS */
+/* ============================= */
+
+.tabs {
+    display: flex;
+    gap: 10px;
+}
+
+.tab {
+    padding: 8px 14px;
+    border-radius: 8px;
+    background: #dcdcdc;
+    cursor: pointer;
+    font-weight: 500;
+    transition: 0.2s;
+}
+
+    .tab.active {
+        background: #2d4ea2;
+        color: white;
+    }
+
+
+
+/* ============================= */
+/* LESSON LIST */
+/* ============================= */
+
+.lesson-list {
+    margin-top: 10px;
+}
+
+.lesson-item {
+    background: #e6e6e6;
+    padding: 12px 14px;
+    border-radius: 12px;
+    margin-bottom: 10px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+    .lesson-item span {
+        font-weight: 500;
+    }
+
+    .lesson-item div {
+        display: flex;
+        gap: 8px;
+    }
+
+    /* buttons inside lesson */
+    .lesson-item button {
+        border: none;
+        border-radius: 20px;
+        padding: 6px 12px;
+        cursor: pointer;
+        background: #2d4ea2;
+        color: white;
+        font-size: 12px;
+    }
+
+        .lesson-item button:hover {
+            background: #1f3f91;
+        }
+
+/* ============================= */
+/* INSTRUCTOR LESSON DETAILS */
+/* ============================= */
+
+.instructor-lesson-outer-card {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+    padding: 16px;
+    border-radius: 14px;
+    margin-bottom: 20px;
+}
+
+    .instructor-lesson-outer-card.secondary {
+        background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    }
+
+.instructor-lesson-section-label {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 8px;
+}
+
+.instructor-lesson-inner-card {
+    background: rgba(255,255,255,0.2);
+    padding: 12px;
+    border-radius: 12px;
+}
+
+.instructor-lesson-info-row {
+    display: flex;
+    gap: 12px;
+    align-items: center;
+}
+
+.instructor-lesson-info-box {
+    flex: 1;
+    min-width: 0;
+    background: rgba(0,0,0,0.25);
+    border-radius: 14px;
+    padding: 10px;
+    text-align: center;
+    color: white;
+}
+
+    .instructor-lesson-info-box span {
+        display: inline-block;
+        background: #d9d9d9;
+        color: black;
+        font-size: 12px;
+        padding: 2px 6px;
+        border-radius: 4px;
+        margin-bottom: 6px;
+    }
+
+    .instructor-lesson-info-box strong {
+        display: block;
+        font-size: 14px;
+        color: white;
+    }
+
+.instructor-lesson-notes-card {
+    background: linear-gradient(135deg, #6c7a96, #8fa0c4);
+    padding: 16px;
+    border-radius: 14px;
+}
+
+.instructor-lesson-notes-blue {
+    background: linear-gradient(135deg, #4a7bd0, #6fa3ff);
+}
+
+.instructor-lesson-notes-title {
+    color: white;
+    font-weight: 600;
+    margin-bottom: 10px;
+}
+
+.instructor-lesson-notes-content {
+    background: #e6e6e6;
+    padding: 14px;
+    border-radius: 8px;
+}
+
+.instructor-notes-input {
+    width: 100%;
+    min-height: 120px;
+    padding: 10px;
+    border: 2px solid #ccc;
+    border-radius: 6px;
+    resize: vertical;
+    font-size: 14px;
+    box-sizing: border-box;
+    background: white;
+    color: black;
+    outline: none;
+}
+    .instructor-notes-input:focus {
+        border-color: #4a7bd0;
+        box-shadow: 0 0 0 2px rgba(74,123,208,0.2);
+    }
+
+/* ============================= */
+/* INSTRUCTOR INBOX */
+/* ============================= */
+
+.inbox-container {
+    max-width: 900px;
+    margin: 20px auto;
+    background: #4a7bd0;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+/* header */
+.inbox-header-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: white;
+    padding: 10px;
+}
+
+/* tabs */
+.inbox-tabs {
+    display: flex;
+    gap: 8px;
+}
+
+.tab {
+    background: #d9d9d9;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 12px;
+    cursor: pointer;
+}
+
+    .tab.active {
+        background: #b1b1b1;
+    }
+
+/* list */
+.inbox-list {
+    max-height: 300px;
+    overflow-y: auto;
+    background: white;
+}
+
+/* row */
+.inbox-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 120px 50px 50px;
+    align-items: center;
+    padding: 8px 10px;
+    border-bottom: 1px solid #eee;
+}
+
+    /* hover */
+    .inbox-row:hover {
+        background: #f0f4ff;
+    }
+
+/* message clickable */
+.inbox-message {
+    cursor: pointer;
+}
+
+/* buttons */
+.icon-btn {
+    border: none;
+    background: none;
+    cursor: pointer;
+    font-size: 16px;
+}
+
+/* ============================= */
+/* INSTRUCTOR FAQ STYLING */
+/* ============================= */
+
+.instructor-faq-card {
+    text-align: left;
+}
+
+/* container */
+.instructor-faq-list {
+    margin-top: 15px;
+}
+
+/* each item */
+.instructor-faq-item {
+    background: #eef3fb;
+    border-radius: 14px;
+    margin-bottom: 12px;
+    padding: 16px;
+    cursor: pointer;
+    transition: 0.25s;
+    border: 1px solid #d6e0f5;
+}
+
+    /* hover */
+    .instructor-faq-item:hover {
+        background: #e0eaff;
+        transform: translateY(-2px);
+    }
+
+/* header */
+.instructor-faq-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-weight: 600;
+    font-size: 15px;
+    color: #2d4ea2;
+}
+
+    /* icon */
+    .instructor-faq-header span:last-child {
+        font-size: 18px;
+        font-weight: bold;
+    }
+
+/* answer */
+.instructor-faq-answer {
+    margin-top: 12px;
+    font-size: 14px;
+    color: #333;
+    line-height: 1.5;
+    padding-top: 6px;
+    border-top: 1px solid #d0d9f0;
+}
+
+/* ============================= */
+/* INSTRUCTOR SETTINGS */
+/* ============================= */
+
+body {
+    padding-top: 80px;
+}
+
+/* ============================= */
+/* NAV BAR (MATCHES YOUR RAZOR) */
+/* ============================= */
+
+.nav-bar {
+    background: #3f66c4;
+    padding: 14px 20px;
+    border-radius: 12px;
+    margin: 20px;
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+}
+
+    .nav-bar button {
+        background: #78a2f0;
+        color: white;
+        border: none;
+        padding: 10px 18px;
+        border-radius: 8px;
+        cursor: pointer;
+        font-size: 16px;
+    }
+
+        .nav-bar button:hover {
+            background: #5e8fe8;
+        }
+
+    /* active nav button */
+    .nav-bar .active,
+    .nav-bar .active-nav {
+        background: #274aa8;
+    }
+
+/* ============================= */
+/* MAIN BLUE CONTAINER */
+/* ============================= */
+
+.instructor-settings-container {
+    background: #4f7fd1;
+    padding: 25px;
+    border-radius: 12px;
+    margin: 20px;
+}
+
+/* FLEX LAYOUT */
+.instructor-settings-layout {
+    display: flex;
+    gap: 25px;
+}
+
+/* ================= LEFT PANEL ================= */
+
+.instructor-settings-sidebar {
+    background: #e6e6e6;
+    padding: 15px;
+    border-radius: 10px;
+    width: 220px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+    .instructor-settings-sidebar h4 {
+        margin-bottom: 10px;
+    }
+
+/* OPTIONS */
+.instructor-settings-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+    .instructor-settings-options button {
+        background: white;
+        border: none;
+        padding: 10px;
+        border-radius: 8px;
+        text-align: left;
+        cursor: pointer;
+        font-weight: 500;
+    }
+
+        .instructor-settings-options button:hover {
+            background: #c7d9ff;
+        }
+
+    /* ACTIVE LEFT OPTION */
+    .instructor-settings-options .active-option {
+        background: #c7d9ff;
+        font-weight: 600;
+    }
+
+/* LOGOUT */
+.instructor-settings-logout {
+    margin-top: 20px;
+    width: 100%;
+    background: #c85a5a;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= RIGHT PANEL ================= */
+
+.instructor-settings-content {
+    background: #e6e6e6;
+    padding: 20px;
+    border-radius: 10px;
+    flex: 1;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+    .instructor-settings-content h4 {
+        margin-bottom: 10px;
+    }
+
+    .instructor-settings-content p {
+        margin: 5px 0;
+        font-size: 14px;
+    }
+
+/* ================= TIME BUTTON GRID ================= */
+
+.instructor-time-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+}
+
+.instructor-time-btn {
+    background: #bfbfbf;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 25px;
+    cursor: pointer;
+    font-size: 13px;
+}
+
+    .instructor-time-btn:hover {
+        background: #9fc2ff;
+    }
+
+/* SELECTED TIME */
+.selected-time {
+    background: #9fc2ff !important;
+    font-weight: 600;
+}
+
+/* ================= SAVE BUTTON ================= */
+
+.instructor-settings-save {
+    margin-top: 15px;
+    background: #27ae60;
+    color: white;
+    border: none;
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* ================= ACCOUNT LINKS ================= */
+
+.settings-link {
+    cursor: pointer;
+    font-size: 16px;
+    margin-bottom: 10px;
+}
+
+    .settings-link:hover {
+        color: #274aa8;
+    }
+
+/* ================= INPUTS ================= */
+
+.settings-input {
+    display: block;
+    width: 100%;
+    max-width: 380px;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+/* ================= STATUS ================= */
+
+.status-setting-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 12px;
+}
+
+/* ================= SUCCESS TEXT ================= */
+
+.success-text {
+    margin-top: 12px;
+    color: green;
+    font-weight: 600;
+}
+
+/* ================= ACCOUNT OPTION BUTTONS ================= */
+
+.instructor-account-options {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
+}
+
+.instructor-account-option-btn {
+    background: white;
+    border: none;
+    padding: 12px 14px;
+    border-radius: 8px;
+    text-align: left;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+    transition: 0.2s ease;
+}
+
+    .instructor-account-option-btn:hover {
+        background: #c7d9ff;
+    }
+
+.instructor-account-option-active {
+    background: #c7d9ff;
+    font-weight: 600;
+}
+/* ============================= */
+/* INSTRUCTOR STUDENT PAGES */
+/* ============================= */
+
+.instructor-student-card {
+    max-width: 500px;
+    margin: 40px auto;
+    background: #f7f7f7;
+    padding: 25px;
+    border-radius: 12px;
+    text-align: left;
+}
+
+    .instructor-student-card ul {
+        margin-top: 15px;
+        margin-bottom: 20px;
+    }
+
+.instructor-confirm-actions {
+    display: flex;
+    gap: 15px;
+}
+
+.instructor-success-btn {
+    background: #2ecc71;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+.instructor-danger-btn {
+    background: #e74c3c;
+    color: white;
+    border: none;
+    padding: 10px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+
+/* ============================= */
+/* admin shared layout */
+/* ============================= */
+
+.admin-main-content {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 32px 36px 40px;
+    box-sizing: border-box;
+}
+
+.admin-brand-title {
+    text-align: center;
+    font-size: 52px;
+    font-weight: 700;
+    color: #24579d;
+    letter-spacing: 0.4px;
+    margin-bottom: 18px;
+}
+
+.admin-page-title {
+    text-align: center;
+    font-size: 28px;
+    font-weight: 600;
+    color: #111827;
+    margin-bottom: 30px;
+}
+
+/* ============================= */
+/* admin nav */
+/* ============================= */
+
+.admin-home-nav-wrap {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 28px;
+}
+
+.admin-home-nav {
+    background: linear-gradient(135deg, #4b7fe0, #315db8);
+    padding: 14px 20px;
+    border-radius: 18px;
+    display: flex;
+    justify-content: center;
+    gap: 14px;
+    box-shadow: 0 10px 24px rgba(37, 87, 157, 0.18);
+    flex-wrap: wrap;
+    width: fit-content;
+    max-width: 100%;
+}
+
+.admin-home-nav-btn {
+    background: #79a7ff;
+    color: #ffffff;
+    border: none;
+    padding: 12px 20px;
+    border-radius: 12px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 600;
+    min-width: 110px;
+    transition: background 0.2s ease, transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .admin-home-nav-btn:hover {
+        background: #6798f8;
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(49, 93, 184, 0.18);
+    }
+
+/* ============================= */
+/* admin home page */
+/* ============================= */
+
+.admin-home-page {
+    padding-top: 48px;
+    padding-bottom: 40px;
+}
+
+.admin-home-card {
+    max-width: 820px;
+    margin: 0 auto;
+    background: #e9f1ff;
+    border-radius: 22px;
+    padding: 26px;
+    box-shadow: 0 8px 22px rgba(36, 87, 157, 0.10);
+}
+
+.admin-home-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+}
+
+.admin-home-btn {
+    background: linear-gradient(135deg, #5e8fe9, #4a7fe2);
+    color: #111827;
+    border: none;
+    border-radius: 18px;
+    padding: 18px 16px;
+    text-align: left;
+    cursor: pointer;
+    min-height: 86px;
+    box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.18), 0 6px 16px rgba(36, 87, 157, 0.12);
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .admin-home-btn:hover {
+        background: linear-gradient(135deg, #5186e7, #3f74d8);
+        transform: translateY(-1px);
+    }
+
+    .admin-home-btn span {
+        display: block;
+        font-size: 15px;
+        font-weight: 600;
+        margin-bottom: 6px;
+        color: #eef4ff;
+    }
+
+    .admin-home-btn strong {
+        display: block;
+        font-size: 28px;
+        line-height: 1.12;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+.admin-home-settings-row {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 18px;
+}
+
+.admin-home-settings-btn {
+    background: #edf4ff;
+    color: #24579d;
+    border: none;
+    border-radius: 999px;
+    padding: 8px 18px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 600;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+    .admin-home-settings-btn:hover {
+        background: #dfeaff;
+        color: #1d4f94;
+    }
+
+/* ============================= */
+/* admin shared cards */
+/* ============================= */
+
+.admin-outer-card {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.admin-inner-card {
+    width: 100%;
+    max-width: 1100px;
+    background: #eef4ff;
+    padding: 18px;
+    border-radius: 22px;
+    box-sizing: border-box;
+    box-shadow: 0 10px 24px rgba(36, 87, 157, 0.10);
+}
+
+/* ============================= */
+/* admin shared database pages */
+/* ============================= */
+
+.admin-database-page .admin-inner-card {
+    background: #dfeaff;
+    border-radius: 24px;
+    padding: 22px;
+}
+
+.admin-database-page .admin-table-shell {
+    background: linear-gradient(135deg, #4f7fd8, #6a98f0);
+    border-radius: 28px;
+    padding: 24px 20px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.08);
+    overflow-x: auto;
+}
+
+.admin-database-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 18px;
+    table-layout: fixed;
+}
+
+    .admin-database-table thead th {
+        background: #e7eefb;
+        color: #0f172a;
+        padding: 13px 12px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 14px;
+        border-radius: 12px;
+        white-space: nowrap;
+    }
+
+    .admin-database-table tbody tr.admin-table-row td {
+        background: rgba(48, 92, 184, 0.72);
+        padding: 14px 10px;
+        vertical-align: middle;
+    }
+
+        .admin-database-table tbody tr.admin-table-row td:first-child {
+            border-top-left-radius: 20px;
+            border-bottom-left-radius: 20px;
+        }
+
+        .admin-database-table tbody tr.admin-table-row td:last-child {
+            border-top-right-radius: 20px;
+            border-bottom-right-radius: 20px;
+        }
+
+.admin-table-pill {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: #f8fbff;
+    color: #111827;
+    padding: 11px 12px;
+    border-radius: 12px;
+    min-height: 42px;
+    width: 100%;
+    font-size: 14px;
+    text-align: center;
+    white-space: nowrap;
+    box-sizing: border-box;
+    font-weight: 500;
+}
+
+.admin-view-btn,
+.admin-database-view-btn {
+    background: #f4ecd9;
+    color: #111827;
+    border: none;
+    padding: 12px 18px;
+    border-radius: 16px;
+    cursor: pointer;
+    font-size: 15px;
+    font-weight: 700;
+    min-width: 90px;
+    transition: transform 0.15s ease, background 0.15s ease, box-shadow 0.15s ease;
+}
+
+    .admin-view-btn:hover,
+    .admin-database-view-btn:hover {
+        background: #eadfc7;
+        transform: translateY(-1px);
+        box-shadow: 0 5px 12px rgba(0,0,0,0.10);
+    }
+
+/* ============================= */
+/* admin student database columns */
+/* ============================= */
+
+.admin-students-page .admin-database-table th:nth-child(1),
+.admin-students-page .admin-database-table td:nth-child(1) {
+    width: 14%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(2),
+.admin-students-page .admin-database-table td:nth-child(2) {
+    width: 13%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(3),
+.admin-students-page .admin-database-table td:nth-child(3) {
+    width: 22%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(4),
+.admin-students-page .admin-database-table td:nth-child(4) {
+    width: 18%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(5),
+.admin-students-page .admin-database-table td:nth-child(5) {
+    width: 18%;
+}
+
+.admin-students-page .admin-database-table th:nth-child(6),
+.admin-students-page .admin-database-table td:nth-child(6) {
+    width: 15%;
+}
+
+/* ============================= */
+/* admin instructor database columns */
+/* ============================= */
+
+.admin-instructors-page .admin-database-table th:nth-child(1),
+.admin-instructors-page .admin-database-table td:nth-child(1) {
+    width: 14%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(2),
+.admin-instructors-page .admin-database-table td:nth-child(2) {
+    width: 16%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(3),
+.admin-instructors-page .admin-database-table td:nth-child(3) {
+    width: 22%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(4),
+.admin-instructors-page .admin-database-table td:nth-child(4) {
+    width: 18%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(5),
+.admin-instructors-page .admin-database-table td:nth-child(5) {
+    width: 15%;
+}
+
+.admin-instructors-page .admin-database-table th:nth-child(6),
+.admin-instructors-page .admin-database-table td:nth-child(6) {
+    width: 15%;
+}
+
+/* ============================= */
+/* admin shared detail pages */
+/* ============================= */
+
+.admin-detail-page .admin-detail-panel {
+    background: linear-gradient(135deg, #3e74cf, #5a8fec);
+    border-radius: 24px;
+    padding: 20px;
+    box-shadow: inset 0 0 0 1px rgba(255,255,255,0.10);
+}
+
+.admin-detail-page .admin-detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+    align-items: stretch;
+}
+
+.admin-detail-page .admin-detail-box {
+    background: #f8fbff;
+    border-radius: 20px;
+    padding: 20px 22px;
+    min-height: 170px;
+    box-sizing: border-box;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+}
+
+.admin-detail-page .admin-detail-box-wide {
+    grid-column: 1 / span 2;
+    min-height: auto;
+}
+
+.admin-detail-page .admin-section-label {
+    font-size: 22px;
+    font-weight: 700;
+    color: #12396f;
+    margin-bottom: 14px;
+    line-height: 1.1;
+}
+
+.admin-detail-page .admin-detail-box p {
+    margin: 12px 0;
+    font-size: 16px;
+    line-height: 1.45;
+    color: #111827;
+}
+
+.admin-detail-page .admin-detail-box strong {
+    font-weight: 700;
+    color: #0f172a;
+}
+
+.admin-status-pill {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #dff3e4;
+    color: #1d6b36;
+    font-size: 13px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.admin-link-chip {
+    display: inline-block;
+    margin-left: 8px;
+    padding: 5px 12px;
+    border-radius: 999px;
+    background: #dbe7ff;
+    color: #24579d;
+    font-size: 13px;
+    font-weight: 700;
+    vertical-align: middle;
+}
+
+.admin-meta-row {
+    display: flex;
+    gap: 14px;
+    flex-wrap: wrap;
+    margin-top: 4px;
+    margin-bottom: 14px;
+}
+
+.admin-mini-card {
+    background: #e8f0ff;
+    border-radius: 16px;
+    padding: 14px 16px;
+    min-width: 180px;
+    box-shadow: inset 0 0 0 1px rgba(53,103,184,0.08);
+}
+
+    .admin-mini-card span {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        color: #24579d;
+        margin-bottom: 6px;
+    }
+
+    .admin-mini-card strong {
+        display: block;
+        font-size: 15px;
+        color: #111827;
+    }
+
+.action-card {
+    border: none;
+    cursor: pointer;
+    text-align: left;
+    transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+    .action-card:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 14px rgba(0,0,0,0.12);
+        background: #dbe8ff;
+    }
+
+    .action-card:active {
+        transform: translateY(0);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.1);
+    }
+
+/* ============================= */
+/* admin student profile overrides */
+/* ============================= */
+
+.admin-student-profile-page.admin-detail-page .admin-detail-panel {
+    border-radius: 24px;
+    padding: 22px;
+}
+
+.admin-student-profile-page.admin-detail-page .admin-detail-box {
+    background: #f8fbff;
+    border-radius: 20px;
+    padding: 20px 22px;
+    min-height: 190px;
+    border: 1px solid rgba(53,103,184,0.08);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+}
+
+.admin-student-profile-page.admin-detail-page .admin-section-label {
+    font-size: 24px;
+    color: #12396f;
+    margin-bottom: 16px;
+}
+
+.admin-student-profile-page.admin-detail-page .admin-detail-box p {
+    margin: 0 0 14px;
+}
+
+    .admin-student-profile-page.admin-detail-page .admin-detail-box p:last-child {
+        margin-bottom: 0;
+    }
+
+.admin-student-profile-page .admin-meta-row {
+    margin-top: 2px;
+    gap: 16px;
+}
+
+.admin-student-profile-page .admin-mini-card {
+    border-radius: 16px;
+    padding: 16px 18px;
+    min-width: 200px;
+}
+
+    .admin-student-profile-page .admin-mini-card span {
+        font-weight: 700;
+        margin-bottom: 8px;
+        text-transform: uppercase;
+        letter-spacing: 0.3px;
+    }
+
+/* ============================= */
+/* admin back button */
+/* ============================= */
+
+.admin-back-container {
+    text-align: left;
+    margin-top: 18px;
+}
+
+.admin-tab {
+    background: #e8eef8;
+    color: #111827;
+    border: none;
+    padding: 11px 18px;
+    border-radius: 14px;
+    cursor: pointer;
+    font-weight: 600;
+    font-size: 14px;
+    transition: background 0.2s ease, transform 0.2s ease;
+}
+
+    .admin-tab:hover {
+        background: #dbe5f5;
+        transform: translateY(-1px);
+    }
+
+/* ============================= */
+/* admin system activity / monitoring */
+/* ============================= */
+
+.admin-activity-table-wrap {
+    overflow-x: auto;
+    margin-top: 12px;
+}
+
+.admin-activity-table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0 16px;
+    table-layout: fixed;
+}
+
+    .admin-activity-table thead th {
+        background: #e7eefb;
+        color: #0f172a;
+        padding: 13px 14px;
+        text-align: left;
+        font-weight: 700;
+        font-size: 14px;
+        white-space: nowrap;
+    }
+
+        .admin-activity-table thead th:first-child {
+            border-top-left-radius: 12px;
+            border-bottom-left-radius: 12px;
+        }
+
+        .admin-activity-table thead th:last-child {
+            border-top-right-radius: 12px;
+            border-bottom-right-radius: 12px;
+        }
+
+    .admin-activity-table tbody td {
+        background: #f8fbff;
+        padding: 16px;
+        vertical-align: middle;
+        color: #111827;
+        font-size: 15px;
+    }
+
+        .admin-activity-table tbody td:first-child {
+            border-top-left-radius: 16px;
+            border-bottom-left-radius: 16px;
+            font-weight: 700;
+        }
+
+        .admin-activity-table tbody td:last-child {
+            border-top-right-radius: 16px;
+            border-bottom-right-radius: 16px;
+        }
+
+    .admin-activity-table th:nth-child(1),
+    .admin-activity-table td:nth-child(1) {
+        width: 12%;
+    }
+
+    .admin-activity-table th:nth-child(2),
+    .admin-activity-table td:nth-child(2) {
+        width: 16%;
+    }
+
+    .admin-activity-table th:nth-child(3),
+    .admin-activity-table td:nth-child(3) {
+        width: 24%;
+    }
+
+    .admin-activity-table th:nth-child(4),
+    .admin-activity-table td:nth-child(4) {
+        width: 18%;
+    }
+
+    .admin-activity-table th:nth-child(5),
+    .admin-activity-table td:nth-child(5) {
+        width: 15%;
+        text-align: center;
+    }
+
+    .admin-activity-table th:nth-child(6),
+    .admin-activity-table td:nth-child(6) {
+        width: 15%;
+        text-align: center;
+    }
+
+    .admin-activity-table td button {
+        min-width: 120px;
+    }
+
+.admin-status-warning {
+    background: #fff1d6;
+    color: #9a5a00;
+}
+
+.admin-remove-btn {
+    background: #f5dede;
+}
+
+    .admin-remove-btn:hover {
+        background: #eccdcd;
+    }
+
+.admin-info-text {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+    color: #111827;
+}
+
+.admin-timeline-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 8px;
+}
+
+.admin-timeline-item {
+    background: #f3f7ff;
+    border-radius: 14px;
+    padding: 14px 16px;
+    border-left: 6px solid #3567b8;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    font-size: 15px;
+    color: #111827;
+}
+
+
+
+/* ============================= */
+/* setting */
+/* ============================= */
+.editable-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-bottom: 14px;
+    flex-wrap: wrap;
+}
+
+.settings-input-inline {
+    padding: 8px 10px;
+    border: 1px solid #c9d3e7;
+    border-radius: 8px;
+    min-width: 220px;
+    font-size: 14px;
+}
+
+.edit-btn {
+    background: linear-gradient(135deg, #5b8df7, #3f6fd1);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 4px 10px;
+    font-size: 12px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+    .edit-btn:hover {
+        background: linear-gradient(135deg, #4f7fe6, #355fc0);
+        transform: translateY(-1px);
+        box-shadow: 0 3px 8px rgba(0,0,0,0.15);
+    }
+
+    .edit-btn:active {
+        transform: translateY(0);
+        box-shadow: none;
+    }
+
+.save-info-btn {
+    margin-top: 10px;
+}
+
+.status-toggle-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+}
+
+.status-toggle-btn {
+    border: none;
+    padding: 8px 14px;
+    border-radius: 999px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 600;
+    transition: all 0.2s ease;
+    background: #e6ebf5;
+    color: #1f2937;
+}
+
+    .status-toggle-btn:hover {
+        transform: translateY(-1px);
+    }
+
+.status-selected-active {
+    background: #dff3e4;
+    color: #1d6b36;
+}
+
+.status-selected-inactive {
+    background: #f8d7da;
+    color: #a1262d;
+}
+
+.admin-status-inactive {
+    background: #f8d7da;
+    color: #a1262d;
+}
+
+
+/* ============================= */
+/* admin change password */
+/* ============================= */
+
+.admin-password-shell {
+    display: flex;
+    justify-content: center;
+    margin-top: 28px;
+}
+
+.admin-password-card {
+    width: 100%;
+    max-width: 560px;
+    background: #f3f3f3;
+    border-radius: 18px;
+    padding: 34px 30px 30px;
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.08);
+    text-align: center;
+}
+
+.admin-password-heading {
+    margin: 0 0 24px;
+    font-size: 24px;
+    font-weight: 600;
+    color: #111;
+}
+
+.admin-password-input {
+    display: block;
+    width: 100%;
+    margin: 0 auto 14px;
+    padding: 12px 14px;
+    border: 1px solid #cfcfcf;
+    border-radius: 10px;
+    font-size: 16px;
+    box-sizing: border-box;
+    background: white;
+}
+
+.admin-password-update-btn {
+    display: block;
+    width: 100%;
+    margin-top: 18px;
+    background: linear-gradient(135deg, #2f6ecf, #2558b2);
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px 18px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+    .admin-password-update-btn:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 6px 14px rgba(37, 88, 178, 0.22);
+    }
+
+.admin-password-back-btn {
+    display: inline-block;
+    margin-top: 16px;
+    background: #4a4a4a;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 10px 20px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background 0.2s ease;
+}
+
+    .admin-password-back-btn:hover {
+        background: #383838;
+    }
+
+/* ============================= */
+/* responsive */
+/* ============================= */
+
+@media (max-width: 900px) {
+    .admin-main-content {
+        padding: 24px 18px 30px;
+    }
+
+    .admin-brand-title {
+        font-size: 40px;
+    }
+
+    .admin-page-title {
+        font-size: 24px;
+    }
+
+    .admin-home-nav {
+        gap: 10px;
+        padding: 12px 14px;
+    }
+
+    .admin-home-nav-btn {
+        min-width: 90px;
+        font-size: 14px;
+        padding: 10px 14px;
+    }
+
+    .admin-home-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-database-page .admin-inner-card {
+        padding: 16px;
+    }
+
+    .admin-database-page .admin-table-shell {
+        padding: 16px 14px;
+    }
+
+    .admin-database-table {
+        min-width: 760px;
+        border-spacing: 0 14px;
+    }
+
+        .admin-database-table thead th {
+            font-size: 12px;
+            padding: 9px 10px;
+        }
+
+        .admin-database-table tbody tr.admin-table-row td {
+            padding: 10px 8px;
+        }
+
+    .admin-table-pill {
+        font-size: 12px;
+        min-height: 36px;
+        padding: 8px 10px;
+    }
+
+    .admin-view-btn,
+    .admin-database-view-btn {
+        font-size: 13px;
+        padding: 10px 14px;
+    }
+
+    .admin-detail-page .admin-detail-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .admin-detail-page .admin-detail-box-wide {
+        grid-column: auto;
+    }
+
+    .admin-detail-page .admin-detail-box {
+        min-height: auto;
+    }
+
+    .admin-detail-page .admin-section-label {
+        font-size: 20px;
+    }
+
+    .admin-detail-page .admin-detail-box p {
+        font-size: 15px;
+    }
+
+    .admin-mini-card {
+        min-width: 100%;
+    }
+
+    .admin-student-profile-page .admin-mini-card {
+        min-width: 100%;
+    }
+
+    .admin-activity-table {
+        min-width: 760px;
+        border-spacing: 0 12px;
+    }
+
+        .admin-activity-table thead th {
+            font-size: 12px;
+            padding: 10px;
+        }
+
+        .admin-activity-table tbody td {
+            padding: 10px;
+            font-size: 13px;
+        }
+
+    .admin-timeline-item {
+        font-size: 14px;
+        padding: 12px 14px;
+    }
+}

@@ -1,0 +1,232 @@
+@page "/book-time"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+<h3>Select Time</h3>
+
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Select a Time</h1>
+    <p>Please select the available times:</p>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
+    @if (isLoading)
+    {
+        <p>loading available times...</p>
+    }
+    else if (availableSlots.Count == 0)
+    {
+        <p>no available times found for this date.</p>
+    }
+    else
+    {
+        <div class="booking-grid">
+            @foreach (var slot in availableSlots)
+            {
+                <label class="booking-box">
+                    <input type="radio" name="time" @onchange='() => SelectTime(slot)' />
+                    <span>@slot.AvailableDateTime.ToString("HH:mm")</span>
+                </label>
+            }
+        </div>
+    }
+
+    <button class="booking-back" @onclick="GoBack">
+        Back
+    </button>
+
+    <button class="booking-btn" @onclick="GoToSummary" disabled="@isLoading">
+        Next: summary selection
+    </button>
+
+</div>
+
+@code {
+    string? selectedTime;
+    string? selectedDate;
+    string? mode;
+    string? errorMessage;
+    bool isLoading = true;
+    int instructorId = 0;
+    int selectedAvailabilityId = 0;
+    int bookingId = 0;
+
+    List<AvailabilityResponseDto> availableSlots = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("date", out var dateValue))
+        {
+            selectedDate = dateValue;
+        }
+
+        if (query.TryGetValue("mode", out var modeValue))
+        {
+            mode = modeValue;
+        }
+
+        if (query.TryGetValue("bookingId", out var bookingValue))
+        {
+            int.TryParse(bookingValue, out bookingId);
+        }
+
+        await LoadLearnerAndTimes();
+        StateHasChanged();
+    }
+
+    async Task LoadLearnerAndTimes()
+    {
+        try
+        {
+            if (string.IsNullOrWhiteSpace(selectedDate))
+            {
+                errorMessage = "please select a date first.";
+                isLoading = false;
+                return;
+            }
+
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=learner");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var learnerResponse = await Http.GetAsync("api/learner/me");
+            var learnerResult = await learnerResponse.Content.ReadFromJsonAsync<ApiResponse<LearnerResponseDto>>();
+
+            if (!learnerResponse.IsSuccessStatusCode || learnerResult == null || !learnerResult.Success || learnerResult.Data == null)
+            {
+                errorMessage = learnerResult?.Message ?? "could not load learner profile.";
+                isLoading = false;
+                return;
+            }
+
+            instructorId = learnerResult.Data.InstructorId;
+
+            if (instructorId <= 0)
+            {
+                errorMessage = "no instructor assigned.";
+                isLoading = false;
+                return;
+            }
+
+            var availabilityResponse = await Http.GetAsync($"api/availability/instructor/{instructorId}");
+            var availabilityResult = await availabilityResponse.Content.ReadFromJsonAsync<ApiResponse<List<AvailabilityResponseDto>>>();
+
+            if (!availabilityResponse.IsSuccessStatusCode || availabilityResult == null || !availabilityResult.Success || availabilityResult.Data == null)
+            {
+                errorMessage = availabilityResult?.Message ?? "could not load availability.";
+                isLoading = false;
+                return;
+            }
+
+            availableSlots = availabilityResult.Data
+                .Where(x => !x.IsTaken &&
+                            x.AvailableDateTime > DateTime.Now &&
+                            x.AvailableDateTime.ToString("dd/MM/yyyy") == selectedDate)
+                .OrderBy(x => x.AvailableDateTime)
+                .ToList();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading booking times.";
+            isLoading = false;
+        }
+    }
+
+    void SelectTime(AvailabilityResponseDto slot)
+    {
+        selectedAvailabilityId = slot.AvailabilityId;
+        selectedTime = slot.AvailableDateTime.ToString("HH:mm");
+        errorMessage = null;
+    }
+
+    void GoBack()
+    {
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/book?mode=reschedule&bookingId={bookingId}");
+        }
+        else
+        {
+            Nav.NavigateTo("/book");
+        }
+    }
+
+    void GoToSummary()
+    {
+        if (string.IsNullOrWhiteSpace(selectedTime) || selectedAvailabilityId <= 0)
+        {
+            errorMessage = "please select a time before continuing.";
+            return;
+        }
+
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}&mode=reschedule&bookingId={bookingId}");
+        }
+        else
+        {
+            Nav.NavigateTo($"/book-summary?date={selectedDate}&time={selectedTime}&availabilityId={selectedAvailabilityId}");
+        }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class LearnerResponseDto
+    {
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string LearnerLessonType { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string? InstructorName { get; set; }
+    }
+
+    public class AvailabilityResponseDto
+    {
+        public int AvailabilityId { get; set; }
+        public DateTime AvailableDateTime { get; set; }
+        public bool IsTaken { get; set; }
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+    }
+}

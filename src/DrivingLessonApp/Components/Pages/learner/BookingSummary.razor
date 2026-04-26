@@ -1,0 +1,198 @@
+@page "/book-summary"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.AspNetCore.WebUtilities
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+<h3>Booking Summary</h3>
+
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/home")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/book")'>Book lessons</button>
+    <button @onclick='() => Nav.NavigateTo("/faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/settings")'>Settings</button>
+</div>
+
+<div class="booking-card">
+
+    <h1>Booking Summary</h1>
+
+    <p>Please review your booking details:</p>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
+    <div class="summary-box">
+
+        <div class="summary-item">
+            <strong>Date:</strong> @selectedDate
+        </div>
+
+        <div class="summary-item">
+            <strong>Time:</strong> @selectedTime
+        </div>
+
+        @if (mode == "reschedule")
+        {
+            <div class="summary-item">
+                <strong>Fee:</strong> £0
+            </div>
+        }
+        else
+        {
+            <div class="summary-item">
+                <strong>Fee:</strong> £67
+            </div>
+        }
+
+    </div>
+
+    <button class="booking-back" @onclick="GoBack">
+        Back
+    </button>
+
+    <button class="booking-btn" @onclick="ConfirmBooking" disabled="@isSubmitting">
+        @(isSubmitting ? "Confirming..." : "Confirm booking")
+    </button>
+
+</div>
+
+@code {
+    string? selectedDate;
+    string? selectedTime;
+    string? mode;
+    string? availabilityId;
+    string? bookingId;
+    string? errorMessage;
+    bool isSubmitting;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("date", out var dateValue))
+        {
+            selectedDate = dateValue;
+        }
+
+        if (query.TryGetValue("time", out var timeValue))
+        {
+            selectedTime = timeValue;
+        }
+
+        if (query.TryGetValue("availabilityId", out var availabilityValue))
+        {
+            availabilityId = availabilityValue;
+        }
+
+        if (query.TryGetValue("bookingId", out var bookingValue))
+        {
+            bookingId = bookingValue;
+        }
+
+        if (query.TryGetValue("mode", out var modeValue))
+        {
+            mode = modeValue;
+        }
+    }
+
+    // this goes back to the time selection page
+    void GoBack()
+    {
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}&mode=reschedule&bookingId={bookingId}");
+        }
+        else
+        {
+            Nav.NavigateTo($"/book-time?date={selectedDate}");
+        }
+    }
+
+    // this creates the booking when the user confirms the summary
+    async Task ConfirmBooking()
+    {
+        errorMessage = null;
+
+        if (mode == "reschedule")
+        {
+            Nav.NavigateTo($"/reschedule-confirmed?bookingId={bookingId}&availabilityId={availabilityId}");
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(availabilityId) || !int.TryParse(availabilityId, out int parsedAvailabilityId))
+        {
+            errorMessage = "invalid availability selection.";
+            return;
+        }
+
+        var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            Nav.NavigateTo("/login?role=learner");
+            return;
+        }
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        isSubmitting = true;
+
+        var request = new CreateBookingRequest
+        {
+            AvailabilityId = parsedAvailabilityId,
+            LessonType = "Beginners"
+        };
+
+        var response = await Http.PostAsJsonAsync("api/booking", request);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<BookingResponseDto>>();
+
+        isSubmitting = false;
+
+        if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+        {
+            errorMessage = result?.Message ?? "could not confirm booking.";
+            return;
+        }
+
+        Nav.NavigateTo($"/book-confirmed?bookingId={result.Data.BookingId}");
+    }
+
+    public class CreateBookingRequest
+    {
+        public int AvailabilityId { get; set; }
+        public string LessonType { get; set; } = "";
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class BookingResponseDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+}

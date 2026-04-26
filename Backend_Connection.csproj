@@ -9,9 +9,13 @@
 
   <ItemGroup>
     <Compile Remove="Backend-ConnectionI\**" />
+    <Compile Remove="src\**" />
     <Content Remove="Backend-ConnectionI\**" />
+    <Content Remove="src\**" />
     <EmbeddedResource Remove="Backend-ConnectionI\**" />
+    <EmbeddedResource Remove="src\**" />
     <None Remove="Backend-ConnectionI\**" />
+    <None Remove="src\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,6 +29,15 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Swashbuckle.AspNetCore" Version="10.1.7" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Content Update="Backend-Connection\appsettings.Development.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="Backend-Connection\appsettings.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
 
 </Project>

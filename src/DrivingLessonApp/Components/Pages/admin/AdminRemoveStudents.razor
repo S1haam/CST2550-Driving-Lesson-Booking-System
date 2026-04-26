@@ -1,0 +1,113 @@
+@page "/admin/remove-students"
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+@if (isLoading)
+{
+    <p>loading...</p>
+}
+else if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red">@errorMessage</p>
+}
+else
+{
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Last Active</th>
+                <th>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var s in InactiveStudents)
+            {
+                <tr>
+                    <td>@s.StudentId</td>
+                    <td>@s.Name</td>
+                    <td>@s.Email</td>
+                    <td>@s.LastActive</td>
+                    <td>
+                        <button @onclick='() => RemoveStudent(s.StudentId)'>Remove</button>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+
+@code {
+    string? errorMessage;
+    bool isLoading = true;
+
+    public List<InactiveStudent> InactiveStudents { get; set; } = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        await Load();
+        StateHasChanged();
+    }
+
+    async Task Load()
+    {
+        var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        var result = await Http.GetFromJsonAsync<ApiResponse<List<InactiveStudent>>>("api/admin/students/inactive");
+
+        if (result == null || !result.Success || result.Data == null)
+        {
+            errorMessage = "failed";
+            return;
+        }
+
+        InactiveStudents = result.Data;
+        isLoading = false;
+    }
+
+    async Task RemoveStudent(string id)
+    {
+        if (!int.TryParse(id, out var studentId))
+        {
+            errorMessage = "invalid id";
+            return;
+        }
+
+        var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+        Http.DefaultRequestHeaders.Authorization =
+            new AuthenticationHeaderValue("Bearer", token);
+
+        await Http.DeleteAsync($"api/admin/student/{studentId}");
+
+        var student = InactiveStudents.FirstOrDefault(x => x.StudentId == id);
+        if (student != null)
+            InactiveStudents.Remove(student);
+    }
+
+    public class InactiveStudent
+    {
+        public string StudentId { get; set; } = "";
+        public string Name { get; set; } = "";
+        public string Email { get; set; } = "";
+        public string LastActive { get; set; } = "";
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+}

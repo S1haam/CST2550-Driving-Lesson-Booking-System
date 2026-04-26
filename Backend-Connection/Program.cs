@@ -85,7 +85,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // this redirects http to https
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 // this validates incoming jwt tokens
 app.UseAuthentication();

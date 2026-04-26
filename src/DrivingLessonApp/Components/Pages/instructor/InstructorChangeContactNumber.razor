@@ -1,0 +1,29 @@
+@page "/instructor-change-contact"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Change Contact Number</h3>
+
+<div class="booking-card">
+
+    <input placeholder="Enter New Number..." @bind="number" />
+
+    <input type="password"
+           placeholder="Enter Password..."
+           @bind="password" />
+
+    <button class="booking-btn" @onclick="Save">Save Number</button>
+
+</div>
+
+@code {
+    string number;
+    string password;
+
+    void Save()
+    {
+        Nav.NavigateTo("/instructor-settings-success");
+    }
+}

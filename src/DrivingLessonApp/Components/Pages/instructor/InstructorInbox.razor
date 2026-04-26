@@ -1,0 +1,243 @@
+@page "/instructor-inbox"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>Instructor Inbox</h3>
+
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading inbox...</p>
+}
+
+<div class="inbox-container">
+
+    <div class="inbox-header-row">
+        <h3>Inbox</h3>
+
+        <div class="inbox-tabs">
+            <button class="@GetTabClass("all")" @onclick='() => SetTab("all")'>Inbox</button>
+            <button class="@GetTabClass("pinned")" @onclick='() => SetTab("pinned")'>Pinned</button>
+            <button class="@GetTabClass("deleted")" @onclick='() => SetTab("deleted")'>Deleted</button>
+        </div>
+    </div>
+
+    <div class="inbox-list">
+
+        @if (!isLoading && !FilteredNotifications.Any())
+        {
+            <p style="padding:10px;">no inbox items found.</p>
+        }
+        else
+        {
+            @foreach (var item in FilteredNotifications)
+            {
+                <div class="inbox-row">
+
+                    <div class="inbox-time">@item.CreatedAt.ToLocalTime().ToString("HH:mm")</div>
+
+                    <div class="inbox-message"
+                         @onclick='() => OpenMessage(item)'>
+                        @item.Title
+                    </div>
+
+                    <div class="inbox-date">@item.CreatedAt.ToLocalTime().ToString("dd MMM yyyy")</div>
+
+                    <button class="icon-btn"
+                            type="button"
+                            @onclick="async () => await TogglePin(item)">
+                        @(item.IsPinned ? "📌" : "📍")
+                    </button>
+
+                    <button class="icon-btn"
+                            type="button"
+                            @onclick="async () => await ToggleDelete(item)">
+                        🗑
+                    </button>
+
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+    string currentTab = "all";
+    string? errorMessage;
+    bool isLoading = true;
+
+    List<InboxItem> notifications = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        await LoadInbox();
+        StateHasChanged();
+    }
+
+    private async Task LoadInbox()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                errorMessage = "you are not logged in";
+                isLoading = false;
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var response = await Http.GetAsync("api/instructor/notifications");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<NotificationDto>>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load inbox items";
+                isLoading = false;
+                return;
+            }
+
+            notifications = result.Data
+                .Select(x => new InboxItem
+                {
+                    Id = x.NotificationId,
+                    Title = x.Message,
+                    Type = x.NotificationType,
+                    CreatedAt = x.CreatedAt,
+                    IsPinned = x.IsPinned,
+                    IsDeleted = x.IsDeleted
+                })
+                .ToList();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading inbox";
+            isLoading = false;
+        }
+    }
+
+    IEnumerable<InboxItem> FilteredNotifications =>
+        currentTab switch
+        {
+            "pinned" => notifications.Where(x => x.IsPinned && !x.IsDeleted),
+            "deleted" => notifications.Where(x => x.IsDeleted),
+            _ => notifications.Where(x => !x.IsDeleted)
+        };
+
+    void SetTab(string tab)
+    {
+        currentTab = tab;
+    }
+
+    string GetTabClass(string tab)
+    {
+        return currentTab == tab ? "tab active" : "tab";
+    }
+
+    async Task TogglePin(InboxItem item)
+    {
+        var endpoint = item.IsPinned
+            ? $"api/instructor/notification/{item.Id}/unpin"
+            : $"api/instructor/notification/{item.Id}/pin";
+
+        var response = await Http.PutAsync(endpoint, null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            item.IsPinned = !item.IsPinned;
+        }
+    }
+
+    async Task ToggleDelete(InboxItem item)
+    {
+        var endpoint = item.IsDeleted
+            ? $"api/instructor/notification/{item.Id}/restore"
+            : $"api/instructor/notification/{item.Id}/delete";
+
+        var response = await Http.PutAsync(endpoint, null);
+
+        if (response.IsSuccessStatusCode)
+        {
+            item.IsDeleted = !item.IsDeleted;
+        }
+    }
+
+    void OpenMessage(InboxItem item)
+    {
+        if (item.Type == "CancelledBooking")
+        {
+            Nav.NavigateTo($"/instructor-cancelled-notification/{item.Id}");
+        }
+        else if (item.Type == "RescheduledBooking")
+        {
+            Nav.NavigateTo($"/instructor-rescheduled-notification/{item.Id}");
+        }
+        else if (item.Type == "RemovedStudent")
+        {
+            Nav.NavigateTo($"/instructor-removed-notification/{item.Id}");
+        }
+        else if (item.Type == "StudentRequest")
+        {
+            Nav.NavigateTo("/instructor-request");
+        }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class NotificationDto
+    {
+        public int NotificationId { get; set; }
+        public int InstructorId { get; set; }
+        public string Message { get; set; } = "";
+        public string NotificationType { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public bool IsRead { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+
+    public class InboxItem
+    {
+        public int Id { get; set; }
+        public string Title { get; set; } = "";
+        public string Type { get; set; } = "";
+        public DateTime CreatedAt { get; set; }
+        public bool IsPinned { get; set; }
+        public bool IsDeleted { get; set; }
+    }
+}
