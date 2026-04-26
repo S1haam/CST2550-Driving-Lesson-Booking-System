@@ -1,0 +1,8 @@
+# Use this workspace to collaborate
+workspace:
+  id: 61d85620-2cbd-4d85-8743-909bfef632d2
+
+localResources:
+  specs:
+    - ..\obj\Debug\net10.0\EndpointInfo\Backend_admin.json
+    - ..\obj\Debug\net10.0\EndpointInfo\Backend_Connection.json

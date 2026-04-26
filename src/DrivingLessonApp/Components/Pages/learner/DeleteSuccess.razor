@@ -1,0 +1,19 @@
+@page "/delete-success"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+
+<div class="booking-card success-card">
+
+    <h1>Account Deleted</h1>
+
+    <p class="success-text">
+        Your account has been successfully deleted.
+        We’re sorry to see you go.
+    </p>
+
+   <button class="booking-btn"
+        @onclick='() => Nav.NavigateTo("/")'>
+    Return to Start Page
+</button>
+
+</div>

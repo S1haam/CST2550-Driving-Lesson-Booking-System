@@ -1,0 +1,171 @@
+@page "/login"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.AspNetCore.WebUtilities
+@using System.ComponentModel.DataAnnotations
+@using System.Net.Http.Json
+@using Microsoft.JSInterop
+
+<div class="booking-card">
+
+    <h1>welcome to SER driving school</h1>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
+    <input placeholder="email" @bind="email" />
+
+    <input type="password" placeholder="password" @bind="password" />
+
+    <button class="booking-btn" @onclick="LoginUser">
+        login
+    </button>
+
+    <button class="login-back"
+            @onclick='() => Nav.NavigateTo("/")'>
+        back
+    </button>
+
+    <p class="link-text">
+        don't have an account?
+        <span class="link-action" @onclick="GoToSignup">create one</span>
+    </p>
+
+</div>
+
+@code {
+    string? email;
+    string? password;
+    string? role;
+    string? errorMessage;
+
+    protected override void OnInitialized()
+    {
+        var uri = Nav.ToAbsoluteUri(Nav.Uri);
+        var query = QueryHelpers.ParseQuery(uri.Query);
+
+        if (query.TryGetValue("role", out var value))
+        {
+            role = value.ToString().Trim().ToLower();
+        }
+    }
+
+    async Task LoginUser()
+    {
+        errorMessage = null;
+
+        var cleanEmail = email?.Trim() ?? "";
+        var cleanPassword = password?.Trim() ?? "";
+        var cleanRole = role?.Trim().ToLower() ?? "";
+
+        if (string.IsNullOrWhiteSpace(cleanEmail) ||
+            string.IsNullOrWhiteSpace(cleanPassword))
+        {
+            errorMessage = "Please enter email and password.";
+            return;
+        }
+
+        if (!new EmailAddressAttribute().IsValid(cleanEmail))
+        {
+            errorMessage = "Please enter a valid email address.";
+            return;
+        }
+
+        if (cleanRole != "learner" && cleanRole != "instructor" && cleanRole != "admin")
+        {
+            errorMessage = "Invalid role selected.";
+            return;
+        }
+
+        var loginData = new LoginRequest
+        {
+            Email = cleanEmail,
+            Password = cleanPassword,
+            Role = cleanRole
+        };
+
+        var response = await Http.PostAsJsonAsync("api/auth/login", loginData);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<AuthResponse>>();
+
+        if (!response.IsSuccessStatusCode)
+        {
+            errorMessage = result?.Message ?? "login failed. check your details.";
+            return;
+        }
+
+        if (result == null || !result.Success || result.Data == null)
+        {
+            errorMessage = result?.Message ?? "login failed.";
+            return;
+        }
+
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "authToken", result.Data.Token);
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "userRole", result.Data.Role);
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "userId", result.Data.UserId.ToString());
+        await JS.InvokeVoidAsync("sessionStorage.setItem", "userEmail", result.Data.Email);
+
+        if (result.Data.Role == "Learner")
+        {
+            Nav.NavigateTo("/home");
+        }
+        else if (result.Data.Role == "Instructor")
+        {
+            Nav.NavigateTo("/instructorHome");
+        }
+        else if (result.Data.Role == "Admin")
+        {
+            Nav.NavigateTo("/admin");
+        }
+        else
+        {
+            errorMessage = "unknown user role.";
+        }
+    }
+
+    void GoToSignup()
+    {
+        if (role == "learner")
+        {
+            Nav.NavigateTo("/signup-learner");
+        }
+        else if (role == "instructor")
+        {
+            Nav.NavigateTo("/signup-instructor");
+        }
+        else if (role == "admin")
+        {
+            Nav.NavigateTo("/signup-admin");
+        }
+        else
+        {
+            Nav.NavigateTo("/");
+        }
+    }
+
+    public class LoginRequest
+    {
+        public string Email { get; set; } = "";
+        public string Password { get; set; } = "";
+        public string Role { get; set; } = "";
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class AuthResponse
+    {
+        public string Token { get; set; } = "";
+        public string Role { get; set; } = "";
+        public int UserId { get; set; }
+        public string Email { get; set; } = "";
+    }
+}

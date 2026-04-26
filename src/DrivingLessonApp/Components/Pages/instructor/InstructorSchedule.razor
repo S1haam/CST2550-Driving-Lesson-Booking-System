@@ -1,0 +1,298 @@
+@page "/instructor-schedule"
+@using Microsoft.AspNetCore.WebUtilities
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject IJSRuntime JS
+
+@using Microsoft.JSInterop
+@using System.Net.Http.Headers
+@using System.Net.Http.Json
+
+<div class="brand-title">SER Driving School</div>
+
+<h3>My Schedule</h3>
+
+<div class="nav-bar">
+    <button @onclick='() => Nav.NavigateTo("/instructorHome")'>Home</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-schedule")'>My Schedule</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-inbox")'>Inbox</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-faqs")'>FAQs</button>
+    <button @onclick='() => Nav.NavigateTo("/instructor-settings")'>Settings</button>
+</div>
+
+@if (!string.IsNullOrWhiteSpace(errorMessage))
+{
+    <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+}
+else if (isLoading)
+{
+    <p>loading schedule...</p>
+}
+
+<div class="card next-card">
+
+    <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:15px;">
+
+        <div class="tabs">
+            <div class="tab @(instructorShowNext ? "active" : "")"
+                 @onclick='() => { instructorShowNext = true; instructorSearchResult = null; searchMessage = null; }'>
+                Next Lessons
+            </div>
+
+            <div class="tab @(!instructorShowNext ? "active" : "")"
+                 @onclick='() => { instructorShowNext = false; instructorSearchResult = null; searchMessage = null; }'>
+                Previous Lessons
+            </div>
+        </div>
+
+        <div class="search-container">
+            <input @bind="instructorSearchId" placeholder="Search by ID" />
+            <button @onclick="InstructorSearchBooking">Search</button>
+        </div>
+
+    </div>
+
+    @if (!string.IsNullOrWhiteSpace(searchMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@searchMessage</p>
+    }
+
+    <div class="lesson-list">
+
+        @if (instructorSearchResult != null)
+        {
+            <div class="lesson-item">
+                <span>@instructorSearchResult.Date @instructorSearchResult.Time</span>
+
+                @if (instructorSearchResult.IsNextLesson)
+                {
+                    <div>
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorSearchResult.Id}&type=next")'>
+                            VIEW
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo($"/instructor-cancel-booking?bookingId={instructorSearchResult.Id}")'>
+                            CANCEL
+                        </button>
+                    </div>
+                }
+                else
+                {
+                    <button class="schedule-action-btn"
+                            @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorSearchResult.Id}&type=previous")'>
+                        VIEW
+                    </button>
+                }
+            </div>
+        }
+        else if (instructorShowNext)
+        {
+            @if (!instructorNextLessons.Any())
+            {
+                <p>No upcoming lessons.</p>
+            }
+
+            @foreach (var instructorLesson in instructorNextLessons)
+            {
+                <div class="lesson-item">
+                    <span>@instructorLesson.Date @instructorLesson.Time</span>
+                    <div>
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorLesson.Id}&type=next")'>
+                            VIEW
+                        </button>
+
+                        <button class="schedule-action-btn"
+                                @onclick='() => Nav.NavigateTo($"/instructor-cancel-booking?bookingId={instructorLesson.Id}")'>
+                            CANCEL
+                        </button>
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            @if (!instructorPreviousLessons.Any())
+            {
+                <p>No previous lessons.</p>
+            }
+
+            @foreach (var instructorLesson in instructorPreviousLessons)
+            {
+                <div class="lesson-item">
+                    <span>@instructorLesson.Date @instructorLesson.Time</span>
+                    <button class="schedule-action-btn"
+                            @onclick='() => Nav.NavigateTo($"/instructor-lesson-details?id={instructorLesson.Id}&type=previous")'>
+                        VIEW
+                    </button>
+                </div>
+            }
+        }
+
+    </div>
+
+</div>
+
+@code {
+    bool instructorShowNext = true;
+    bool isLoading = true;
+
+    string? instructorSearchId;
+    string? errorMessage;
+    string? searchMessage;
+
+    InstructorLesson? instructorSearchResult;
+
+    List<InstructorLesson> instructorNextLessons = new();
+    List<InstructorLesson> instructorPreviousLessons = new();
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender)
+            return;
+
+        var instructorUri = Nav.ToAbsoluteUri(Nav.Uri);
+
+        if (QueryHelpers.ParseQuery(instructorUri.Query).TryGetValue("tab", out var instructorTab))
+        {
+            instructorShowNext = instructorTab == "next";
+        }
+
+        await LoadSchedule();
+        StateHasChanged();
+    }
+
+    // this loads upcoming and previous lessons for the logged in instructor
+    private async Task LoadSchedule()
+    {
+        try
+        {
+            var token = await JS.InvokeAsync<string>("sessionStorage.getItem", "authToken");
+
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                Nav.NavigateTo("/login?role=instructor");
+                return;
+            }
+
+            Http.DefaultRequestHeaders.Authorization =
+                new AuthenticationHeaderValue("Bearer", token);
+
+            var upcomingResponse = await Http.GetAsync("api/instructor/schedule/upcoming");
+            var upcomingResult = await upcomingResponse.Content.ReadFromJsonAsync<ApiResponse<List<InstructorScheduleLessonDto>>>();
+
+            if (!upcomingResponse.IsSuccessStatusCode || upcomingResult == null || !upcomingResult.Success || upcomingResult.Data == null)
+            {
+                errorMessage = upcomingResult?.Message ?? "could not load upcoming lessons.";
+                isLoading = false;
+                return;
+            }
+
+            var pastResponse = await Http.GetAsync("api/instructor/schedule/past");
+            var pastResult = await pastResponse.Content.ReadFromJsonAsync<ApiResponse<List<InstructorScheduleLessonDto>>>();
+
+            if (!pastResponse.IsSuccessStatusCode || pastResult == null || !pastResult.Success || pastResult.Data == null)
+            {
+                errorMessage = pastResult?.Message ?? "could not load previous lessons.";
+                isLoading = false;
+                return;
+            }
+
+            instructorNextLessons = upcomingResult.Data
+                .Select(x => new InstructorLesson
+                {
+                    Id = x.BookingId,
+                    Date = x.LessonDate.ToString("dd/MM/yyyy"),
+                    Time = x.LessonTime.ToString(@"hh\:mm"),
+                    IsNextLesson = true
+                })
+                .ToList();
+
+            instructorPreviousLessons = pastResult.Data
+                .Select(x => new InstructorLesson
+                {
+                    Id = x.BookingId,
+                    Date = x.LessonDate.ToString("dd/MM/yyyy"),
+                    Time = x.LessonTime.ToString(@"hh\:mm"),
+                    IsNextLesson = false
+                })
+                .ToList();
+
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading schedule.";
+            isLoading = false;
+        }
+    }
+
+    // this searches lessons by booking id
+    void InstructorSearchBooking()
+    {
+        instructorSearchResult = null;
+        searchMessage = null;
+
+        if (string.IsNullOrWhiteSpace(instructorSearchId))
+        {
+            searchMessage = "please enter a booking id.";
+            return;
+        }
+
+        var cleanSearchId = instructorSearchId.Trim();
+
+        foreach (var instructorLesson in instructorNextLessons)
+        {
+            if (instructorLesson.Id.ToString() == cleanSearchId)
+            {
+                instructorSearchResult = instructorLesson;
+                return;
+            }
+        }
+
+        foreach (var instructorLesson in instructorPreviousLessons)
+        {
+            if (instructorLesson.Id.ToString() == cleanSearchId)
+            {
+                instructorSearchResult = instructorLesson;
+                return;
+            }
+        }
+
+        searchMessage = "no booking found with that id.";
+    }
+
+    class InstructorLesson
+    {
+        public int Id { get; set; }
+        public string Date { get; set; } = "";
+        public string Time { get; set; } = "";
+        public bool IsNextLesson { get; set; }
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+
+    public class InstructorScheduleLessonDto
+    {
+        public int BookingId { get; set; }
+        public int LearnerId { get; set; }
+        public string LearnerName { get; set; } = "";
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public DateTime LessonDate { get; set; }
+        public TimeSpan LessonTime { get; set; }
+        public string LessonType { get; set; } = "";
+        public string BookingStatus { get; set; } = "";
+        public string? InstructorNotes { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public DateTime UpdatedAt { get; set; }
+    }
+}

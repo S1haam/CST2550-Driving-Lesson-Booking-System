@@ -1,0 +1,179 @@
+@page "/choose-instructor"
+@rendermode InteractiveServer
+@inject NavigationManager Nav
+@inject HttpClient Http
+@inject DrivingLessonApp.Services.LearnerSignupState SignupState
+@using System.Net.Http.Json
+
+<div class="booking-card instructor-card">
+
+    <h1>WELCOME TO SER DRIVING SCHOOL</h1>
+    <h3>You have a choice of instructors:</h3>
+
+    @if (!string.IsNullOrWhiteSpace(errorMessage))
+    {
+        <p style="color:red; margin-bottom:10px;">@errorMessage</p>
+    }
+
+    @if (isLoading)
+    {
+        <p>loading instructors...</p>
+    }
+    else if (instructors.Count == 0)
+    {
+        <p>no instructors available for this lesson type.</p>
+    }
+    else
+    {
+        @foreach (var instructor in instructors)
+        {
+            <button class="instructor-btn @(selectedInstructor == instructor.InstructorId ? "selected" : "")"
+                    @onclick='() => SelectInstructor(instructor.InstructorId)'>
+                @instructor.InstructorName
+            </button>
+        }
+    }
+
+    <div class="instructor-nav">
+        <button class="instructor-back" @onclick='() => Nav.NavigateTo("/choose-type")'>
+            Back
+        </button>
+
+        <button class="instructor-next"
+                disabled="@(selectedInstructor == 0 || isSubmitting || isLoading)"
+                @onclick="Finish">
+            @(isSubmitting ? "Submitting..." : "Next")
+        </button>
+    </div>
+
+</div>
+
+@code {
+    int selectedInstructor = 0;
+    string? errorMessage;
+    bool isSubmitting = false;
+    bool isLoading = true;
+
+    List<InstructorResponseDto> instructors = new();
+
+    // this runs when the page first loads and gets instructors based on selected lesson type
+    protected override async Task OnInitializedAsync()
+    {
+        if (string.IsNullOrWhiteSpace(SignupState.LessonType))
+        {
+            errorMessage = "please choose a lesson type first.";
+            isLoading = false;
+            return;
+        }
+
+        await LoadInstructors();
+    }
+
+    // this gets instructors filtered by the learner's selected lesson type
+    async Task LoadInstructors()
+    {
+        try
+        {
+            var response = await Http.GetAsync($"api/instructor/by-lesson-type/{SignupState.LessonType}");
+            var result = await response.Content.ReadFromJsonAsync<ApiResponse<List<InstructorResponseDto>>>();
+
+            if (!response.IsSuccessStatusCode || result == null || !result.Success || result.Data == null)
+            {
+                errorMessage = result?.Message ?? "could not load instructors.";
+                isLoading = false;
+                return;
+            }
+
+            instructors = result.Data;
+            isLoading = false;
+        }
+        catch
+        {
+            errorMessage = "something went wrong while loading instructors.";
+            isLoading = false;
+        }
+    }
+
+    // this stores the selected instructor id
+    void SelectInstructor(int id)
+    {
+        selectedInstructor = id;
+        errorMessage = null;
+    }
+
+    // this completes learner signup after selecting an instructor
+    async Task Finish()
+    {
+        errorMessage = null;
+
+        if (selectedInstructor == 0)
+        {
+            errorMessage = "please choose an instructor.";
+            return;
+        }
+
+        if (string.IsNullOrWhiteSpace(SignupState.Name) ||
+            string.IsNullOrWhiteSpace(SignupState.Email) ||
+            string.IsNullOrWhiteSpace(SignupState.Phone) ||
+            string.IsNullOrWhiteSpace(SignupState.Password) ||
+            string.IsNullOrWhiteSpace(SignupState.LicenceId) ||
+            string.IsNullOrWhiteSpace(SignupState.LessonType))
+        {
+            errorMessage = "signup details are incomplete. please start again.";
+            return;
+        }
+
+        SignupState.SelectedInstructorId = selectedInstructor;
+        isSubmitting = true;
+
+        var request = new RegisterLearnerRequest
+        {
+            LearnerName = SignupState.Name,
+            LearnerLicenceId = SignupState.LicenceId,
+            LearnerEmail = SignupState.Email,
+            LearnerPhone = SignupState.Phone,
+            Password = SignupState.Password,
+            LearnerLessonType = SignupState.LessonType,
+            SelectedInstructorId = SignupState.SelectedInstructorId
+        };
+
+        var response = await Http.PostAsJsonAsync("api/auth/register/learner", request);
+        var result = await response.Content.ReadFromJsonAsync<ApiResponse<object>>();
+
+        isSubmitting = false;
+
+        if (!response.IsSuccessStatusCode || result == null || !result.Success)
+        {
+            errorMessage = result?.Message ?? "could not create learner account.";
+            return;
+        }
+
+        SignupState.Clear();
+        Nav.NavigateTo("/login?role=learner");
+    }
+
+    public class RegisterLearnerRequest
+    {
+        public string LearnerName { get; set; } = "";
+        public string LearnerLicenceId { get; set; } = "";
+        public string LearnerEmail { get; set; } = "";
+        public string LearnerPhone { get; set; } = "";
+        public string Password { get; set; } = "";
+        public string LearnerLessonType { get; set; } = "";
+        public int SelectedInstructorId { get; set; }
+    }
+
+    public class InstructorResponseDto
+    {
+        public int InstructorId { get; set; }
+        public string InstructorName { get; set; } = "";
+        public string InstructorCarType { get; set; } = "";
+    }
+
+    public class ApiResponse<T>
+    {
+        public bool Success { get; set; }
+        public string Message { get; set; } = "";
+        public T? Data { get; set; }
+    }
+}
